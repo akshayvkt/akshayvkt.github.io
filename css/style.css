@@ -2,8 +2,8 @@
 body{
   color:blue;
   background-color: grey;
-  text-align: center;
-  font-family:cursive;
+  text-align:'center';
+  font-family:'cursive';
 }
 li{
   font-size:15;
