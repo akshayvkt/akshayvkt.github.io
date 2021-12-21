@@ -1,4 +1,9 @@
 
-h1{
-color:blue;
+body{
+  color:blue;
+  background-color: green;
+}
+li{
+  font-size:15;
+  color:red;
 }
