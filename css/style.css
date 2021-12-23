@@ -1,11 +1,11 @@
 
 body{
-  color:blue;
+  color:rgb(25, 25, 107);
   background-color: white;
   text-align:center;
   font-family: sans-serif;
 }
 li{
   font-size:15px;
-  color:lightblue;
+  color:rgb(75, 136, 156);
 }
