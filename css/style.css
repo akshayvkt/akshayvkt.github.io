@@ -1,11 +1,24 @@
 
 body{
-  color:blue;
+  margin:50px;
+  color:rgb(15, 125, 228);
   background-color: white;
-  text-align:center;
-  font-family: sans-serif;
+  text-align:left;
+  font-family: Calibri;
 }
-li{
-  font-size:15px;
-  color:lightblue;
+
+.steps{
+  text-align:left;
 }
+
+.progress{
+  text-align:left;
+  color:rgb(110, 168, 23);
+}
+a{
+  margin-right:5px;
+}
+/* img{
+  margin:50px;
+  text-align:right;
+} */
