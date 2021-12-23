@@ -1,11 +1,16 @@
 
 body{
+<<<<<<< HEAD
   margin:50px;
   color:rgb(15, 125, 228);
+=======
+  color:rgb(25, 25, 107);
+>>>>>>> d2fbd4f1efb28638eaf4bed96bc83c0fb8319692
   background-color: white;
   text-align:left;
   font-family: Calibri;
 }
+<<<<<<< HEAD
 
 .steps{
   text-align:left;
@@ -17,6 +22,11 @@ body{
 }
 a{
   margin-right:5px;
+=======
+li{
+  font-size:16px;
+  color:rgb(75, 136, 156);
+>>>>>>> d2fbd4f1efb28638eaf4bed96bc83c0fb8319692
 }
 /* img{
   margin:50px;
