@@ -18,7 +18,10 @@ body{
 a{
   margin-right:5px;
 }
-/* img{
-  margin:50px;
-  text-align:right;
-} */
+
+.experience{
+  margin:50px 20px;
+}
+.education{
+  margin:50px 20px;
+}
