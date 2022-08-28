@@ -21,7 +21,13 @@ a{
 
 .experience{
   margin:50px 20px;
+  text-align:left;
 }
 .education{
   margin:50px 20px;
+  text-align:left;
+}
+
+.foto{
+  margin: 120px 120px;
 }
