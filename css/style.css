@@ -30,3 +30,14 @@ a{
 .foto{
   margin: 120px 120px;
 }
+
+body.dark{
+  background-color: #212121; /* When dark mode is on, set background color to black */
+  color: #e8e8e8; /* When dark mode is on, set text color to white */
+
+}
+
+a{
+  color:rgb(255, 111, 0)
+
+}
