@@ -6,6 +6,20 @@ body{
   font-family: 'Courier New', Courier, monospace;
 }
 
+/* body {
+  font-size: 14px;
+  text-align: center;
+  line-height: 20px;
+  font-weight: normal;
+  font-style: normal;
+  font-family: Consolas, monaco, monospace;
+  color: #333333;
+  padding: 20px;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+} */
+
 .steps{
   text-align:left;
 }
