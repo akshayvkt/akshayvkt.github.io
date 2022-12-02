@@ -13,9 +13,3 @@ function enableDarkMode(event) {
         }
     }
   }
-
-
-
-
-
-
