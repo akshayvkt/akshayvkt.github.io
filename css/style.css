@@ -1,4 +1,25 @@
 
+body{
+  color:rgb(1, 1, 11);
+  background-color: white;
+  text-align:center;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* body {
+  font-size: 14px;
+  text-align: center;
+  line-height: 20px;
+  font-weight: normal;
+  font-style: normal;
+  font-family: Consolas, monaco, monospace;
+  color: #333333;
+  padding: 20px;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+} */
+
 .steps{
   text-align:left;
 }
@@ -20,20 +41,17 @@ a{
   text-align:left;
 }
 
+.foto{
+  margin: 120px 120px;
+}
+
+body.dark{
+  background-color: #212121; /* When dark mode is on, set background color to black */
+  color: #e8e8e8; /* When dark mode is on, set text color to white */
+
+}
+
 a{
   color:rgb(223, 132, 27)
-}
 
-/* Light mode styles */
-body {
-  text-align:center;
-  font-family: 'Courier New', Courier, monospace;
-  background-color: #fff;
-  color: #000;
-}
-
-/* Dark mode styles */
-.dark-mode body {
-  background-color: #000;
-  color: #fff;
 }
