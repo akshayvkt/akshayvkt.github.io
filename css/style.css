@@ -1,9 +1,13 @@
 
 body{
   color:rgb(1, 1, 11);
-  background-color: white;
+  background-color: rgb(223, 244, 251);
   text-align:left;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  padding: 100px 400px;
+  line-height: 1.5;
+
+
 }
 
 /* body {
@@ -52,6 +56,6 @@ body.dark{
 }
 
 a{
-  color:rgb(223, 132, 27)
+  color:rgb(53, 102, 238)
 
 }
