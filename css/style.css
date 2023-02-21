@@ -6,36 +6,8 @@ body{
   background-size: cover;
   text-align:left;
   font-family: 'Sarala', sans-serif;
-  padding: 150px 400px;
+  padding: 10% 5%;
   line-height: 1.5;
-
-
-}
-
-
-.steps{
-  text-align:left;
-}
-
-.progress{
-  text-align:left;
-  color:rgb(35, 226, 255);
-}
-a{
-  margin-right:5px;
-}
-
-.experience{
-  margin:50px 20px;
-  text-align:left;
-}
-.education{
-  margin:50px 20px;
-  text-align:left;
-}
-
-.foto{
-  margin: 120px 120px;
 }
 
 body.dark{
@@ -47,4 +19,27 @@ body.dark{
 a{
   color:rgb(11, 136, 78)
 
+}
+
+.social-links a{
+margin-right: 5px;
+}
+
+header {
+margin-bottom: 20px;
+}
+
+ul {
+list-style-type: none;
+padding-left: 0;
+}
+
+ul li {
+margin-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+body {
+padding: 150px 400px;
+}
 }
