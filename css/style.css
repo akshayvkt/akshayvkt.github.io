@@ -2,7 +2,8 @@
 
 body{
   color: #444;
-  background-color: rgb(207, 228, 235);
+  background-color: #f5f5dc;
+    /* background-color: rgb(207, 228, 235); */
   background-size: cover;
   text-align:left;
   font-family: 'Sarala', sans-serif;
