@@ -3,17 +3,12 @@
 body{
   color: #444;
   background-color: #f5f5dc;
-    /* background-color: rgb(207, 228, 235); */
   background-size: cover;
   text-align:left;
   font-family: 'Sarala', sans-serif;
   padding: 5% 25% 10% 25%;
   line-height: 1.5;
-}
-
-body.dark{
-  background-color: #212121; /* When dark mode is on, set background color to black */
-  color: #e8e8e8; /* When dark mode is on, set text color to white */
+  transition: all 0.5s linear;
 
 }
 
@@ -39,3 +34,41 @@ ul li {
   margin-bottom: 10px;
 }
 
+.container {
+  display: flex;
+}
+
+.toggle {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 10px;
+}
+
+.dark-mode {
+  background-color: #222;
+  color: #fff;
+}
+
+.yellow-sun {
+  color: transparent;
+}
+
+.yellow-sun:before {
+  content: '\f185';
+  font-family: 'Font Awesome 6 Pro';
+  font-weight: 900;
+  position: absolute;
+  background-image: linear-gradient(45deg, #fbcf00, #ffc107, #fbcf00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+
+.white-moon {
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+
+}
