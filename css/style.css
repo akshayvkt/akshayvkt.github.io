@@ -169,3 +169,78 @@ ul li {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Books page */
+.books-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.books-intro {
+  font-style: italic;
+  color: #888;
+  margin-bottom: 40px;
+  font-size: 1.05em;
+  letter-spacing: 0.02em;
+}
+
+.books-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.book-entry {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(68, 68, 68, 0.08);
+  transition: background-color 0.2s ease;
+}
+
+.book-entry:hover {
+  background-color: rgba(11, 136, 78, 0.04);
+}
+
+.book-number {
+  font-size: 0.7rem;
+  color: #bbb;
+  font-variant-numeric: tabular-nums;
+  min-width: 18px;
+  letter-spacing: 0.05em;
+}
+
+.book-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.book-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.3;
+}
+
+.book-author {
+  font-size: 0.8rem;
+  color: #999;
+  letter-spacing: 0.02em;
+}
+
+.books-section-label {
+  margin-top: 48px;
+  margin-bottom: 16px;
+  font-style: italic;
+  color: #888;
+  font-size: 0.95em;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 600px) {
+  .books-list {
+    grid-template-columns: 1fr;
+  }
+}
