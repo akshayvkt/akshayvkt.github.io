@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Quotes | Akshay Chintalapati</title>
+        <link href="css/style.css" rel='stylesheet'>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-61SVW4TL71"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-61SVW4TL71');
+        </script>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+          crossorigin="anonymous"
+        />
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+      <div class="quotes-page">
+
+        <a href="index.html" class="back-link">&larr; Back</a>
+
+        <p class="quotes-intro">Words I keep returning to.</p>
+
+        <div class="quotes-collection">
+
+          <article class="quote-entry quote-reveal">
+            <span class="quote-mark">&ldquo;</span>
+            <blockquote class="quote-body">
+              Attention shapes the self, and is in turn shaped by it.
+            </blockquote>
+            <cite class="quote-source">Mihaly Csikszentmihalyi, <em>Flow</em></cite>
+          </article>
+
+          <hr class="quote-divider">
+
+          <article class="quote-entry quote-reveal">
+            <span class="quote-mark">&ldquo;</span>
+            <blockquote class="quote-body">
+              The mind is a wonderful servant but a terrible master.
+            </blockquote>
+          </article>
+
+          <hr class="quote-divider">
+
+          <article class="quote-entry quote-reveal">
+            <span class="quote-mark">&ldquo;</span>
+            <blockquote class="quote-body">
+              You have the right to work, never to its fruits.
+            </blockquote>
+            <cite class="quote-source">Bhagavad Gita</cite>
+          </article>
+
+          <hr class="quote-divider">
+
+          <article class="quote-entry quote-reveal">
+            <span class="quote-mark">&ldquo;</span>
+            <blockquote class="quote-body">
+              The generality of mankind cannot accompany us one short hour unless the path is strewn with flowers.
+            </blockquote>
+            <cite class="quote-source">Michael Faraday</cite>
+          </article>
+
+        </div>
+      </div>
+
+      <script>
+        // Fade in quotes as they enter the viewport
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('quote-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.quote-reveal').forEach(el => observer.observe(el));
+      </script>
+
+    </body>
+</html>
