@@ -145,15 +145,95 @@
             <cite class="quote-source">Kevin Kelly, <em>Excellent Advice for Living</em></cite>
           </article>
 
+          <hr class="quote-divider">
+
+          <article class="quote-entry quote-reveal" data-yt="KkLN6bUGfZY">
+            <span class="quote-mark">&ldquo;</span>
+            <blockquote class="quote-body">
+              When you're thinking about something that you don't understand, you have a terrible, uncomfortable feeling called confusion. It's a very difficult and unhappy business. And so, most of the time, you're rather unhappy, actually, with this confusion. You can't penetrate this thing.
+              <br><br>
+              The confusion is because we are some kind of apes that are kind of stupid, trying to put two sticks together to reach the banana, and we can't quite make it. And I got this feeling all the time, that I'm an ape trying to put two sticks together. So I always feel stupid. Once in a while though, the sticks go together on me and I reach the banana.
+            </blockquote>
+            <cite class="quote-source">Richard Feynman</cite>
+            <div class="quote-video"></div>
+          </article>
+
+          <hr class="quote-divider">
+
+          <article class="quote-entry quote-reveal" data-yt="X1-Gz5Bv3W8">
+            <span class="quote-mark">&ldquo;</span>
+            <blockquote class="quote-body">
+              I was an ordinary person who studied hard.
+            </blockquote>
+            <cite class="quote-source">Richard Feynman</cite>
+            <div class="quote-video"></div>
+          </article>
+
+          <hr class="quote-divider">
+
+          <article class="quote-entry quote-reveal" data-yt="kYfNvmF0Bqw">
+            <span class="quote-mark">&ldquo;</span>
+            <blockquote class="quote-body">
+              Life can be much broader once you discover one simple fact: everything around you was made up by people no smarter than you.
+            </blockquote>
+            <cite class="quote-source">Steve Jobs</cite>
+            <div class="quote-video"></div>
+          </article>
+
+          <hr class="quote-divider">
+
+          <article class="quote-entry quote-reveal" data-yt="zkTf0LmDqKI">
+            <span class="quote-mark">&ldquo;</span>
+            <blockquote class="quote-body">
+              You've got to act, and you've got to be willing to fail.
+            </blockquote>
+            <cite class="quote-source">Steve Jobs</cite>
+            <div class="quote-video"></div>
+          </article>
+
+          <hr class="quote-divider">
+
+          <article class="quote-entry quote-reveal">
+            <span class="quote-mark">&ldquo;</span>
+            <blockquote class="quote-body">
+              You are always to some degree wrong, and the goal is to be less wrong.
+            </blockquote>
+            <cite class="quote-source">Elon Musk</cite>
+          </article>
+
         </div>
       </div>
 
       <script>
-        // Fade in quotes as they enter the viewport
+        // Fade in quotes as they enter the viewport, and lazy-load YouTube thumbnails
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
               entry.target.classList.add('quote-visible');
+
+              const ytId = entry.target.dataset.yt;
+              const slot = entry.target.querySelector('.quote-video');
+              if (ytId && slot && !slot.hasChildNodes()) {
+                const btn = document.createElement('button');
+                btn.className = 'quote-video-thumb';
+                btn.type = 'button';
+                btn.setAttribute('aria-label', 'Play video');
+                const img = document.createElement('img');
+                img.loading = 'lazy';
+                img.decoding = 'async';
+                img.src = `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`;
+                img.alt = '';
+                btn.appendChild(img);
+                btn.addEventListener('click', () => {
+                  const iframe = document.createElement('iframe');
+                  iframe.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0`;
+                  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                  iframe.allowFullscreen = true;
+                  slot.replaceChild(iframe, btn);
+                });
+                slot.appendChild(btn);
+              }
+
               observer.unobserve(entry.target);
             }
           });

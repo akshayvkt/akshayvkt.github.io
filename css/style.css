@@ -170,6 +170,84 @@ ul li {
   transform: translateY(0);
 }
 
+.quote-video {
+  margin-top: 22px;
+  max-width: 520px;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #000;
+}
+
+.quote-video:empty {
+  display: none;
+}
+
+.quote-video-thumb {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: #000;
+  cursor: pointer;
+  position: relative;
+  display: block;
+}
+
+.quote-video-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0.88;
+  transition: opacity 0.2s ease;
+}
+
+.quote-video-thumb:hover img,
+.quote-video-thumb:focus-visible img {
+  opacity: 1;
+}
+
+.quote-video-thumb::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 62px;
+  height: 62px;
+  background: rgba(0, 0, 0, 0.72);
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+
+.quote-video-thumb:hover::after {
+  background: rgba(11, 136, 78, 0.85);
+}
+
+.quote-video-thumb::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-35%, -50%);
+  width: 0;
+  height: 0;
+  border-left: 16px solid #fff;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  z-index: 1;
+}
+
+.quote-video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
 /* Books page */
 .books-page {
   max-width: 800px;
