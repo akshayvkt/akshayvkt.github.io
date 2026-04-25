@@ -94,9 +94,13 @@ for shelf_idx, shelf in enumerate(shelves):
             f'</button>'
         )
     shelf_html_parts.append(
-        '<div class="shelf-row">\n  <div class="books">\n    '
-        + "\n    ".join(items)
-        + '\n  </div>\n  <div class="shelf-plank"></div>\n</div>'
+        '<div class="shelf-row">\n'
+        '  <div class="shelf-frame">\n'
+        '    <div class="books">\n      '
+        + "\n      ".join(items)
+        + '\n    </div>\n'
+        '  </div>\n'
+        '</div>'
     )
 
 shelves_html = "\n\n".join(shelf_html_parts)
@@ -123,22 +127,43 @@ page = f"""<!DOCTYPE html>
       letter-spacing: 0.02em;
     }}
     .shelf-row {{
-      margin-bottom: 28px;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 32px;
+    }}
+    .shelf-frame {{
+      display: inline-flex;
+      flex-direction: column;
+      max-width: 100%;
+      background: linear-gradient(180deg, #1c1208 0%, #0f0a04 100%);
+      border-top: 10px solid;
+      border-left: 12px solid;
+      border-right: 12px solid;
+      border-image: linear-gradient(180deg, #6b4a2b 0%, #4a3217 70%, #382412 100%) 1;
+      border-radius: 4px 4px 0 0;
+      padding: 4px 4px 0;
+      box-shadow:
+        inset 0 6px 14px rgba(0,0,0,0.55),
+        inset 0 -2px 0 rgba(0,0,0,0.4),
+        0 6px 16px rgba(0,0,0,0.22);
+      position: relative;
+    }}
+    .shelf-frame::after {{
+      content: "";
+      display: block;
+      height: 14px;
+      margin: 0 -4px;
+      background: linear-gradient(180deg, #6b4a2b 0%, #4a3217 55%, #2c1d0c 100%);
+      border-radius: 0 0 3px 3px;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 4px 10px rgba(0,0,0,0.28);
     }}
     .books {{
       display: flex;
       align-items: flex-end;
-      justify-content: flex-start;
       gap: 1px;
-      padding-left: 6px;
       min-height: 248px;
-    }}
-    .shelf-plank {{
-      height: 12px;
-      background: linear-gradient(180deg, #6b4a2b 0%, #4a3217 60%, #2c1d0c 100%);
-      border-radius: 2px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
-      margin-top: -2px;
     }}
     .book {{
       all: unset;
