@@ -248,6 +248,38 @@ ul li {
   display: block;
 }
 
+.quote-image {
+  margin: 60px auto 20px;
+  padding: 0;
+  max-width: 612px;
+  text-align: center;
+}
+
+.quote-image-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.4rem;
+  color: #555;
+  margin-bottom: 22px;
+  letter-spacing: 0.02em;
+}
+
+.quote-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.08);
+}
+
+.quote-image-credit {
+  font-family: 'Sarala', sans-serif;
+  font-size: 0.8rem;
+  color: #999;
+  letter-spacing: 0.04em;
+  margin-top: 14px;
+}
+
 /* Books page */
 .books-page {
   max-width: 800px;
