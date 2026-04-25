@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 BOOKS_HTML = (ROOT / "books.html").read_text()
 COLORS = json.loads((ROOT / "covers-colors.json").read_text())
-BOOKS_PER_SHELF = 14
+BOOKS_PER_SHELF = 18
 
 
 def extract_books(html):
@@ -59,9 +59,8 @@ for i, title, author in books:
     color_key = f"{i:02d}-{slug}"
     bg = COLORS.get(color_key, "#666666")
     fg = text_color_for(bg)
-    # width: longer titles => slightly thicker spines; clamp 32-44px
-    title_len = len(title)
-    width = max(32, min(44, 32 + title_len // 5))
+    # uniform spine width so every shelf has identical total width
+    width = 44
     spines.append({
         "i": i,
         "title": title,
@@ -115,7 +114,7 @@ page = f"""<!DOCTYPE html>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <style>
     .bookshelf-page {{
-      max-width: 900px;
+      max-width: 1040px;
       margin: 0 auto;
       padding: 0 8px;
     }}
@@ -129,7 +128,13 @@ page = f"""<!DOCTYPE html>
     .shelf-row {{
       display: flex;
       justify-content: center;
-      margin-bottom: 32px;
+      margin-bottom: 0;
+    }}
+    .shelf-row + .shelf-row .shelf-frame {{
+      /* shelves above the first share the lower plank of the previous */
+      border-top-width: 0;
+      border-radius: 0;
+      margin-top: -2px;
     }}
     .shelf-frame {{
       display: inline-flex;
@@ -141,7 +146,7 @@ page = f"""<!DOCTYPE html>
       border-right: 12px solid;
       border-image: linear-gradient(180deg, #6b4a2b 0%, #4a3217 70%, #382412 100%) 1;
       border-radius: 4px 4px 0 0;
-      padding: 4px 4px 0;
+      padding: 14px 16px 0;
       box-shadow:
         inset 0 6px 14px rgba(0,0,0,0.55),
         inset 0 -2px 0 rgba(0,0,0,0.4),
@@ -152,7 +157,7 @@ page = f"""<!DOCTYPE html>
       content: "";
       display: block;
       height: 14px;
-      margin: 0 -4px;
+      margin: 0 -16px;
       background: linear-gradient(180deg, #6b4a2b 0%, #4a3217 55%, #2c1d0c 100%);
       border-radius: 0 0 3px 3px;
       box-shadow:
@@ -163,13 +168,13 @@ page = f"""<!DOCTYPE html>
       display: flex;
       align-items: flex-end;
       gap: 1px;
-      min-height: 248px;
+      min-height: 296px;
     }}
     .book {{
       all: unset;
       cursor: pointer;
-      width: var(--w, 38px);
-      height: 240px;
+      width: var(--w, 44px);
+      height: 288px;
       background: var(--bg);
       color: var(--fg);
       position: relative;
@@ -203,31 +208,31 @@ page = f"""<!DOCTYPE html>
       left: 50%;
       transform: translate(-50%, -50%) rotate(-90deg);
       transform-origin: center;
-      width: 220px;
+      width: 264px;
       display: flex;
       flex-direction: row;
       align-items: baseline;
-      gap: 10px;
+      gap: 12px;
       white-space: nowrap;
       font-family: 'Cormorant Garamond', serif;
       pointer-events: none;
     }}
     .spine-text .t {{
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 1.14rem;
       letter-spacing: 0.02em;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 165px;
+      max-width: 198px;
     }}
     .spine-text .a {{
       font-weight: 400;
-      font-size: 0.7rem;
+      font-size: 0.84rem;
       opacity: 0.75;
       font-style: italic;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 90px;
+      max-width: 108px;
     }}
 
     /* Modal overlay (3D flip) when a book is clicked */
