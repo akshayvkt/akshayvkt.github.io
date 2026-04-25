@@ -195,7 +195,9 @@ PAGE = f'''<!DOCTYPE html>
 
         <!-- LIBRARY ZONE: bookshelf, plant, chair -->
         <button class="bookshelf" aria-label="Open the bookshelf — 54 books">
-          {shelves_inner}
+          <span class="bookshelf-shelves">
+            {shelves_inner}
+          </span>
           <span class="bookshelf-label">view 54 books →</span>
         </button>
 

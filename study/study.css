@@ -105,23 +105,22 @@ body::before {
   position: relative;
   width: 100%;
   aspect-ratio: 1180 / 720;
-  background: var(--paper);
+  background:
+    url("/assets/room/01-room-shell.png") center / contain no-repeat,
+    var(--paper);
   border-radius: 6px;
   overflow: hidden;
   box-shadow: 0 8px 28px var(--shadow);
+}
+body.night .stage {
+  filter: brightness(0.55) sepia(0.15) hue-rotate(-15deg);
 }
 
 /* All children in stage use 1116×640 SVG-equivalent coordinate system,
    scaled to fit the parent. We use percentages calculated from the design coords. */
 
-/* Room shell SVG fills the stage */
-.room-shell {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
+/* Room shell SVG no longer used (replaced by .stage background-image) */
+.room-shell { display: none; }
 
 /* Furniture container — uses absolute positioning with percentages
    matched to the blueprint coordinates (artboard 1116×640). */
@@ -138,63 +137,59 @@ body::before {
 /* ─── Bookshelf ─── */
 .bookshelf {
   position: absolute;
-  /* x:70 y:130 w:420 h:350 of 1116×640 */
-  left: 6.27%;
-  top: 20.31%;
-  width: 37.63%;
-  height: 54.69%;
-  background:
-    linear-gradient(180deg,
-      #6e4626 0%,
-      #5b3a1f 6%,
-      #5b3a1f 94%,
-      #6e4626 100%);
-  border-radius: 4px;
+  /* Approximate position over the empty room shell, shifted left for library zone */
+  left: 5%;
+  top: 14%;
+  width: 33%;
+  height: 60%;
+  background: url("/assets/room/02-bookshelf.png") center / contain no-repeat;
   border: 0;
   padding: 0;
   cursor: pointer;
-  box-shadow:
-    inset 0 0 0 4px #4a3015,
-    inset 0 8px 12px rgba(0,0,0,0.3),
-    0 6px 18px rgba(0,0,0,0.25);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 14px 12px;
-  gap: 4px;
   font: inherit;
   color: inherit;
   text-align: left;
   transition: filter 0.25s ease, transform 0.25s ease;
 }
 .bookshelf:hover, .bookshelf:focus-visible {
-  filter: brightness(1.05);
+  filter: brightness(1.06) drop-shadow(0 0 14px rgba(74,122,58,0.5));
   outline: none;
+}
+.bookshelf-shelves {
+  position: absolute;
+  /* shelves area within the bookshelf PNG (approx) */
+  left: 12%;
+  right: 6%;
+  top: 12%;
+  bottom: 8%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4px;
+  pointer-events: none;
 }
 .bookshelf-shelf {
   flex: 1;
   display: flex;
   align-items: flex-end;
   gap: 1px;
-  padding: 0 2px 4px;
-  border-bottom: 4px solid #3d2810;
-  box-shadow: inset 0 -6px 8px rgba(0,0,0,0.35);
   position: relative;
+  pointer-events: none;
 }
-.bookshelf-shelf:last-child { border-bottom: 0; }
 .spine {
   flex: 1 1 0;
-  height: 86%;
+  height: 82%;
   border-radius: 1.5px 1.5px 0 0;
   position: relative;
   box-shadow:
     inset 1px 0 0 rgba(255,255,255,0.10),
-    inset -1px 0 0 rgba(0,0,0,0.20);
-  min-width: 6px;
-  max-width: 22px;
+    inset -1px 0 0 rgba(0,0,0,0.20),
+    0 1px 2px rgba(0,0,0,0.3);
+  min-width: 4px;
+  max-width: 16px;
 }
 .spine.tilted {
-  height: 80%;
+  height: 76%;
   transform: rotate(-6deg);
   transform-origin: bottom left;
 }
@@ -217,30 +212,21 @@ body::before {
 /* ─── Corkboard ─── */
 .corkboard {
   position: absolute;
-  /* x:580 y:120 w:210 h:170 */
-  left: 51.97%;
-  top: 18.75%;
-  width: 18.82%;
-  height: 26.56%;
-  background:
-    repeating-linear-gradient(45deg, #c89d65 0 4px, #b88858 4px 8px),
-    #c89d65;
-  border: 8px solid #6a4a2a;
-  border-radius: 3px;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.3),
-              inset 0 0 30px rgba(60,40,20,0.4);
+  left: 46%;
+  top: 14%;
+  width: 22%;
+  height: 30%;
+  background: url("/assets/room/07-corkboard.png") center / contain no-repeat;
+  border: 0;
   cursor: pointer;
-}
-.corkboard::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, rgba(255,238,200,0.05) 0%, rgba(0,0,0,0.18) 100%);
-  pointer-events: none;
 }
 .corkboard-cards {
   position: absolute;
-  inset: 6px;
+  /* Inside the cork area of the PNG (frame is ~10% of each side) */
+  left: 12%;
+  right: 12%;
+  top: 14%;
+  bottom: 14%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
@@ -320,38 +306,32 @@ body::before {
 /* ─── Window ─── */
 .window {
   position: absolute;
-  /* x:870 y:120 w:190 h:150 */
-  left: 77.96%;
-  top: 18.75%;
-  width: 17.03%;
-  height: 23.44%;
-  border: 10px solid #6a4a2a;
-  border-radius: 2px;
+  left: 70%;
+  top: 14%;
+  width: 22%;
+  height: 26%;
   background: linear-gradient(180deg, var(--sky-top), var(--sky-bot));
-  box-shadow: 0 6px 14px rgba(0,0,0,0.25),
-              inset 0 0 20px rgba(0,0,0,0.15);
+  border-radius: 4px;
   overflow: hidden;
   transition: background 0.6s ease;
-}
-.window::before, .window::after {
-  content: "";
-  position: absolute;
-  background: #6a4a2a;
-}
-.window::before {
-  top: 50%; left: 0; right: 0; height: 4px; transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
 }
 .window::after {
-  left: 50%; top: 0; bottom: 0; width: 4px; transform: translateX(-2px);
+  /* window frame layered on top of sky */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/assets/room/10-window.png") center / contain no-repeat;
+  pointer-events: none;
 }
 .window-sun {
   position: absolute;
   top: 18%;
-  right: 14%;
+  right: 16%;
   width: 22%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,242,196,0.95) 0%, rgba(255,219,140,0.45) 60%, transparent 100%);
+  background: radial-gradient(circle, rgba(255,242,196,0.85) 0%, rgba(255,219,140,0.4) 60%, transparent 100%);
   filter: blur(0.5px);
   z-index: 1;
 }
@@ -361,21 +341,15 @@ body.night .window-sun {
   right: 18%;
   width: 14%;
 }
-body.night .window::after,
-body.night .window::before { background: #2a1e10; }
 
 /* ─── Clock ─── */
 .clock {
   position: absolute;
-  /* cx:815 y:150 r:26 → x:789 y:124 w:52 h:52 */
-  left: 70.70%;
-  top: 19.38%;
-  width: 4.66%;
+  left: 65%;
+  top: 16%;
+  width: 6%;
   aspect-ratio: 1;
-  background: radial-gradient(circle at 32% 28%, #fefcf3, #d4b483 78%, #b08856 100%);
-  border-radius: 50%;
-  border: 3px solid #4a3015;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+  background: url("/assets/room/11-clock.png") center / contain no-repeat;
   z-index: 5;
 }
 .clock-hand {
@@ -422,10 +396,8 @@ body.night .window::before { background: #2a1e10; }
   position: absolute;
   width: 18%;
   aspect-ratio: 8 / 7;
-  background: #fbf6e6;
-  border: 1px solid var(--ink);
-  border-radius: 2px;
-  box-shadow: 1px 3px 4px rgba(0,0,0,0.3);
+  background: url("/assets/room/15-postcard.png") center / contain no-repeat;
+  border: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -435,7 +407,8 @@ body.night .window::before { background: #2a1e10; }
   color: var(--ink);
   text-decoration: none;
   pointer-events: auto;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.25));
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
 .postcard::before {
   content: "";
@@ -463,29 +436,26 @@ body.night .window::before { background: #2a1e10; }
 /* ─── TV ─── */
 .tv {
   position: absolute;
-  /* x:870 y:290 w:180 h:170 */
-  left: 77.96%;
-  top: 45.31%;
-  width: 16.13%;
-  height: 26.56%;
-  background: linear-gradient(180deg, #6e4626 0%, #4a3015 100%);
-  border-radius: 6px 6px 4px 4px;
+  left: 70%;
+  top: 44%;
+  width: 23%;
+  height: 30%;
+  background: url("/assets/room/09-tv.png") center / contain no-repeat;
   border: 0;
-  padding: 12px 12px 14px;
+  padding: 0;
   cursor: pointer;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.4),
-              inset 0 1px 0 rgba(255,255,255,0.08);
   font: inherit;
   color: inherit;
 }
 .tv-screen {
-  width: 100%;
-  height: 60%;
-  background: #1a1612;
-  border: 3px solid #2a1d10;
-  border-radius: 3px;
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.7);
-  position: relative;
+  position: absolute;
+  /* fits over the screen area of the TV PNG */
+  left: 7%;
+  right: 27%;
+  top: 13%;
+  bottom: 32%;
+  background: rgba(20,18,15,0.0);
+  border-radius: 4px;
   overflow: hidden;
 }
 .tv-screen .scanlines {
@@ -519,26 +489,33 @@ body.night .window::before { background: #2a1e10; }
 .tv:hover .tv-screen .play-icon { background: var(--green); transform: translate(-50%, -50%) scale(1.06); }
 .tv:hover .tv-screen .play-icon::after { border-left-color: white; }
 .tv-controls {
-  height: 28%;
+  position: absolute;
+  bottom: 12%;
+  left: 8%;
+  right: 28%;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding-top: 8px;
+  gap: 6px;
+  font-family: 'Caveat', cursive;
+  font-size: 11px;
+  color: rgba(255,238,200,0.85);
+  pointer-events: none;
 }
 .tv-dial {
-  width: 16px;
+  width: 12px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #d4b483, #6a4a2a 75%);
-  box-shadow: inset -1px -1px 2px rgba(0,0,0,0.4),
-              inset 1px 1px 1px rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.0);
+  cursor: pointer;
+  pointer-events: auto;
 }
 .tv-info {
   flex: 1;
   font-family: 'Caveat', cursive;
-  font-size: 13px;
-  color: rgba(255,238,200,0.75);
+  font-size: 11px;
   line-height: 1.1;
+  color: rgba(255,238,200,0.8);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.6);
 }
 .tv-label {
   position: absolute;
@@ -568,86 +545,53 @@ body.night .window::before { background: #2a1e10; }
 /* ─── Desk ─── */
 .desk {
   position: absolute;
-  /* desk top: M 290 470 L 1010 470 L 1040 540 L 320 540 → 25.99% top:73.44% */
-  left: 25.99%;
-  top: 73.44%;
-  width: 67.20%;
-  height: 20.31%;
-  background:
-    linear-gradient(180deg, #8a5d33 0%, #6e4626 30%, #4a3015 100%);
-  border-radius: 4px 4px 0 0;
-  box-shadow:
-    0 6px 16px rgba(0,0,0,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.08);
-  transform: skewX(-6deg);
-  transform-origin: bottom right;
+  left: 30%;
+  top: 64%;
+  width: 50%;
+  height: 28%;
+  background: url("/assets/room/03-desk.png") center / contain no-repeat;
+  pointer-events: none;
 }
 
 /* ─── Typewriter ─── */
 .typewriter {
   position: absolute;
-  /* x:420 y:400 w:170 h:75 + paper x:440 y:372 w:130 h:32 */
-  left: 37.63%;
-  top: 56%;
-  width: 15.23%;
-  height: 17%;
+  left: 37%;
+  top: 50%;
+  width: 18%;
+  height: 22%;
   border: 0;
   padding: 0;
-  background: transparent;
+  background: url("/assets/room/05-typewriter.png") center / contain no-repeat;
   cursor: pointer;
   font: inherit;
   color: inherit;
 }
 .typewriter-paper {
   position: absolute;
-  top: 0;
-  left: 12%;
-  width: 76%;
-  height: 32%;
+  top: -8%;
+  left: 22%;
+  width: 56%;
+  height: 22%;
   background: #fbf6e6;
-  border: 1px solid var(--leather);
   border-radius: 1px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+  box-shadow: 0 2px 3px rgba(0,0,0,0.25);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--ink);
   text-align: center;
   line-height: 1.2;
-  padding: 0 8px;
+  padding: 0 6px;
   transition: transform 0.25s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.typewriter-body {
-  position: absolute;
-  top: 28%;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    linear-gradient(180deg, #4a3015 0%, #2a1c10 80%);
-  border: 2px solid #2a1c10;
-  border-radius: 4px 4px 6px 6px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.45),
-              inset 0 1px 0 rgba(255,255,255,0.08);
-}
-.typewriter-keys {
-  position: absolute;
-  bottom: 12%;
-  left: 8%;
-  right: 8%;
-  height: 26%;
-  background: repeating-linear-gradient(90deg,
-    rgba(244,219,182,0.85) 0 5%,
-    rgba(74,48,21,0.6) 5% 7%);
-  border-radius: 2px;
-  opacity: 0.85;
-}
+.typewriter-body, .typewriter-keys { display: none; }
 .typewriter:hover .typewriter-paper { transform: translateY(-3px); }
 .typewriter:hover .typewriter-paper { text-decoration: underline wavy var(--green); text-underline-offset: 2px; }
 .typewriter-label {
@@ -669,46 +613,16 @@ body.night .window::before { background: #2a1e10; }
 /* ─── Lamp ─── */
 .lamp {
   position: absolute;
-  /* lamp at x:650 base, head at y:370 */
   left: 56%;
-  top: 53%;
-  width: 6%;
-  height: 21%;
+  top: 50%;
+  width: 7%;
+  height: 22%;
   border: 0;
   padding: 0;
-  background: transparent;
+  background: url("/assets/room/06-lamp.png") center / contain no-repeat;
   cursor: pointer;
 }
-.lamp-pole {
-  position: absolute;
-  bottom: 18%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 2px;
-  height: 60%;
-  background: linear-gradient(180deg, #4a3015 0%, #2a1c10 100%);
-}
-.lamp-shade {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 30%;
-  background: linear-gradient(180deg, #5d8c47 0%, #3a6628 80%, #2a4a18 100%);
-  clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.35);
-}
-.lamp-base {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50%;
-  height: 12%;
-  background: radial-gradient(ellipse at center 30%, #5b4632 0%, #2a1c10 100%);
-  border-radius: 50%;
-}
+.lamp-pole, .lamp-shade, .lamp-base { display: none; }
 .lamp-glow {
   position: absolute;
   top: 18%;
@@ -743,29 +657,17 @@ body.night .lamp-glow { opacity: 1; }
 /* ─── Coffee mug ─── */
 .coffee {
   position: absolute;
-  left: 65.6%;
-  top: 65.6%;
-  width: 4.5%;
+  left: 64%;
+  top: 60%;
+  width: 6%;
   aspect-ratio: 1;
 }
 .coffee-mug {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 35% 28%, #fefcf3, #d4b483 78%, #a87544 100%);
-  border-radius: 50% 50% 8% 8%;
-  border: 2px solid #5b4632;
+  background: url("/assets/room/13-coffee.png") center / contain no-repeat;
 }
-.coffee-mug::after {
-  content: "";
-  position: absolute;
-  top: 30%;
-  right: -22%;
-  width: 35%;
-  height: 38%;
-  border: 2px solid #5b4632;
-  border-radius: 0 50% 50% 0;
-  border-left: 0;
-}
+.coffee-mug::after { display: none; }
 .coffee-steam {
   position: absolute;
   bottom: 80%;
@@ -797,93 +699,34 @@ body.night .lamp-glow { opacity: 1; }
 /* ─── Plant ─── */
 .plant {
   position: absolute;
-  /* x:120 y:500 w:50 h:60 */
-  left: 10.75%;
-  top: 78.13%;
-  width: 6%;
-  height: 16%;
+  left: 8%;
+  top: 70%;
+  width: 9%;
+  height: 26%;
+  background: url("/assets/room/12-plant.png") center / contain no-repeat;
 }
-.plant-pot {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(180deg, #b97f4a 0%, #6e4626 100%);
-  border-radius: 4px 4px 6px 6px;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.1);
-}
-.plant-leaves {
-  position: absolute;
-  bottom: 42%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 130%;
-  height: 70%;
-}
-.plant-leaves::before, .plant-leaves::after,
-.plant-leaves > span {
-  content: "";
-  position: absolute;
-  background: linear-gradient(135deg, #5d8c47 0%, #3a6628 100%);
-  border-radius: 50% 10% 60% 10%;
-  transform-origin: 100% 100%;
-}
-.plant-leaves::before { left: 20%; bottom: 0; width: 28%; height: 80%; transform: rotate(-12deg); }
-.plant-leaves::after  { right: 20%; bottom: 0; width: 28%; height: 75%; transform: rotate(8deg); }
-.plant-leaves > span:nth-of-type(1) { left: 42%; bottom: 5%; width: 20%; height: 90%; transform: rotate(-2deg); }
+.plant-pot, .plant-leaves { display: none; }
 
 /* ─── Reading chair ─── */
 .chair {
   position: absolute;
-  /* x:305 y:470 w:165 h:130 */
-  left: 27.33%;
-  top: 73.44%;
-  width: 14.78%;
-  height: 22.66%;
+  left: 19%;
+  top: 56%;
+  width: 16%;
+  height: 36%;
+  background: url("/assets/room/04-chair.png") center / contain no-repeat;
   pointer-events: none;
 }
-.chair-back {
-  position: absolute;
-  bottom: 30%;
-  left: 8%;
-  right: 6%;
-  height: 65%;
-  background: linear-gradient(180deg, #8c674d 0%, #5b4632 100%);
-  border-radius: 6px 8px 2px 2px;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.08),
-              0 4px 8px rgba(0,0,0,0.3);
-}
-.chair-seat {
-  position: absolute;
-  bottom: 12%;
-  left: 0;
-  right: 0;
-  height: 30%;
-  background: linear-gradient(180deg, #a07452 0%, #6b4f38 100%);
-  border-radius: 4px;
-  box-shadow: 0 6px 10px rgba(0,0,0,0.3);
-}
-.chair-leg {
-  position: absolute;
-  bottom: 0;
-  width: 6%;
-  height: 14%;
-  background: #2a1c10;
-  border-radius: 1px;
-}
-.chair-leg.left  { left: 8%; }
-.chair-leg.right { right: 8%; }
+.chair-back, .chair-seat, .chair-leg { display: none; }
 
 /* ─── Rug ─── */
 .rug {
   position: absolute;
   left: 18%;
-  top: 90.5%;
+  top: 84%;
   width: 64%;
-  height: 6%;
-  background: radial-gradient(ellipse at center, rgba(194,85,63,0.45) 0%, rgba(168,117,68,0.35) 65%, transparent 92%);
-  border-radius: 50%;
+  height: 14%;
+  background: url("/assets/room/14-rug.png") center / contain no-repeat;
   pointer-events: none;
 }
 
