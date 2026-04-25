@@ -205,58 +205,130 @@ page = f"""<!DOCTYPE html>
       max-width: 90px;
     }}
 
-    /* Modal overlay when a book is clicked */
+    /* Modal overlay (3D flip) when a book is clicked */
     .book-modal {{
       position: fixed;
       inset: 0;
-      background: rgba(20, 18, 14, 0.78);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      background: rgba(20, 18, 14, 0.0);
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 100;
-      opacity: 0;
-      transition: opacity 0.25s ease;
+      perspective: 1600px;
+      transition: background 0.4s ease, backdrop-filter 0.4s ease;
       padding: 20px;
     }}
-    .book-modal.open {{
+    .book-modal.visible {{
       display: flex;
+    }}
+    .book-modal.open {{
+      background: rgba(20, 18, 14, 0.78);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }}
+    .book-card {{
+      position: relative;
+      width: 320px;
+      height: 480px;
+      transform-style: preserve-3d;
+      transform: scale(0.55) rotateY(0deg);
+      opacity: 0;
+      transition:
+        transform 0.85s cubic-bezier(0.22, 0.85, 0.3, 1.05),
+        opacity 0.4s ease;
+    }}
+    .book-modal.open .book-card {{
+      transform: scale(1) rotateY(-180deg);
       opacity: 1;
     }}
-    .book-modal-card {{
-      max-width: 380px;
-      transform: scale(0.85);
-      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
-      text-align: center;
-    }}
-    .book-modal.open .book-modal-card {{
-      transform: scale(1);
-    }}
-    .book-modal-card img {{
-      width: 100%;
-      height: auto;
-      max-height: 70vh;
-      object-fit: contain;
+    .book-card-face {{
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
       border-radius: 4px;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.45);
-      display: block;
-      margin: 0 auto;
+      box-shadow: 0 22px 48px rgba(0,0,0,0.55);
     }}
-    .book-modal-card .meta {{
-      color: #f3eee2;
-      margin-top: 18px;
+    .book-card-spine {{
+      background: var(--card-bg, #444);
+      color: var(--card-fg, #f5f1e6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }}
+    .book-card-spine::before {{
+      /* spine gloss */
+      content: "";
+      position: absolute;
+      top: 0; bottom: 0; left: 12px; width: 2px;
+      background: rgba(255,255,255,0.15);
+    }}
+    .book-card-spine::after {{
+      content: "";
+      position: absolute;
+      top: 0; bottom: 0; right: 0; width: 14px;
+      background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 100%);
+    }}
+    .book-card-spine-text {{
+      transform: rotate(-90deg);
+      transform-origin: center;
+      white-space: nowrap;
       font-family: 'Cormorant Garamond', serif;
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
     }}
-    .book-modal-card .meta .title {{
-      font-size: 1.3rem;
-      font-weight: 500;
+    .book-card-spine-text .t {{
+      font-weight: 600;
+      font-size: 1.4rem;
+      letter-spacing: 0.02em;
+    }}
+    .book-card-spine-text .a {{
+      font-weight: 400;
+      font-size: 0.9rem;
+      opacity: 0.78;
       font-style: italic;
     }}
-    .book-modal-card .meta .author {{
+    .book-card-cover {{
+      transform: rotateY(180deg);
+      background: #111;
+      overflow: hidden;
+    }}
+    .book-card-cover img {{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }}
+    .book-card-meta {{
+      position: absolute;
+      left: 50%;
+      bottom: -72px;
+      transform: translateX(-50%) rotateY(180deg);
+      color: #f3eee2;
+      font-family: 'Cormorant Garamond', serif;
+      text-align: center;
+      width: 360px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease 0.5s;
+    }}
+    .book-modal.open .book-card-meta {{
+      opacity: 1;
+    }}
+    .book-card-meta .title {{
+      font-size: 1.25rem;
+      font-style: italic;
+      font-weight: 500;
+    }}
+    .book-card-meta .author {{
       font-size: 0.9rem;
       opacity: 0.75;
-      margin-top: 4px;
+      margin-top: 2px;
     }}
     .book-modal-close {{
       position: absolute;
@@ -265,12 +337,17 @@ page = f"""<!DOCTYPE html>
       background: transparent;
       border: 0;
       color: #fff;
-      font-size: 28px;
+      font-size: 30px;
       cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease 0.4s;
+      z-index: 2;
+    }}
+    .book-modal.open .book-modal-close {{
       opacity: 0.7;
     }}
     .book-modal-close:hover {{
-      opacity: 1;
+      opacity: 1 !important;
     }}
 
     @media (max-width: 600px) {{
@@ -293,43 +370,79 @@ page = f"""<!DOCTYPE html>
 
   <div class="book-modal" id="book-modal" role="dialog" aria-modal="true" aria-label="Book cover">
     <button class="book-modal-close" id="book-modal-close" aria-label="Close">&times;</button>
-    <div class="book-modal-card">
-      <img id="book-modal-img" src="" alt="">
-      <div class="meta">
-        <div class="title" id="book-modal-title"></div>
-        <div class="author" id="book-modal-author"></div>
+    <div class="book-card" id="book-card">
+      <div class="book-card-face book-card-spine">
+        <div class="book-card-spine-text">
+          <span class="t" id="book-card-spine-title"></span>
+          <span class="a" id="book-card-spine-author"></span>
+        </div>
+      </div>
+      <div class="book-card-face book-card-cover">
+        <img id="book-card-img" src="" alt="">
+      </div>
+      <div class="book-card-meta">
+        <div class="title" id="book-card-meta-title"></div>
+        <div class="author" id="book-card-meta-author"></div>
       </div>
     </div>
   </div>
 
   <script>
     const modal = document.getElementById('book-modal');
-    const modalImg = document.getElementById('book-modal-img');
-    const modalTitle = document.getElementById('book-modal-title');
-    const modalAuthor = document.getElementById('book-modal-author');
+    const card = document.getElementById('book-card');
+    const cardImg = document.getElementById('book-card-img');
+    const spineTitle = document.getElementById('book-card-spine-title');
+    const spineAuthor = document.getElementById('book-card-spine-author');
+    const metaTitle = document.getElementById('book-card-meta-title');
+    const metaAuthor = document.getElementById('book-card-meta-author');
     const modalClose = document.getElementById('book-modal-close');
 
+    let openLockUntil = 0;
+
     function openBook(btn) {{
-      modalImg.src = btn.dataset.cover;
-      modalImg.alt = btn.dataset.title;
-      modalTitle.textContent = btn.dataset.title;
-      modalAuthor.textContent = btn.dataset.author;
-      modal.classList.add('open');
+      const styles = getComputedStyle(btn);
+      const bg = styles.getPropertyValue('--bg').trim() || '#444';
+      const fg = styles.getPropertyValue('--fg').trim() || '#f5f1e6';
+      card.style.setProperty('--card-bg', bg);
+      card.style.setProperty('--card-fg', fg);
+
+      spineTitle.textContent = btn.dataset.title;
+      spineAuthor.textContent = btn.dataset.author;
+      cardImg.src = btn.dataset.cover;
+      cardImg.alt = btn.dataset.title;
+      metaTitle.textContent = btn.dataset.title;
+      metaAuthor.textContent = btn.dataset.author;
+
+      modal.classList.add('visible');
       document.body.style.overflow = 'hidden';
+      void modal.offsetHeight;
+      requestAnimationFrame(() => modal.classList.add('open'));
+
+      // Ignore stray backdrop clicks for the duration of the open animation
+      openLockUntil = Date.now() + 900;
     }}
 
     function closeBook() {{
+      if (!modal.classList.contains('open')) return;
       modal.classList.remove('open');
       document.body.style.overflow = '';
+      setTimeout(() => modal.classList.remove('visible'), 850);
     }}
 
     document.querySelectorAll('.book').forEach(btn => {{
-      btn.addEventListener('click', () => openBook(btn));
+      btn.addEventListener('click', (e) => {{
+        e.stopPropagation();
+        openBook(btn);
+      }});
     }});
     modal.addEventListener('click', e => {{
+      if (Date.now() < openLockUntil) return;
       if (e.target === modal) closeBook();
     }});
-    modalClose.addEventListener('click', closeBook);
+    modalClose.addEventListener('click', (e) => {{
+      e.stopPropagation();
+      closeBook();
+    }});
     document.addEventListener('keydown', e => {{
       if (e.key === 'Escape' && modal.classList.contains('open')) closeBook();
     }});
