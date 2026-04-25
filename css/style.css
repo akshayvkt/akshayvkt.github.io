@@ -294,6 +294,17 @@ ul li {
   letter-spacing: 0.02em;
 }
 
+.books-shelf-link {
+  margin-left: 12px;
+  font-style: normal;
+  font-size: 0.9em;
+  color: #0b884e;
+  text-decoration: none;
+}
+.books-shelf-link:hover {
+  text-decoration: underline;
+}
+
 .books-list {
   display: grid;
   grid-template-columns: 1fr 1fr;

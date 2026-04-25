@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Room mockup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #f5f1e6;
+      margin: 0;
+      padding: 40px 20px;
+      font-family: 'Cormorant Garamond', serif;
+      color: #333;
+    }
+    h1 { font-weight: 500; max-width: 1100px; margin: 0 auto 8px; }
+    .note { max-width: 1100px; margin: 0 auto 24px; color: #777; font-style: italic; }
+    .room {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 100px 360px 200px 140px;
+      gap: 14px;
+      background: #efe8d5;
+      padding: 18px;
+      border: 4px solid #4a3217;
+      border-radius: 6px;
+    }
+    .block {
+      background: rgba(255,255,255,0.55);
+      border: 2px dashed #8b6a3a;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      text-align: center;
+      font-size: 1rem;
+    }
+    .block .label {
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #4a3217;
+    }
+    .block .desc {
+      font-size: 0.85rem;
+      color: #666;
+      font-style: italic;
+      margin-top: 6px;
+      max-width: 240px;
+    }
+    .window     { grid-column: 1 / 2; grid-row: 1; }
+    .clock      { grid-column: 2 / 3; grid-row: 1; }
+    .frames     { grid-column: 3 / 4; grid-row: 1; }
+
+    .bookshelf  { grid-column: 1 / 2; grid-row: 2; background: rgba(74, 50, 23, 0.18); border-color: #4a3217; }
+    .corkboard  { grid-column: 2 / 3; grid-row: 2; }
+    .tv         { grid-column: 3 / 4; grid-row: 2; }
+
+    .desk       { grid-column: 1 / 4; grid-row: 3; background: rgba(107, 74, 43, 0.18); border-color: #6b4a2b; }
+    .desk-inner { display: flex; gap: 18px; width: 100%; height: 100%; align-items: center; justify-content: center; }
+    .desk-item {
+      background: rgba(255,255,255,0.7);
+      border: 1.5px dashed #8b6a3a;
+      border-radius: 4px;
+      padding: 14px 16px;
+      flex: 1;
+      max-width: 260px;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+    .desk-item b { display: block; margin-bottom: 4px; color: #4a3217; }
+    .desk-item span { font-size: 0.82rem; color: #666; font-style: italic; }
+
+    .pegboard   { grid-column: 1 / 4; grid-row: 4; }
+  </style>
+</head>
+<body>
+  <h1>Room layout — low-fi mockup</h1>
+  <p class="note">Labeled boxes showing what goes where. No art yet — argue positions before drawing.</p>
+
+  <div class="room">
+    <div class="block window">
+      <div class="label">Window</div>
+      <div class="desc">sky color shifts with time of day (ambient)</div>
+    </div>
+
+    <div class="block clock">
+      <div class="label">Clock</div>
+      <div class="desc">your local time (ambient)</div>
+    </div>
+
+    <div class="block frames">
+      <div class="label">Wall frames</div>
+      <div class="desc">2–3 favorite framed quotes hanging like art</div>
+    </div>
+
+    <div class="block bookshelf">
+      <div class="label">Bookshelf</div>
+      <div class="desc">existing — links to /books/</div>
+    </div>
+
+    <div class="block corkboard">
+      <div class="label">Corkboard</div>
+      <div class="desc">pinned index cards = quotes (rotated, thumbtacks). Click expands a card.</div>
+    </div>
+
+    <div class="block tv">
+      <div class="label">TV / video screen</div>
+      <div class="desc">old wood-cabinet TV showing video thumbnails. Click → plays in place.</div>
+    </div>
+
+    <div class="block desk">
+      <div class="desk-inner">
+        <div class="desk-item">
+          <b>Typewriter</b>
+          <span>writing — paper sticking out shows latest post title; click for full list</span>
+        </div>
+        <div class="desk-item">
+          <b>Journal / open book</b>
+          <span>alt for writing — open notebook with flipping pages</span>
+        </div>
+        <div class="desk-item">
+          <b>Postcard rack</b>
+          <span>socials — postcards labeled "X", "GitHub", "Email"</span>
+        </div>
+        <div class="desk-item">
+          <b>Lamp</b>
+          <span>ambient — toggle dark mode?</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="block pegboard">
+      <div class="label">Pegboard / wall hooks (alt for socials)</div>
+      <div class="desc">if postcards on desk feel cluttered, move socials up here — small hanging tags</div>
+    </div>
+  </div>
+
+  <p class="note" style="margin-top: 26px;">
+    <b>Decide:</b> 1) which writing artifact (typewriter vs journal),
+    2) socials on desk vs pegboard,
+    3) ambient stuff (window/clock/lamp) — keep or drop.
+  </p>
+</body>
+</html>

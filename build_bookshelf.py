@@ -1,11 +1,11 @@
-"""Generate bookshelf.html from books.html + covers-colors.json."""
+"""Generate books/index.html (the bookshelf view) from books/list/index.html + covers-colors.json."""
 
 import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-BOOKS_HTML = (ROOT / "books.html").read_text()
+BOOKS_HTML = (ROOT / "books" / "list" / "index.html").read_text()
 COLORS = json.loads((ROOT / "covers-colors.json").read_text())
 BOOKS_PER_SHELF = 18
 
@@ -55,7 +55,7 @@ books = extract_books(BOOKS_HTML)
 spines = []
 for i, title, author in books:
     slug = slugify(title)
-    fname = f"covers/{i:02d}-{slug}.jpg"
+    fname = f"/covers/{i:02d}-{slug}.jpg"
     color_key = f"{i:02d}-{slug}"
     bg = COLORS.get(color_key, "#666666")
     fg = text_color_for(bg)
@@ -109,7 +109,7 @@ page = f"""<!DOCTYPE html>
 <head>
   <meta charset="utf-8">
   <title>Bookshelf | Akshay Chintalapati</title>
-  <link href="css/style.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <style>
@@ -391,8 +391,8 @@ page = f"""<!DOCTYPE html>
 </head>
 <body>
   <div class="bookshelf-page">
-    <a href="index.html" class="back-link">&larr; Back</a>
-    <p class="bookshelf-intro">A bookshelf of what I've read. Click any spine.</p>
+    <a href="/" class="back-link">&larr; Back</a>
+    <p class="bookshelf-intro">A bookshelf of what I've read. Click any spine. <a href="/books/list/" class="books-shelf-link">View as list &rarr;</a></p>
 
     {shelves_html}
 
@@ -481,5 +481,5 @@ page = f"""<!DOCTYPE html>
 </html>
 """
 
-(ROOT / "bookshelf.html").write_text(page)
-print(f"Wrote bookshelf.html with {len(books)} books across {len(shelves)} shelves")
+(ROOT / "books" / "index.html").write_text(page)
+print(f"Wrote books/index.html with {len(books)} books across {len(shelves)} shelves")
