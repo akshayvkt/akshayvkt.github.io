@@ -1,0 +1,265 @@
+/* The apartment's shared system: fonts, palette tokens, type, the masthead and the room views.
+   Every colour comes from the moment (sky-head.js sets --wall --desk --sky --paper --ink --muted --accent
+   on <html> before first paint); the values below are only the fallback when scripts don't run. */
+
+/* ---------- fonts (Latin subsets, self-hosted) ---------- */
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/geist-latin.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/cormorant-garamond-latin.woff2") format("woff2");
+  font-weight: 300 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/cormorant-garamond-italic-latin.woff2") format("woff2");
+  font-weight: 300 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ---------- palette ---------- */
+/* Registered as colours so they can be animated and mixed. */
+@property --wall { syntax: "<color>"; inherits: true; initial-value: #6f5a46; }
+@property --desk { syntax: "<color>"; inherits: true; initial-value: #d9cbb9; }
+@property --sky { syntax: "<color>"; inherits: true; initial-value: #eef0ee; }
+@property --paper { syntax: "<color>"; inherits: true; initial-value: #e4ddd2; }
+@property --ink { syntax: "<color>"; inherits: true; initial-value: #1f1b16; }
+@property --muted { syntax: "<color>"; inherits: true; initial-value: #736c64; }
+@property --accent { syntax: "<color>"; inherits: true; initial-value: #794d2c; }
+
+:root {
+  --serif: "Cormorant Garamond", "Cormorant", Garamond, "Times New Roman", serif;
+  --sans: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+
+  /* derived from the moment */
+  --page: var(--paper);
+  --text: var(--ink);
+  --quiet: color-mix(in oklab, var(--muted) 68%, var(--ink));
+  --faint: color-mix(in oklab, var(--muted) 62%, var(--paper));
+  --hair: color-mix(in oklab, var(--ink) 13%, transparent);
+  --hair-strong: color-mix(in oklab, var(--ink) 26%, transparent);
+  --raised: color-mix(in oklab, var(--paper) 72%, #fff);
+  --shade: rgba(42, 26, 12, 0.16);
+  --shade-deep: rgba(42, 26, 12, 0.32);
+  --media-dim: none;
+
+  --gutter: clamp(16px, 2.2vw, 32px);
+  --mh: 84px;            /* masthead height, measured by masthead.js */
+  --ease-out: cubic-bezier(0.22, 0.8, 0.24, 1);
+  --ease-in: cubic-bezier(0.55, 0, 0.75, 0.2);
+  color-scheme: light;
+}
+:root[data-scheme="dark"] {
+  --raised: color-mix(in oklab, var(--paper) 90%, var(--ink));
+  --hair: color-mix(in oklab, var(--ink) 15%, transparent);
+  --shade: rgba(0, 0, 0, 0.32);
+  --shade-deep: rgba(0, 0, 0, 0.58);
+  --media-dim: brightness(0.86) contrast(0.97);   /* white screenshots in a lamp-lit room */
+  color-scheme: dark;
+}
+
+/* ---------- page base (opt in with <body class="page">) ---------- */
+.page, .page * { box-sizing: border-box; }
+html:has(body.page) { background: var(--paper); }
+body.page {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--page);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern";
+}
+.page a { color: inherit; }
+.page img, .page video { max-width: 100%; }
+.page :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.page ::selection { background: color-mix(in oklab, var(--accent) 32%, transparent); }
+.vh {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+.serif { font-family: var(--serif); }
+
+/* A quiet text link: hairline underline that firms up on hover */
+.page .link {
+  text-decoration: none;
+  background-image: linear-gradient(var(--hair-strong), var(--hair-strong));
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  padding-bottom: 1px;
+  transition: background-size 0.2s ease, color 0.2s ease;
+}
+.page .link:hover { background-image: linear-gradient(currentColor, currentColor); }
+
+/* ---------- masthead ---------- */
+/* One header on every page, the homepage's: light type at the bottom of the first screen, over the picture,
+   on the same darkening of the photograph's lower third. Values match the homepage's style.css. */
+:root {
+  --hero-h: max(520px, 100svh);   /* the first screen; a page with a shorter picture sets its own */
+  --on-scene: #f4efe6;
+  --on-scene-soft: rgba(244, 239, 230, 0.74);
+  --on-scene-faint: rgba(244, 239, 230, 0.28);
+}
+.page .masthead {
+  position: absolute; z-index: 20; left: 0; right: 0; top: var(--hero-h);
+  transform: translateY(-100%);
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 1rem;
+  padding: 1.5rem 2rem 1.4rem;
+  padding-bottom: max(1.4rem, env(safe-area-inset-bottom));
+  font-size: 15px; line-height: 1.65;
+  color: var(--on-scene);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+.page .masthead > * { pointer-events: auto; }
+/* the homepage's .veil: the photograph darkens toward the bottom so the type reads on any moment */
+.page .masthead::before {
+  content: ""; position: absolute; z-index: -1; left: 0; right: 0; bottom: 0;
+  height: max(calc(var(--hero-h) * 0.32), calc(100% + 56px));   /* at least the whole masthead (three rows on phones) */
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(8, 6, 4, 0.55) 100%);
+  pointer-events: none;
+}
+.page .masthead .who h1,
+.page .masthead .who .name {
+  display: block;
+  width: fit-content;   /* the link (and its focus ring) is the name, not the whole column */
+  margin: 0;
+  font-size: 15px; font-weight: 500; letter-spacing: -0.005em;
+  text-decoration: none;
+  color: inherit;
+}
+.page .masthead .who p { margin: 0; color: var(--on-scene-soft); }
+.page .masthead .clock { display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+.page .masthead .now {
+  margin: 0; padding: 0; border: 0; background: none; cursor: pointer;
+  font: inherit; font-size: 13px; color: var(--on-scene-soft); text-shadow: inherit;
+  border-bottom: 1px solid var(--on-scene-faint);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.page .masthead .now:hover,
+.page .masthead .now[aria-expanded="true"] { color: var(--on-scene); border-bottom-color: rgba(244, 239, 230, 0.6); }
+.page .masthead .dial { display: flex; gap: 0.8rem; align-items: center; font-size: 12px; }
+.page .masthead .dial[hidden] { display: none; }
+.page .masthead .dial input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 220px; height: 18px; margin: 0; background: transparent; cursor: pointer;
+}
+.page .masthead .dial input[type="range"]::-webkit-slider-runnable-track { height: 1px; background: rgba(244, 239, 230, 0.5); }
+.page .masthead .dial input[type="range"]::-moz-range-track { height: 1px; background: rgba(244, 239, 230, 0.5); }
+.page .masthead .dial input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 11px; height: 11px; margin-top: -5px; border: 0; border-radius: 50%;
+  background: var(--on-scene); box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.18), 0 1px 8px rgba(0, 0, 0, 0.4);
+}
+.page .masthead .dial input[type="range"]::-moz-range-thumb {
+  width: 11px; height: 11px; border: 0; border-radius: 50%;
+  background: var(--on-scene); box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.18), 0 1px 8px rgba(0, 0, 0, 0.4);
+}
+.page .masthead .dial input[type="range"]:focus-visible { outline: none; }
+.page .masthead .dial input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5), 0 0 0 4px var(--on-scene); }
+.page .masthead .dial input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5), 0 0 0 4px var(--on-scene); }
+.page .masthead .dial button {
+  padding: 0; border: 0; background: none; color: var(--on-scene-soft); font: inherit; cursor: pointer; text-shadow: inherit;
+  text-decoration: underline; text-decoration-color: var(--on-scene-faint); text-underline-offset: 3px;
+}
+.page .masthead .dial button:hover { color: var(--on-scene); }
+/* "Back to now" is a small icon (its name is the button's aria-label): no words beside the dial */
+.page .masthead .dial #dial-reset { display: inline-flex; padding: 4px; margin: -4px; border-radius: 50%; text-decoration: none; transition: color 0.2s ease; }
+.page .masthead .dial #dial-reset svg { display: block; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.4)); }
+.page .masthead .dial #dial-reset:focus-visible { outline: 2px solid var(--on-scene); outline-offset: 1px; }
+.page .masthead nav { display: flex; gap: 1.15rem; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.page .masthead nav a { color: var(--on-scene-soft); text-decoration: none; transition: color 0.2s ease; -webkit-tap-highlight-color: transparent; }
+.page .masthead nav a:hover,
+.page .masthead nav a[aria-current="page"],
+.page .masthead .who .name:hover { color: var(--on-scene); }
+.page .masthead .icons { display: inline-flex; gap: 0.95rem; align-items: center; }
+.page .masthead a.icon { display: inline-flex; }
+.page .masthead a.icon svg { width: 1.05em; height: 1.05em; fill: currentColor; filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.4)); }
+.page .masthead :focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }
+
+/* tablets: name and links on one line, the clock under them */
+@media (min-width: 761px) and (max-width: 1080px) {
+  .page .masthead { grid-template-columns: 1fr auto; grid-template-areas: "who nav" "clock clock"; row-gap: 0.8rem; }
+  .page .masthead .who { grid-area: who; }
+  .page .masthead nav { grid-area: nav; flex-wrap: nowrap; }
+  .page .masthead .clock { grid-area: clock; align-items: flex-start; }
+}
+@media (max-width: 760px) {
+  .page .masthead { grid-template-columns: 1fr; gap: 0.6rem; padding: 1.1rem 1.1rem 1.2rem; padding-bottom: max(1.2rem, env(safe-area-inset-bottom)); }
+  .page .masthead .clock { align-items: flex-start; order: 3; }
+  .page .masthead .dial input[type="range"] { width: min(220px, 52vw); }
+  .page .masthead nav { justify-content: flex-start; gap: min(0.9rem, 3.3vw); font-size: 14px; }   /* six words on one line down to 360 px */
+}
+
+/* The first screen of a page: its view of the room, full bleed. Page overlays sit over it in light type. */
+.page .hero { position: relative; height: var(--hero-h); overflow: hidden; }
+.page .hero > .room { position: absolute; inset: 0; }
+.page .on-scene { color: var(--on-scene); text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45); }
+
+/* ---------- a view of the room ---------- */
+/* room.js fills .room with a stage of image layers cover-cropped around the view's focus. */
+.room {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--wall) 82%, var(--sky)) 0%, var(--wall) 55%, color-mix(in oklab, var(--wall) 70%, var(--desk)) 100%);
+  contain: layout paint;
+}
+.room-stage {
+  position: absolute;
+  left: 0; top: 0;
+  transform-origin: 0 0;
+}
+.room-stage > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+.room-stage > img.lqip { filter: blur(14px); transform: scale(1.03); }
+.room-stage > img.full { opacity: 0; transition: opacity var(--room-fade, 0.5s) ease; }
+.room-stage > img.full.is-on { opacity: 1; }
+
+/* ---------- page changes ---------- */
+/* Opting in to cross-document view transitions, the zoom arrival and the head turns between rooms are in
+   shared/arrive.js (loaded in every page's <head>). Here: the clock moving on to the next rendered moment while
+   you read is a slow dissolve (masthead.js). */
+:root.moment-change::view-transition-old(root),
+:root.moment-change::view-transition-new(root),
+:root.moment-change::view-transition-group(masthead) { animation-duration: 1.4s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .room-stage > img.full { transition: none; }
+}
+
+/* Without scripts there is no room photograph: the masthead stays at the top, on the night's dark wall. */
+html:not(.js) .page .masthead { position: relative; top: auto; transform: none; background: #2a1f15; }
+html:not(.js) .page .masthead::before { display: none; }

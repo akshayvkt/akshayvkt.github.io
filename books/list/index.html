@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<script type="importmap">{"imports":{"/app.js":"/app.js?v=72396308c3","/books/page.js":"/books/page.js?v=88a2f77b18","/format.js":"/format.js?v=50384e37ad","/js/boats.js":"/js/boats.js?v=7b9d601da5","/js/live.js":"/js/live.js?v=196871ae70","/js/roomfx.js":"/js/roomfx.js?v=e756ad296f","/js/shaders.js":"/js/shaders.js?v=4e0136e559","/js/traffic.js":"/js/traffic.js?v=5f430920a4","/projects/assets/index-CnU865DL.js":"/projects/assets/index-CnU865DL.js?v=ed57984fa4","/projects/assets/index-yZTIuYmV.js":"/projects/assets/index-yZTIuYmV.js?v=3ceacf9c06","/projects/screen-data.js":"/projects/screen-data.js?v=bacfffe348","/projects/screen.js":"/projects/screen.js?v=b4e8770797","/quotes/page.js":"/quotes/page.js?v=897fbce978","/shared/arrive.js":"/shared/arrive.js?v=0091c48869","/shared/city/city.js":"/shared/city/city.js?v=aafd71733c","/shared/city/clock.js":"/shared/city/clock.js?v=11eee1d011","/shared/city/events/aircraft.js":"/shared/city/events/aircraft.js?v=cbbb01a8c1","/shared/city/events/beacons.js":"/shared/city/events/beacons.js?v=bd383fbadb","/shared/city/events/bridge.js":"/shared/city/events/bridge.js?v=e372a6e72c","/shared/city/events/ferries.js":"/shared/city/events/ferries.js?v=3814c1ba76","/shared/city/events/gulls.js":"/shared/city/events/gulls.js?v=f3f5573133","/shared/city/events/phase2.js":"/shared/city/events/phase2.js?v=c9e11a649b","/shared/city/events/sails.js":"/shared/city/events/sails.js?v=e1afb86c34","/shared/city/events/ships.js":"/shared/city/events/ships.js?v=3dec6fc64a","/shared/city/events/sound.js":"/shared/city/events/sound.js?v=9d934b89d4","/shared/city/events/tours.js":"/shared/city/events/tours.js?v=63cfc133bc","/shared/city/events/windows.js":"/shared/city/events/windows.js?v=3a5179b41c","/shared/city/geo.js":"/shared/city/geo.js?v=0fbea9e12f","/shared/city/hash.js":"/shared/city/hash.js?v=53291f6082","/shared/city/lighting.js":"/shared/city/lighting.js?v=a6d7e2ee45","/shared/city/sprites.js":"/shared/city/sprites.js?v=fed504bf80","/shared/city/tables.js":"/shared/city/tables.js?v=b986efc19a","/shared/edgefit.js":"/shared/edgefit.js?v=b0913bb1af","/shared/frames-lite.js":"/shared/frames-lite.js?v=602a1e5346","/shared/framing.js":"/shared/framing.js?v=aec5411693","/shared/gestures.js":"/shared/gestures.js?v=f8fe7b3110","/shared/gl/beams.js":"/shared/gl/beams.js?v=6c263a4343","/shared/gl/colour.js":"/shared/gl/colour.js?v=90160e695f","/shared/gl/context.js":"/shared/gl/context.js?v=41434de7f7","/shared/gl/engine.js":"/shared/gl/engine.js?v=9b2402567d","/shared/gl/glass.js":"/shared/gl/glass.js?v=8164c9cf9a","/shared/gl/hitex.js":"/shared/gl/hitex.js?v=b3377372f2","/shared/gl/interact.js":"/shared/gl/interact.js?v=43b0668e3e","/shared/gl/loader.js":"/shared/gl/loader.js?v=b4254b23b4","/shared/gl/loop.js":"/shared/gl/loop.js?v=d52a5476be","/shared/gl/material.js":"/shared/gl/material.js?v=3e0ba4f1b8","/shared/gl/mirror.js":"/shared/gl/mirror.js?v=c53f23da48","/shared/gl/outside.glsl.js":"/shared/gl/outside.glsl.js?v=3791115d23","/shared/gl/probes.js":"/shared/gl/probes.js?v=58c5ea4b02","/shared/gl/room.js":"/shared/gl/room.js?v=e133bbbda4","/shared/gl/sheen.js":"/shared/gl/sheen.js?v=da5ce78979","/shared/gl/steam.js":"/shared/gl/steam.js?v=7d9e954ffc","/shared/laptop.js":"/shared/laptop.js?v=d747ded182","/shared/links.js":"/shared/links.js?v=e050c6065a","/shared/masthead.js":"/shared/masthead.js?v=f0de8f814d","/shared/notebook.js":"/shared/notebook.js?v=c126141c6e","/shared/occlude.js":"/shared/occlude.js?v=578081d816","/shared/outside-events.js":"/shared/outside-events.js?v=1d1b00f661","/shared/outside-stats-worker.js":"/shared/outside-stats-worker.js?v=4bbac98be2","/shared/outside-stats.js":"/shared/outside-stats.js?v=5f7420da68","/shared/outside.js":"/shared/outside.js?v=83339dc1e2","/shared/overlays.js":"/shared/overlays.js?v=872a728ce8","/shared/pages.js":"/shared/pages.js?v=8b1227fc75","/shared/pano.js":"/shared/pano.js?v=72f1cf3988","/shared/phone.js":"/shared/phone.js?v=2f4788b193","/shared/picking.js":"/shared/picking.js?v=23cd2e32d7","/shared/print.js":"/shared/print.js?v=dc71581f92","/shared/reader.js":"/shared/reader.js?v=6b17834181","/shared/rig.js":"/shared/rig.js?v=f52db7751e","/shared/room.js":"/shared/room.js?v=391435d3bf","/shared/router.js":"/shared/router.js?v=37e6499ad7","/shared/sky-head.js":"/shared/sky-head.js?v=65e367f2aa","/shared/sky.js":"/shared/sky.js?v=411edbfcd2","/shared/spots.js":"/shared/spots.js?v=2c3aee999a","/shared/surface.js":"/shared/surface.js?v=6afd8d1fce","/shared/toys.js":"/shared/toys.js?v=c9e0cb950d","/shared/transition.js":"/shared/transition.js?v=df1fe11116"}}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-61SVW4TL71"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-61SVW4TL71');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Books | Akshay Chintalapati</title>
+<meta name="description" content="Books I've read." />
+<script>document.documentElement.classList.add("js")</script>
+<script src="/shared/frames-lite.js?v=602a1e5346"></script>
+<script src="/shared/sky-head.js?v=65e367f2aa"></script>
+<script src="/shared/arrive.js?v=0091c48869"></script>
+<link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/cormorant-garamond-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="stylesheet" href="/shared/world.css?v=cf09402b33" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<style>
+  /* a band of the shelf at the top, so the masthead sits over the room here too */
+  :root { --hero-h: clamp(300px, 44svh, 440px); }
+  html:not(.js) .hero { display: none; }
+  .list-page {
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: clamp(40px, 9vh, 104px) var(--gutter) clamp(72px, 12vh, 140px);
+  }
+  .intro { margin: 0 0 clamp(40px, 7vh, 72px); line-height: 1.5; }
+  .intro .lede { font-family: var(--serif); font-style: italic; font-size: 24px; }
+  .intro a { margin-left: 0.5em; font-size: 13px; color: var(--quiet); white-space: nowrap; }
+  .intro a:hover { color: var(--text); }
+
+  .book-list { list-style: none; margin: 0; padding: 0; }
+  @media (min-width: 1000px) { .book-list.read { columns: 2; column-gap: clamp(48px, 6vw, 96px); } }
+  .book-list li {
+    display: grid;
+    grid-template-columns: 2.4rem minmax(0, 1fr);
+    align-items: baseline;
+    break-inside: avoid;
+    border-top: 1px solid var(--hair);
+  }
+  .book-list .n { font-size: 11px; letter-spacing: 0.04em; color: var(--faint); font-variant-numeric: tabular-nums; }
+  .book-list .row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+    padding: 0.62rem 0 0.58rem;
+    text-decoration: none;
+  }
+  .book-list .t { font-family: var(--serif); font-size: 21px; line-height: 1.25; }
+  .book-list .a { flex: none; max-width: 48%; text-align: right; font-size: 13px; color: var(--quiet); }
+  .book-list .row:hover .t { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; text-decoration-color: var(--hair-strong); }
+  .section {
+    margin: clamp(48px, 8vh, 80px) 0 14px;
+    font-size: 12px; font-weight: 400; letter-spacing: 0.03em;
+    color: var(--accent);
+  }
+  @media (min-width: 1000px) { .book-list.now { width: calc(50% - clamp(48px, 6vw, 96px) / 2); } }
+  @media (max-width: 560px) {
+    .book-list li { grid-template-columns: 2rem minmax(0, 1fr); }
+    .book-list .row { flex-direction: column; gap: 2px; }
+    .book-list .a { max-width: none; text-align: left; }
+    .book-list .t { font-size: 20px; }
+  }
+</style>
+</head>
+<body class="page">
+<header class="masthead" id="masthead">
+  <div class="who">
+    <a class="name" href="/">Akshay Chintalapati</a>
+    <p>Always learning</p>
+  </div>
+  <div class="clock">
+    <button class="now" id="now" type="button" aria-expanded="false" aria-controls="dial">The sky over San Francisco</button>
+    <div class="dial" id="dial" hidden>
+      <input id="dial-range" type="range" min="0" max="1439" step="5" aria-label="Time of day in San Francisco" />
+      <button id="dial-reset" type="button" aria-label="Back to now"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.1 9.2a5 5 0 1 0 .9-4.6" /><path d="M3.2 2.4v2.9h2.9" /></svg></button>
+    </div>
+  </div>
+  <nav aria-label="Primary">
+    <a href="/projects/">Projects</a>
+        <a href="/writing/">Writing</a>
+    <a href="/books/" aria-current="page">Books</a>
+    <a href="/quotes.html">Quotes</a>
+    <a href="/#about">About</a>
+    <a href="/#social">Social</a>
+  </nav>
+</header>
+<div class="hero"><div class="room" id="list-room" aria-hidden="true"></div></div>
+<main class="list-page" id="main">
+  <h1 class="vh">Books</h1>
+  <p class="intro"><span class="lede">Books I've read.</span> <a class="link" href="/books/">View as bookshelf&nbsp;&rarr;</a></p>
+  <ol class="book-list read" role="list">
+      <li><span class="n" aria-hidden="true">01</span><a class="row" href="/books/#01-man-s-search-for-meaning"><span class="t">Man's Search for Meaning</span> <span class="a">Viktor Frankl</span></a></li>
+      <li><span class="n" aria-hidden="true">02</span><a class="row" href="/books/#02-the-three-body-problem"><span class="t">The Three-Body Problem</span> <span class="a">Liu Cixin</span></a></li>
+      <li><span class="n" aria-hidden="true">03</span><a class="row" href="/books/#03-hooked"><span class="t">Hooked</span> <span class="a">Nir Eyal</span></a></li>
+      <li><span class="n" aria-hidden="true">04</span><a class="row" href="/books/#04-true-names"><span class="t">True Names</span> <span class="a">Vernor Vinge</span></a></li>
+      <li><span class="n" aria-hidden="true">05</span><a class="row" href="/books/#05-liftoff"><span class="t">Liftoff</span> <span class="a">Eric Berger</span></a></li>
+      <li><span class="n" aria-hidden="true">06</span><a class="row" href="/books/#06-flow"><span class="t">Flow</span> <span class="a">Mihaly Csikszentmihalyi</span></a></li>
+      <li><span class="n" aria-hidden="true">07</span><a class="row" href="/books/#07-the-founders"><span class="t">The Founders</span> <span class="a">Jimmy Soni</span></a></li>
+      <li><span class="n" aria-hidden="true">08</span><a class="row" href="/books/#08-nuclear-war"><span class="t">Nuclear War</span> <span class="a">Annie Jacobsen</span></a></li>
+      <li><span class="n" aria-hidden="true">09</span><a class="row" href="/books/#09-siddhartha"><span class="t">Siddhartha</span> <span class="a">Hermann Hesse</span></a></li>
+      <li><span class="n" aria-hidden="true">10</span><a class="row" href="/books/#10-the-thinking-machine"><span class="t">The Thinking Machine</span> <span class="a">Stephen Witt</span></a></li>
+      <li><span class="n" aria-hidden="true">11</span><a class="row" href="/books/#11-zero-to-one"><span class="t">Zero to One</span> <span class="a">Peter Thiel</span></a></li>
+      <li><span class="n" aria-hidden="true">12</span><a class="row" href="/books/#12-consider-phlebas"><span class="t">Consider Phlebas</span> <span class="a">Iain M. Banks</span></a></li>
+      <li><span class="n" aria-hidden="true">13</span><a class="row" href="/books/#13-atomic-habits"><span class="t">Atomic Habits</span> <span class="a">James Clear</span></a></li>
+      <li><span class="n" aria-hidden="true">14</span><a class="row" href="/books/#14-the-dream-machine"><span class="t">The Dream Machine</span> <span class="a">M. Mitchell Waldrop</span></a></li>
+      <li><span class="n" aria-hidden="true">15</span><a class="row" href="/books/#15-when-breath-becomes-air"><span class="t">When Breath Becomes Air</span> <span class="a">Paul Kalanithi</span></a></li>
+      <li><span class="n" aria-hidden="true">16</span><a class="row" href="/books/#16-superintelligence"><span class="t">Superintelligence</span> <span class="a">Nick Bostrom</span></a></li>
+      <li><span class="n" aria-hidden="true">17</span><a class="row" href="/books/#17-elon-musk"><span class="t">Elon Musk</span> <span class="a">Ashlee Vance</span></a></li>
+      <li><span class="n" aria-hidden="true">18</span><a class="row" href="/books/#18-foundation"><span class="t">Foundation</span> <span class="a">Isaac Asimov</span></a></li>
+      <li><span class="n" aria-hidden="true">19</span><a class="row" href="/books/#19-don-t-make-me-think"><span class="t">Don't Make Me Think</span> <span class="a">Steve Krug</span></a></li>
+      <li><span class="n" aria-hidden="true">20</span><a class="row" href="/books/#20-the-precipice"><span class="t">The Precipice</span> <span class="a">Toby Ord</span></a></li>
+      <li><span class="n" aria-hidden="true">21</span><a class="row" href="/books/#21-becoming-steve-jobs"><span class="t">Becoming Steve Jobs</span> <span class="a">Brent Schlender & Rick Tetzeli</span></a></li>
+      <li><span class="n" aria-hidden="true">22</span><a class="row" href="/books/#22-a-deepness-in-the-sky"><span class="t">A Deepness in the Sky</span> <span class="a">Vernor Vinge</span></a></li>
+      <li><span class="n" aria-hidden="true">23</span><a class="row" href="/books/#23-the-mom-test"><span class="t">The Mom Test</span> <span class="a">Rob Fitzpatrick</span></a></li>
+      <li><span class="n" aria-hidden="true">24</span><a class="row" href="/books/#24-the-dark-forest"><span class="t">The Dark Forest</span> <span class="a">Liu Cixin</span></a></li>
+      <li><span class="n" aria-hidden="true">25</span><a class="row" href="/books/#25-excellent-advice-for-living"><span class="t">Excellent Advice for Living</span> <span class="a">Kevin Kelly</span></a></li>
+      <li><span class="n" aria-hidden="true">26</span><a class="row" href="/books/#26-permutation-city"><span class="t">Permutation City</span> <span class="a">Greg Egan</span></a></li>
+      <li><span class="n" aria-hidden="true">27</span><a class="row" href="/books/#27-the-hard-thing-about-hard-things"><span class="t">The Hard Thing About Hard Things</span> <span class="a">Ben Horowitz</span></a></li>
+      <li><span class="n" aria-hidden="true">28</span><a class="row" href="/books/#28-human-compatible"><span class="t">Human Compatible</span> <span class="a">Stuart Russell</span></a></li>
+      <li><span class="n" aria-hidden="true">29</span><a class="row" href="/books/#29-reentry"><span class="t">Reentry</span> <span class="a">Eric Berger</span></a></li>
+      <li><span class="n" aria-hidden="true">30</span><a class="row" href="/books/#30-bhagavad-gita"><span class="t">Bhagavad Gita</span> <span class="a">Eknath Easwaran</span></a></li>
+      <li><span class="n" aria-hidden="true">31</span><a class="row" href="/books/#31-the-player-of-games"><span class="t">The Player of Games</span> <span class="a">Iain M. Banks</span></a></li>
+      <li><span class="n" aria-hidden="true">32</span><a class="row" href="/books/#32-how-the-internet-happened"><span class="t">How the Internet Happened</span> <span class="a">Brian McCullough</span></a></li>
+      <li><span class="n" aria-hidden="true">33</span><a class="row" href="/books/#33-outliers"><span class="t">Outliers</span> <span class="a">Malcolm Gladwell</span></a></li>
+      <li><span class="n" aria-hidden="true">34</span><a class="row" href="/books/#34-the-maniac"><span class="t">The MANIAC</span> <span class="a">Benjamin Labatut</span></a></li>
+      <li><span class="n" aria-hidden="true">35</span><a class="row" href="/books/#35-founders-at-work"><span class="t">Founders at Work</span> <span class="a">Jessica Livingston</span></a></li>
+      <li><span class="n" aria-hidden="true">36</span><a class="row" href="/books/#36-life-3-0"><span class="t">Life 3.0</span> <span class="a">Max Tegmark</span></a></li>
+      <li><span class="n" aria-hidden="true">37</span><a class="row" href="/books/#37-benjamin-franklin"><span class="t">Benjamin Franklin</span> <span class="a">Walter Isaacson</span></a></li>
+      <li><span class="n" aria-hidden="true">38</span><a class="row" href="/books/#38-use-of-weapons"><span class="t">Use of Weapons</span> <span class="a">Iain M. Banks</span></a></li>
+      <li><span class="n" aria-hidden="true">39</span><a class="row" href="/books/#39-the-alignment-problem"><span class="t">The Alignment Problem</span> <span class="a">Brian Christian</span></a></li>
+      <li><span class="n" aria-hidden="true">40</span><a class="row" href="/books/#40-profiles-of-the-future"><span class="t">Profiles of the Future</span> <span class="a">Arthur C. Clarke</span></a></li>
+      <li><span class="n" aria-hidden="true">41</span><a class="row" href="/books/#41-elon-musk"><span class="t">Elon Musk</span> <span class="a">Walter Isaacson</span></a></li>
+      <li><span class="n" aria-hidden="true">42</span><a class="row" href="/books/#42-why-greatness-cannot-be-planned"><span class="t">Why Greatness Cannot Be Planned</span> <span class="a">Kenneth Stanley & Joel Lehman</span></a></li>
+      <li><span class="n" aria-hidden="true">43</span><a class="row" href="/books/#43-death-s-end"><span class="t">Death's End</span> <span class="a">Liu Cixin</span></a></li>
+      <li><span class="n" aria-hidden="true">44</span><a class="row" href="/books/#44-persuasive-technology"><span class="t">Persuasive Technology</span> <span class="a">BJ Fogg</span></a></li>
+      <li><span class="n" aria-hidden="true">45</span><a class="row" href="/books/#45-the-man-who-remade-india"><span class="t">The Man Who Remade India</span> <span class="a">Vinay Sitapati</span></a></li>
+      <li><span class="n" aria-hidden="true">46</span><a class="row" href="/books/#46-there-is-no-antimemetics-division"><span class="t">There Is No Antimemetics Division</span> <span class="a">qntm</span></a></li>
+      <li><span class="n" aria-hidden="true">47</span><a class="row" href="/books/#47-peak"><span class="t">Peak</span> <span class="a">Anders Ericsson</span></a></li>
+      <li><span class="n" aria-hidden="true">48</span><a class="row" href="/books/#48-this-is-water"><span class="t">This Is Water</span> <span class="a">David Foster Wallace</span></a></li>
+      <li><span class="n" aria-hidden="true">49</span><a class="row" href="/books/#49-the-innovator-s-dilemma"><span class="t">The Innovator's Dilemma</span> <span class="a">Clayton Christensen</span></a></li>
+      <li><span class="n" aria-hidden="true">50</span><a class="row" href="/books/#50-boom-bubbles-and-the-end-of-stagnation"><span class="t">Boom: Bubbles and the End of Stagnation</span> <span class="a">Byrne Hobart & Tobias Huber</span></a></li>
+      <li><span class="n" aria-hidden="true">51</span><a class="row" href="/books/#51-what-do-you-care-what-other-people-think"><span class="t">"What Do You Care What Other People Think?"</span> <span class="a">Richard Feynman</span></a></li>
+      <li><span class="n" aria-hidden="true">52</span><a class="row" href="/books/#52-shoe-dog"><span class="t">Shoe Dog</span> <span class="a">Phil Knight</span></a></li>
+  </ol>
+  <h2 class="section">Currently reading</h2>
+  <ul class="book-list now" role="list">
+      <li><span class="n" aria-hidden="true">&middot;</span><a class="row" href="/books/#53-the-selfish-gene"><span class="t">The Selfish Gene</span> <span class="a">Richard Dawkins</span></a></li>
+      <li><span class="n" aria-hidden="true">&middot;</span><a class="row" href="/books/#54-poor-charlie-s-almanack"><span class="t">Poor Charlie's Almanack</span> <span class="a">Charlie Munger</span></a></li>
+  </ul>
+</main>
+<script type="module">
+  import { initMasthead } from "/shared/masthead.js";
+  import { mountRoom, bbox } from "/shared/room.js";
+  import { arrive } from "/shared/transition.js";
+  import { mastheadHeight } from "/shared/pages.js";
+  initMasthead();
+  // the shelf, as from the Books page, framed on its books above the masthead
+  const room = mountRoom(document.getElementById("list-room"), "books", {
+    keep: (v) => { const all = Object.entries(v.hotspots || {}).filter(([k]) => k.startsWith("book:")).flatMap(([, p]) => p); return all.length ? bbox(all) : null; },
+    keepMargin: 0.02,
+    reserve: () => ({ bottom: mastheadHeight() }),
+  });
+  arrive({ ready: room.ready });
+</script>
+</body>
+</html>

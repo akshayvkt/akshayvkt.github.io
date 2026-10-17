@@ -1,0 +1,189 @@
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/geist-latin.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --wall --desk --sky --paper --ink --muted --accent and data-scheme come from the moment
+   (shared/sky-head.js before first paint, then applyPalette). These are only fallbacks. */
+:root {
+  --wall: #4a331e; --desk: #715134; --sky: #24222b;
+  --paper: #f3eee6; --ink: #1f1b16; --muted: #736c64; --accent: #794d2c;
+  --on-scene: #f4efe6;
+  --on-scene-soft: rgba(244, 239, 230, 0.74);
+  --on-scene-faint: rgba(244, 239, 230, 0.28);
+  --hair: color-mix(in srgb, var(--ink) 14%, transparent);
+  color-scheme: light;
+}
+:root[data-scheme="dark"] { color-scheme: dark; }
+
+@view-transition { navigation: auto; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--paper); }
+body {
+  font-family: "Geist", -apple-system, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  color: var(--ink);
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }
+
+/* ---------- the scene ---------- */
+.scene {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 520px;
+  overflow: hidden;
+  /* first paint, before any image: the moment's sky over its desk */
+  background: linear-gradient(180deg, var(--sky) 0%, var(--sky) 40%, var(--wall) 72%, var(--desk) 100%);
+}
+.stage { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }   /* app.js sizes it exactly */
+/* the blurred preview sits over the photographs until they are both ready, then dissolves into them.
+   Once the stage has the room's own shape, cover is an exact fit. */
+.lqip {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: var(--lqip, none);
+  background-size: cover;
+  background-position: var(--lqip-pos, 50% 50%);
+  filter: blur(22px) saturate(1.05);
+  transform: scale(1.08);
+  transition: opacity 0.7s ease;
+}
+.layer { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+.layer.ext, #halo { will-change: transform; }
+.layer.glass { mix-blend-mode: screen; will-change: transform; }
+.layer.room { will-change: transform; }
+.layer.halo { mix-blend-mode: screen; }
+/* halation is spilled light, not colour: toward warm white, so the mullions glow rather than tint */
+.halo .pic { filter: saturate(0.4); }
+
+.pic {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: block; opacity: 0;
+  user-select: none; -webkit-user-select: none; -webkit-user-drag: none;
+}
+.ext .pic, .glass .pic, .halo .pic { transition: opacity 0.9s ease; }
+.room .pic { transition: none; }
+
+/* the living view: a WebGL canvas over the first-paint images, then in place of them */
+.ext canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.6s ease; }
+.ext.live-on canvas { opacity: 1; }
+.ext.live-settled .pic { visibility: hidden; }
+.room canvas { position: absolute; display: block; pointer-events: none; }
+
+.hotspots { position: absolute; left: 0; top: 0; width: 100%; height: 100%; will-change: transform; }
+.hotspots .hit { fill: transparent; cursor: pointer; outline: none; }
+/* no outline or tint over the objects (Akshay, 2026-10-15): keyboard focus shows the object's name in the tip */
+
+.veil {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 68%, rgba(8, 6, 4, 0.55) 100%);
+}
+
+.masthead {
+  position: absolute; z-index: 3; left: 0; right: 0; bottom: 0;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 1rem;
+  padding: 1.5rem 2rem 1.4rem;
+  padding-bottom: max(1.4rem, env(safe-area-inset-bottom));
+  color: var(--on-scene);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+.masthead > * { pointer-events: auto; }
+.who h1 { margin: 0; font-size: 15px; font-weight: 500; letter-spacing: -0.005em; }
+.who p { margin: 0; color: var(--on-scene-soft); }
+.clock { display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+.now {
+  margin: 0; padding: 0; border: 0; background: none; cursor: pointer;
+  font: inherit; font-size: 13px; color: var(--on-scene-soft); text-shadow: inherit;
+  border-bottom: 1px solid var(--on-scene-faint);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.now:hover, .now[aria-expanded="true"] { color: var(--on-scene); border-bottom-color: rgba(244, 239, 230, 0.6); }
+.dial { display: flex; gap: 0.8rem; align-items: center; font-size: 12px; }
+.dial[hidden] { display: none; }
+.dial input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 220px; height: 18px; margin: 0; background: transparent; cursor: pointer;
+}
+.dial input[type="range"]::-webkit-slider-runnable-track { height: 1px; background: rgba(244, 239, 230, 0.5); }
+.dial input[type="range"]::-moz-range-track { height: 1px; background: rgba(244, 239, 230, 0.5); }
+.dial input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 11px; height: 11px; margin-top: -5px; border: 0; border-radius: 50%;
+  background: var(--on-scene); box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.18), 0 1px 8px rgba(0, 0, 0, 0.4);
+}
+.dial input[type="range"]::-moz-range-thumb {
+  width: 11px; height: 11px; border: 0; border-radius: 50%;
+  background: var(--on-scene); box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.18), 0 1px 8px rgba(0, 0, 0, 0.4);
+}
+.dial input[type="range"]:focus-visible { outline: none; }
+.dial input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5), 0 0 0 4px var(--on-scene); }
+.dial input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5), 0 0 0 4px var(--on-scene); }
+.dial button {
+  padding: 0; border: 0; background: none; color: var(--on-scene-soft); font: inherit; cursor: pointer;
+  text-decoration: underline; text-decoration-color: var(--on-scene-faint); text-underline-offset: 3px;
+}
+.dial button:hover { color: var(--on-scene); }
+/* "Back to now" is a small icon (its name is the button's aria-label): no words beside the dial */
+.dial #dial-reset { display: inline-flex; padding: 4px; margin: -4px; border-radius: 50%; text-decoration: none; transition: color 0.2s ease; }
+.dial #dial-reset svg { display: block; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.4)); }
+.dial #dial-reset:focus-visible { outline: 2px solid var(--on-scene); outline-offset: 1px; }
+nav { display: flex; gap: 1.15rem; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+nav a { color: var(--on-scene-soft); text-decoration: none; transition: color 0.2s ease; -webkit-tap-highlight-color: transparent; }
+nav a:hover { color: var(--on-scene); }
+.icons { display: inline-flex; gap: 0.95rem; align-items: center; }
+a.icon { display: inline-flex; }
+a.icon svg { width: 1.05em; height: 1.05em; fill: currentColor; filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.4)); }
+
+.tip {
+  position: fixed; z-index: 5; left: 0; top: 0; pointer-events: none;
+  padding: 0.32rem 0.7rem; border-radius: 999px;
+  background: rgba(20, 18, 16, 0.66); color: #f4f1ea;
+  font-size: 13px; line-height: 1.4; white-space: nowrap;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transform: translate(14px, 14px);
+}
+.tip.at-focus { transform: translate(-50%, -50%); }
+
+/* ---------- below the window ---------- */
+.about { background: var(--paper); color: var(--ink); }
+.about .col { max-width: 32rem; margin: 0 auto; padding: 5.5rem 1.5rem 6rem; }
+.about p { margin: 0 0 1em; }
+.about a { text-decoration: none; border-bottom: 1px solid var(--hair); transition: border-color 0.2s ease; }
+.about a:hover { border-bottom-color: var(--ink); }
+.links { list-style: none; margin: 3rem 0 0; padding: 0; }
+.links li { padding: 0.55rem 0; border-top: 1px solid var(--hair); }
+.links li:last-child { border-bottom: 1px solid var(--hair); }
+.links a { border: 0; font-weight: 500; }
+.credit { margin-top: 3rem !important; font-size: 13px; color: var(--muted); }
+
+/* tablets: name and links on one line, the clock under them */
+@media (min-width: 761px) and (max-width: 1080px) {
+  .masthead { grid-template-columns: 1fr auto; grid-template-areas: "who nav" "clock clock"; row-gap: 0.8rem; }
+  .who { grid-area: who; }
+  nav { grid-area: nav; flex-wrap: nowrap; }
+  .clock { grid-area: clock; align-items: flex-start; }
+}
+@media (max-width: 760px) {
+  .masthead { grid-template-columns: 1fr; gap: 0.6rem; padding: 1.1rem 1.1rem 1.2rem; padding-bottom: max(1.2rem, env(safe-area-inset-bottom)); }
+  .clock { align-items: flex-start; order: 3; }
+  .dial input { width: min(220px, 52vw); }
+  nav { justify-content: flex-start; gap: min(0.9rem, 3.3vw); font-size: 14px; }   /* six words on one line down to 360 px */
+}
+@media (prefers-reduced-motion: reduce) {
+  .lqip, .pic, .ext canvas { transition: none !important; }
+  @view-transition { navigation: none; }
+}
+
+/* The menu's About and Social blocks are read by the router and the phone, never shown in the page's flow: `nav` and
+   `.about` set a display that beat the hidden attribute (a row of icons and a strip below the room, 17 Oct). Without
+   scripts, /#about and /#social still show them over the photograph (:target, index.html's noscript styles). */
+#about[hidden]:not(:target), #social[hidden]:not(:target), .sfw-js #about[hidden], .sfw-js #social[hidden] { display: none !important; }
