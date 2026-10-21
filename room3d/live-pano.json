@@ -1,0 +1,1305 @@
+{
+ "version": 1,
+ "kind": "sfw-panorama",
+ "look": "crisp",
+ "source": "R2 full set, crisp look: city 64 px/deg, sky 32 (scripts/pano_production.py)",
+ "projection": "equirectangular: column = yaw (deg right of the room axis), row = elevation (deg), row 0 at the top",
+ "axis_bearing_deg": 291.6564,
+ "eye": {
+  "room_engine": [
+   0.0,
+   1.17,
+   1.05
+  ],
+  "asl_m": 112.64,
+  "world_m": [
+   0.0,
+   0.0,
+   112.636
+  ],
+  "note": "the desk eye, which is the photo camera's eye: every pass (bands, clouds, aux) renders from this one point. room_engine is it in the room's engine coordinates (x right, y up, -z out of the window; room.py CAM: 1.17 m above the room floor, 1.05 m back from the window). world_m is it in build.py's world (x east, y north, z up from the water; build.py places the room so its camera lands on (0, 0, ground + --eye)), so asl_m (= world_m z) is the eye's height above the water and the room floor is at asl_m - 1.17. (The fake panorama's 113.81 added the 1.17 a second time.)"
+ },
+ "yaw": [
+  -56.0,
+  56.0
+ ],
+ "columns": 7,
+ "column_deg": 16.0,
+ "gutter": 2,
+ "bands": {
+  "city": {
+   "el": [
+    -22.0,
+    6.0
+   ],
+   "levels": {
+    "L0": 64,
+    "L1": 32,
+    "L2": 16
+   }
+  },
+  "sky": {
+   "el": [
+    6.0,
+    56.0
+   ],
+   "levels": {
+    "L1": 32,
+    "L2": 16
+   }
+  }
+ },
+ "tiles": "{moment}/{band}-{level}-{col}.avif (L0, L1); {moment}/{band}-L2.avif (the whole band)",
+ "tile_layout": "column c covers yaw [-56 + 16c, -40 + 16c]; each tile carries a 2 px gutter on all four sides (the neighbouring panorama pixels at that level), so a tile is (16 ppd + 4) x (band ppd + 4)",
+ "aux": {
+  "mask": "r2pano/aux/mask.png",
+  "depth": "r2pano/aux/depth.png",
+  "ppd": 20,
+  "band": "city",
+  "gutter": 2,
+  "mask_channels": "R sky, G water, B fog opacity (at the moment's full fog; scaled by the moment's fog)",
+  "depth_channels": "R the far scene's soft depth (the near layer taken out; grown 0.1 deg, smoothed) for the far layer's parallax, G sharp depth of the whole panorama for occlusion, B the near layer's depth grown out past its outline by layers.radius_deg (255 = no near layer within reach)",
+  "depth_encoding": "log(d / 10 m) / log(6000): 0 = 10 m, 1 = 60 km or sky (build.py's aux pass)"
+ },
+ "clouds": {
+  "ppd": 16,
+  "yaw": [
+   -76.0,
+   76.0
+  ],
+  "el": [
+   -3.0,
+   45.0
+  ],
+  "gutter": 2,
+  "format": "RGBA, straight alpha, sRGB, composited over the base where the mask says sky"
+ },
+ "lights": {
+  "ppd": 32,
+  "band": "city",
+  "channels": "R windows, G street lamps, B floodlights: brightness (display units) added as brightness x tint; the base is all off",
+  "cells": "window cell = floor((top - el) * 28) * 65536 + floor((yaw + 56) * 28)"
+ },
+ "far_el": [
+  -22.0,
+  6.0
+ ],
+ "layers": {
+  "far": {
+   "el": [
+    -22.0,
+    6.0
+   ],
+   "levels": {
+    "L1": 32,
+    "L2": 16
+   },
+   "tiles": "{moment}/far-{level}-{col}.avif (L1); {moment}/far-L2.avif (the whole far band)",
+   "format": "RGBA: RGB the panorama with the near layer taken out (what lies behind it), A the near layer's coverage in the panorama (the near layer itself is the panorama's own pixels there)",
+   "tile_layout": "as the city band's tiles, over the far band's elevations"
+  },
+  "near": {
+   "max_m": 350.0,
+   "radius_deg": 1.5,
+   "ratio": 1.5
+  },
+  "near2": {
+   "el": [
+    -28.0,
+    -3.0
+   ],
+   "levels": {
+    "L0": 88,
+    "L1": 44,
+    "L2": 22
+   },
+   "back": {
+    "levels": {
+     "L1": 44,
+     "L2": 22
+    },
+    "alpha": "coverage"
+   },
+   "columns": 7,
+   "column_deg": 16.0,
+   "gutter": 2,
+   "premultiplied": true,
+   "depth": {
+    "file": "aux/near-depth.png",
+    "ppd": 44,
+    "yaw": [
+     -56.25,
+     56.25
+    ],
+    "el": [
+     -28.25,
+     -2.75
+    ],
+    "size": [
+     4950,
+     1122
+    ],
+    "depth_m": [
+     2.0,
+     2000.0
+    ],
+    "clip_m": 350.0,
+    "encoding": "q16 = ln(d / d0) / ln(d1 / d0) * 65535; R,G = front (hi, lo), B,A = back; 65535 = none",
+    "tiles": "aux/near-depth-L1-{col}.png",
+    "tiles_ppd": 44,
+    "tiles_encoding": "RGB8: R,G = the front's q16 (hi, lo); B = the back's q16 >> 8; none = 65535 / 255"
+   },
+   "extra": {
+    "tiles": "nearx-L1-{col}.avif",
+    "ppd": 44,
+    "dial_default": 0.0,
+    "add": "RGB over the near layer",
+    "moments": [
+     "blue",
+     "dawn",
+     "dusk",
+     "night",
+     "predawn"
+    ],
+    "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
+   },
+   "dir": "nearpano/",
+   "moments": [
+    "afternoon",
+    "blue",
+    "dawn",
+    "dusk",
+    "golden",
+    "lateafternoon",
+    "latemorning",
+    "lowsun",
+    "midday",
+    "morning",
+    "night",
+    "predawn",
+    "sunrise",
+    "sunset"
+   ]
+  }
+ },
+ "cuts": {
+  "home_l": {
+   "heading": 284.6564,
+   "pitch": -1.0,
+   "focal_w": 0.7716049382716049,
+   "ext_size": [
+    4148,
+    2332
+   ]
+  },
+  "home_p": {
+   "heading": 291.6564,
+   "pitch": 9.0,
+   "focal_w": 1.337448559670782,
+   "ext_size": [
+    1750,
+    3110
+   ]
+  }
+ },
+ "moments": {
+  "night": {
+   "dir": "r2pano/night/",
+   "clouds": "clouds.avif",
+   "lights": {
+    "tiles": "lights-{col}.webp",
+    "ppd": 32,
+    "tints": {
+     "windows": [
+      1.3546,
+      0.9395,
+      0.5556
+     ],
+     "lamps": [
+      1.4086,
+      0.9336,
+      0.454
+     ],
+     "flood": [
+      2.0055,
+      0.7976,
+      0.044
+     ]
+    },
+    "baked_share": 0.0,
+    "source": "Cycles light groups",
+    "windows_px": 190451,
+    "lamps_px": 380819,
+    "flood_px": 5167,
+    "extra": {
+     "tiles": "lightsx-{col}.webp",
+     "ppd": 32,
+     "channel": "R",
+     "tint": [
+      1.344,
+      0.9442,
+      0.5397
+     ],
+     "px": 117841,
+     "dial_default": 0.0,
+     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
+    }
+   },
+   "bytes": {
+    "lights": 320436,
+    "lightsx": 42110,
+    "clouds": 94295,
+    "far-L1": 71498,
+    "far-L2": 25520,
+    "city-L0": 36164,
+    "city-L1": 14137,
+    "city-L2": 4374,
+    "sky-L1": 11302,
+    "sky-L2": 3311
+   },
+   "renders": {
+    "night_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 107.81
+    },
+    "night_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 106.53
+    },
+    "night_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 64,
+     "seconds": 34.32
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "midday": {
+   "dir": "r2pano/midday/",
+   "clouds": "clouds.avif",
+   "lights": null,
+   "bytes": {
+    "clouds": 119398,
+    "far-L1": 324863,
+    "far-L2": 96465,
+    "city-L0": 1209060,
+    "city-L1": 360412,
+    "city-L2": 94044,
+    "sky-L1": 16483,
+    "sky-L2": 5080
+   },
+   "renders": {
+    "midday_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 53.12
+    },
+    "midday_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 100.48
+    },
+    "midday_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 64,
+     "seconds": 65.93
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "predawn": {
+   "dir": "r2pano/predawn/",
+   "clouds": "clouds.avif",
+   "lights": {
+    "tiles": "lights-{col}.webp",
+    "ppd": 32,
+    "tints": {
+     "windows": [
+      1.3627,
+      0.9383,
+      0.543
+     ],
+     "lamps": [
+      1.2884,
+      0.9491,
+      0.6555
+     ],
+     "flood": [
+      2.3915,
+      0.6863,
+      0.0097
+     ]
+    },
+    "baked_share": 0.0,
+    "source": "Cycles light groups",
+    "windows_px": 108003,
+    "lamps_px": 157455,
+    "flood_px": 4328,
+    "extra": {
+     "tiles": "lightsx-{col}.webp",
+     "ppd": 32,
+     "channel": "R",
+     "tint": [
+      1.327,
+      0.9477,
+      0.5552
+     ],
+     "px": 54737,
+     "dial_default": 0.0,
+     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
+    }
+   },
+   "bytes": {
+    "lights": 180714,
+    "lightsx": 20998,
+    "clouds": 79206,
+    "far-L1": 68814,
+    "far-L2": 24545,
+    "city-L0": 29590,
+    "city-L1": 11580,
+    "city-L2": 3476,
+    "sky-L1": 9723,
+    "sky-L2": 2968
+   },
+   "renders": {
+    "predawn_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 105.32
+    },
+    "predawn_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 104.88
+    },
+    "predawn_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 64,
+     "seconds": 35.42
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "dawn": {
+   "dir": "r2pano/dawn/",
+   "clouds": "clouds.avif",
+   "lights": {
+    "tiles": "lights-{col}.webp",
+    "ppd": 32,
+    "tints": {
+     "windows": [
+      1.4842,
+      0.9151,
+      0.4154
+     ],
+     "lamps": [
+      1.305,
+      0.9629,
+      0.4688
+     ],
+     "flood": [
+      2.3884,
+      0.6816,
+      0.066
+     ]
+    },
+    "baked_share": 0.0,
+    "source": "Cycles light groups",
+    "windows_px": 101754,
+    "lamps_px": 141780,
+    "flood_px": 3492,
+    "extra": {
+     "tiles": "lightsx-{col}.webp",
+     "ppd": 32,
+     "channel": "R",
+     "tint": [
+      1.4186,
+      0.932,
+      0.4409
+     ],
+     "px": 62797,
+     "dial_default": 0.0,
+     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
+    }
+   },
+   "bytes": {
+    "lights": 213480,
+    "lightsx": 22990,
+    "clouds": 186913,
+    "far-L1": 91263,
+    "far-L2": 31200,
+    "city-L0": 118741,
+    "city-L1": 39496,
+    "city-L2": 11425,
+    "sky-L1": 10198,
+    "sky-L2": 3082
+   },
+   "renders": {
+    "dawn_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 128,
+     "seconds": 222.31
+    },
+    "dawn_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 128,
+     "seconds": 153.54
+    },
+    "dawn_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 128,
+     "seconds": 68.82
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "sunrise": {
+   "dir": "r2pano/sunrise/",
+   "clouds": "clouds.avif",
+   "lights": null,
+   "bytes": {
+    "clouds": 289417,
+    "far-L1": 203471,
+    "far-L2": 66674,
+    "city-L0": 634720,
+    "city-L1": 204391,
+    "city-L2": 57225,
+    "sky-L1": 15049,
+    "sky-L2": 4775
+   },
+   "renders": {
+    "sunrise_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 128,
+     "seconds": 327.46
+    },
+    "sunrise_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 128,
+     "seconds": 292.27
+    },
+    "sunrise_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 128,
+     "seconds": 119.47
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "morning": {
+   "dir": "r2pano/morning/",
+   "clouds": "clouds.avif",
+   "lights": null,
+   "bytes": {
+    "clouds": 240123,
+    "far-L1": 247795,
+    "far-L2": 77032,
+    "city-L0": 841816,
+    "city-L1": 265848,
+    "city-L2": 70988,
+    "sky-L1": 17609,
+    "sky-L2": 5552
+   },
+   "renders": {
+    "morning_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 128,
+     "seconds": 253.62
+    },
+    "morning_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 128,
+     "seconds": 205.88
+    },
+    "morning_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 128,
+     "seconds": 161.23
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "latemorning": {
+   "dir": "r2pano/latemorning/",
+   "clouds": "clouds.avif",
+   "lights": null,
+   "bytes": {
+    "clouds": 126705,
+    "far-L1": 304697,
+    "far-L2": 92113,
+    "city-L0": 1093165,
+    "city-L1": 336059,
+    "city-L2": 88404,
+    "sky-L1": 17332,
+    "sky-L2": 5193
+   },
+   "renders": {
+    "latemorning_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 76.71
+    },
+    "latemorning_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 64.24
+    },
+    "latemorning_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 64,
+     "seconds": 34.89
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "afternoon": {
+   "dir": "r2pano/afternoon/",
+   "clouds": "clouds.avif",
+   "lights": null,
+   "bytes": {
+    "clouds": 324741,
+    "far-L1": 294142,
+    "far-L2": 88758,
+    "city-L0": 1028982,
+    "city-L1": 314191,
+    "city-L2": 82763,
+    "sky-L1": 19467,
+    "sky-L2": 6235
+   },
+   "renders": {
+    "afternoon_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 92.08
+    },
+    "afternoon_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 83.24
+    },
+    "afternoon_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 64,
+     "seconds": 36.24
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "lateafternoon": {
+   "dir": "r2pano/lateafternoon/",
+   "clouds": "clouds.avif",
+   "lights": null,
+   "bytes": {
+    "clouds": 335293,
+    "far-L1": 256413,
+    "far-L2": 79092,
+    "city-L0": 824856,
+    "city-L1": 264410,
+    "city-L2": 69776,
+    "sky-L1": 21600,
+    "sky-L2": 7257
+   },
+   "renders": {
+    "lateafternoon_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 84.54
+    },
+    "lateafternoon_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 97.7
+    },
+    "lateafternoon_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 64,
+     "seconds": 43.03
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "sunset": {
+   "dir": "r2pano/sunset/",
+   "clouds": "clouds.avif",
+   "lights": null,
+   "bytes": {
+    "clouds": 482091,
+    "far-L1": 166170,
+    "far-L2": 56165,
+    "city-L0": 438318,
+    "city-L1": 147452,
+    "city-L2": 43151,
+    "sky-L1": 15863,
+    "sky-L2": 5344
+   },
+   "renders": {
+    "sunset_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 55.7
+    },
+    "sunset_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 62.09
+    },
+    "sunset_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 64,
+     "seconds": 44.15
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "dusk": {
+   "dir": "r2pano/dusk/",
+   "clouds": "clouds.avif",
+   "lights": {
+    "tiles": "lights-{col}.webp",
+    "ppd": 32,
+    "tints": {
+     "windows": [
+      1.3339,
+      0.9631,
+      0.3817
+     ],
+     "lamps": [
+      1.172,
+      1.0111,
+      0.3816
+     ],
+     "flood": [
+      2.0187,
+      0.7968,
+      0.0128
+     ]
+    },
+    "baked_share": 0.0,
+    "source": "Cycles light groups",
+    "windows_px": 196832,
+    "lamps_px": 307560,
+    "flood_px": 4410,
+    "extra": {
+     "tiles": "lightsx-{col}.webp",
+     "ppd": 32,
+     "channel": "R",
+     "tint": [
+      1.3732,
+      0.9465,
+      0.4311
+     ],
+     "px": 138671,
+     "dial_default": 0.0,
+     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
+    }
+   },
+   "bytes": {
+    "lights": 326998,
+    "lightsx": 49694,
+    "clouds": 482983,
+    "far-L1": 125859,
+    "far-L2": 42250,
+    "city-L0": 241560,
+    "city-L1": 82959,
+    "city-L2": 23963,
+    "sky-L1": 15133,
+    "sky-L2": 4870
+   },
+   "renders": {
+    "dusk_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 108.35
+    },
+    "dusk_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 105.92
+    },
+    "dusk_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 64,
+     "seconds": 54.53
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "blue": {
+   "dir": "r2pano/blue/",
+   "clouds": "clouds.avif",
+   "lights": {
+    "tiles": "lights-{col}.webp",
+    "ppd": 32,
+    "tints": {
+     "windows": [
+      1.3244,
+      0.9451,
+      0.5892
+     ],
+     "lamps": [
+      1.1908,
+      0.9712,
+      0.7228
+     ],
+     "flood": [
+      2.1725,
+      0.7492,
+      0.0319
+     ]
+    },
+    "baked_share": 0.0,
+    "source": "Cycles light groups",
+    "windows_px": 196289,
+    "lamps_px": 296834,
+    "flood_px": 4868,
+    "extra": {
+     "tiles": "lightsx-{col}.webp",
+     "ppd": 32,
+     "channel": "R",
+     "tint": [
+      1.3561,
+      0.9424,
+      0.5214
+     ],
+     "px": 131559,
+     "dial_default": 0.0,
+     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
+    }
+   },
+   "bytes": {
+    "lights": 311972,
+    "lightsx": 47282,
+    "clouds": 405431,
+    "far-L1": 78284,
+    "far-L2": 27443,
+    "city-L0": 63650,
+    "city-L1": 22215,
+    "city-L2": 6380,
+    "sky-L1": 11804,
+    "sky-L2": 3612
+   },
+   "renders": {
+    "blue_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 101.65
+    },
+    "blue_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 102.22
+    },
+    "blue_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 64,
+     "seconds": 53.93
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "golden": {
+   "dir": "r2pano/golden/",
+   "clouds": "clouds.avif",
+   "lights": null,
+   "bytes": {
+    "clouds": 468432,
+    "far-L1": 161251,
+    "far-L2": 54610,
+    "city-L0": 403378,
+    "city-L1": 136767,
+    "city-L2": 40400,
+    "sky-L1": 18277,
+    "sky-L2": 6193
+   },
+   "renders": {
+    "golden_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 52.5
+    },
+    "golden_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 79.1
+    },
+    "golden_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 64,
+     "seconds": 40.34
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  },
+  "lowsun": {
+   "dir": "r2pano/lowsun/",
+   "clouds": "clouds.avif",
+   "lights": null,
+   "bytes": {
+    "clouds": 564093,
+    "far-L1": 171015,
+    "far-L2": 57739,
+    "city-L0": 473839,
+    "city-L1": 159794,
+    "city-L2": 45480,
+    "sky-L1": 18085,
+    "sky-L2": 6380
+   },
+   "renders": {
+    "lowsun_city0.png": {
+     "ppd": 64,
+     "yaw": [
+      -56.25,
+      0.5
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 82.52
+    },
+    "lowsun_city1.png": {
+     "ppd": 64,
+     "yaw": [
+      -0.5,
+      56.25
+     ],
+     "el": [
+      -22.25,
+      6.25
+     ],
+     "samples": 64,
+     "seconds": 57.73
+    },
+    "lowsun_sky.png": {
+     "ppd": 32,
+     "yaw": [
+      -56.25,
+      56.25
+     ],
+     "el": [
+      5.75,
+      56.25
+     ],
+     "samples": 64,
+     "seconds": 31.5
+    }
+   },
+   "cut_coverage": {
+    "home_l": 1.0,
+    "home_p": 0.9637
+   },
+   "set": "r2",
+   "near2": true
+  }
+ },
+ "live_sets": {
+  "r2": {
+   "path": "r2pano/pano.json",
+   "moments": [
+    "night",
+    "midday",
+    "predawn",
+    "dawn",
+    "sunrise",
+    "morning",
+    "latemorning",
+    "afternoon",
+    "lateafternoon",
+    "sunset",
+    "dusk",
+    "blue",
+    "golden",
+    "lowsun"
+   ],
+   "source": "R2 full set, crisp look: city 64 px/deg, sky 32 (scripts/pano_production.py)"
+  },
+  "standin": {
+   "path": "x1pano/pano.json",
+   "moments": [],
+   "axis_bearing_deg": 291.9968,
+   "eye_asl_m": 113.81,
+   "left_out": null,
+   "needed": false
+  }
+ }
+}

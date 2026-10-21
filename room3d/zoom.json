@@ -1,0 +1,21 @@
+{
+ "l3": "zoom-l3/l3.json",
+ "source": "city-detail/renders/zoom_l3_final",
+ "synthetic": false,
+ "moments": {
+  "golden": 644,
+  "night": 644,
+  "midday": 644,
+  "predawn": 644,
+  "dawn": 644,
+  "sunrise": 644,
+  "morning": 644,
+  "latemorning": 644,
+  "afternoon": 644,
+  "lateafternoon": 644,
+  "sunset": 644,
+  "dusk": 644,
+  "blue": 644,
+  "lowsun": 644
+ }
+}

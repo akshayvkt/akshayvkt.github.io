@@ -1,0 +1,8 @@
+{
+ "note": "Fixed constants of grade() in scripts/build_web.py, shared with the room engine's composite (web/shared/gl/colour.js). Per-moment values (contrast, saturation, gamma, warmth) come from frames.json.",
+ "order": ["clamp01", "gamma", "contrast", "saturation", "warmth"],
+ "contrast_pivot": 0.5,
+ "luma": [0.2126, 0.7152, 0.0722],
+ "warmth": [1.0, 0.0, -1.0],
+ "dither": {"python": "triangular, one 8-bit step (+-1/255), seed 1", "engine": "+-0.5/255 per channel (plan 2.5)"}
+}

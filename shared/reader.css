@@ -1,0 +1,377 @@
+/* The reading sheet: an essay lifted out of the notebook (shared/reader.js).
+   A calm sheet of paper over the room; the room softens and dims behind it and stays visible at the edges.
+   Type: the site's own families (Cormorant Garamond for the essay, Geist for the small print), a 60-72 character
+   measure and generous leading. Colours follow the moment (--paper --ink --accent from sky-head.js) where they
+   suit paper; at night the sheet stays paper, lit by the lamp. */
+
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/cormorant-garamond-latin.woff2") format("woff2");
+  font-weight: 300 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/cormorant-garamond-italic-latin.woff2") format("woff2");
+  font-weight: 300 600; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/geist-latin.woff2") format("woff2");
+  font-weight: 400 600; font-style: normal; font-display: swap;
+}
+
+.rd {
+  --rd-serif: "Cormorant Garamond", "Cormorant", Garamond, "Times New Roman", serif;
+  --rd-sans: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --rd-paper: color-mix(in oklab, var(--paper, #e4ddd2) 18%, #fbf8f2);
+  --rd-ink: #221c16;
+  --rd-text: color-mix(in oklab, #221c16 92%, var(--rd-paper));
+  --rd-quiet: #6f665c;
+  --rd-faint: color-mix(in oklab, #221c16 34%, var(--rd-paper));
+  --rd-hair: color-mix(in oklab, #221c16 12%, transparent);
+  --rd-hair-strong: color-mix(in oklab, #221c16 24%, transparent);
+  --rd-accent: color-mix(in oklab, var(--accent, #794d2c) 78%, #221c16);
+  --rd-wash: color-mix(in oklab, #221c16 4.5%, var(--rd-paper));
+  --rd-dim: rgba(18, 12, 6, 0.26);
+  --rd-blur: 7px;
+  --rd-w: 752px;          /* the sheet; its text column is 600px: 64-70 characters at 21px */
+  --rd-pad: 76px;
+  --rd-gap: clamp(14px, 3.2vh, 30px);
+  --rd-radius: 14px;
+  --rd-size: 21px;
+
+  position: fixed; inset: 0; z-index: 60;
+  color: var(--rd-text);
+  font-family: var(--rd-sans);
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+.rd[hidden] { display: none; }
+.rd a, .rd button { -webkit-tap-highlight-color: transparent; }
+:root[data-scheme="dark"] .rd {
+  /* lamp light on paper: warmer and a little lower, so the sheet never glares in a dark room */
+  --rd-paper: #ece3d3;
+  --rd-wash: color-mix(in oklab, #221c16 5.5%, #ece3d3);
+  --rd-accent: #85552f;
+  --rd-dim: rgba(4, 2, 0, 0.42);
+}
+html.rd-lock, html.rd-lock body { overflow: hidden !important; }
+
+/* ---------- the room behind ---------- */
+.rd-scrim {
+  position: absolute; inset: 0;
+  background: var(--rd-dim);
+  -webkit-backdrop-filter: blur(var(--rd-blur)) saturate(0.92);
+  backdrop-filter: blur(var(--rd-blur)) saturate(0.92);
+  opacity: 0;
+  touch-action: none;
+}
+.rd:not([data-state="closed"]) .rd-scrim { opacity: 1; }
+
+/* ---------- the sheet ---------- */
+.rd-sheet {
+  position: fixed; left: 0; right: 0; margin: 0 auto;
+  top: var(--rd-gap); bottom: var(--rd-gap);
+  width: min(var(--rd-w), calc(100vw - 2 * var(--rd-gap)));
+  transform-origin: 0 0;
+  outline: none;
+}
+.rd-shadow, .rd-paper { position: absolute; inset: 0; border-radius: var(--rd-radius); }
+/* two shadows, cross-faded as the page lifts: lying on the desk, then held up toward you */
+.rd-shadow.rest { box-shadow: 0 1px 1.5px rgba(30, 18, 6, 0.24), 0 2px 7px rgba(30, 18, 6, 0.12); opacity: 0; }
+.rd-shadow.lift {
+  box-shadow: 0 0 0 0.5px rgba(30, 18, 6, 0.08), 0 10px 24px -8px rgba(20, 12, 4, 0.28),
+    0 34px 90px -24px rgba(20, 12, 4, 0.5);
+}
+.rd-paper {
+  overflow: hidden;
+  background: var(--rd-paper);
+  /* the faintest tooth, so it reads as paper rather than a panel */
+  background-image: radial-gradient(120% 70% at 50% 0%, rgba(255, 255, 255, 0.35), transparent 70%);
+}
+.rd-inner { position: absolute; inset: 0; }
+.rd-scroll {
+  position: absolute; inset: 0;
+  overflow-y: auto; overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rd-hair-strong) transparent;
+  outline: none;
+}
+.rd-scroll::-webkit-scrollbar { width: 9px; }
+.rd-scroll::-webkit-scrollbar-thumb { background: var(--rd-hair-strong); border-radius: 9px; border: 3px solid transparent; background-clip: content-box; }
+
+/* the slim progress hairline along the top edge */
+.rd-progress { position: absolute; z-index: 2; left: 0; right: 0; top: 0; height: 2px; pointer-events: none; }
+.rd-progress i {
+  position: absolute; inset: 0;
+  background: color-mix(in oklab, var(--rd-accent) 62%, transparent);
+  transform-origin: 0 50%; transform: scaleX(0);
+}
+.rd-close {
+  position: absolute; z-index: 3; top: 14px; right: 14px;
+  width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%;
+  display: grid; place-items: center;
+  background: color-mix(in oklab, var(--rd-paper) 82%, transparent);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  color: var(--rd-quiet); cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+.rd-close:hover { color: var(--rd-ink); background: color-mix(in oklab, var(--rd-wash) 92%, transparent); }
+.rd-close svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; fill: none; }
+.rd-close:focus-visible, .rd a:focus-visible { outline: 2px solid var(--rd-accent); outline-offset: 3px; }
+.rd-grip { display: none; }
+
+/* ---------- the essay ---------- */
+.rd-article {
+  box-sizing: border-box;
+  max-width: calc(600px + 2 * var(--rd-pad));
+  margin: 0 auto;
+  padding: 92px var(--rd-pad) 84px;
+  font-family: var(--rd-serif);
+  font-size: var(--rd-size);
+  font-weight: 500;
+  line-height: 1.6;
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+  hanging-punctuation: first;
+  overflow-wrap: break-word;
+}
+.rd-article * { box-sizing: border-box; }
+.rd-head { margin: 0 0 2.6em; }
+.rd-title {
+  margin: 0;
+  font-family: var(--rd-serif); font-weight: 500;
+  font-size: 2.2em; line-height: 1.06; letter-spacing: -0.006em;
+  color: var(--rd-ink);
+  text-wrap: balance;
+}
+.rd-sub {
+  margin: 0.55em 0 0;
+  font-style: italic; font-weight: 400;
+  font-size: 1.1em; line-height: 1.32;
+  color: var(--rd-quiet);
+  text-wrap: balance;
+}
+.rd-date {
+  display: block; margin-top: 1.7rem;
+  font-family: var(--rd-sans); font-size: 11.5px; font-weight: 500; line-height: 1;
+  letter-spacing: 0.09em; text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--rd-quiet);
+}
+.rd-date::after {
+  content: ""; display: block; width: 32px; height: 1px; margin-top: 1.5rem;
+  background: var(--rd-hair-strong);
+}
+
+.rd-body { text-wrap: pretty; }
+.rd-body > :first-child { margin-top: 0; }
+.rd-body p { margin: 0 0 0.92em; }
+.rd-body h2, .rd-body h3 {
+  margin: 1.9em 0 0.55em;
+  font-family: var(--rd-serif); font-weight: 600; line-height: 1.18; letter-spacing: -0.003em;
+  color: var(--rd-ink);
+  text-wrap: balance;
+}
+.rd-body h2 { font-size: 1.45em; }
+.rd-body h3 { font-size: 1.22em; }
+.rd-body h2 strong, .rd-body h3 strong { font-weight: inherit; }
+.rd-body h4 {
+  margin: 2em 0 0.6em;
+  font-family: var(--rd-sans); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--rd-quiet);
+}
+.rd-body strong { font-weight: 600; color: var(--rd-ink); }
+.rd-body em { font-style: italic; }
+.rd-body a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in oklab, var(--rd-accent) 42%, transparent);
+  transition: text-decoration-color 0.2s ease, color 0.2s ease;
+}
+.rd-body a:hover { color: var(--rd-accent); text-decoration-color: currentColor; }
+.rd-body ul, .rd-body ol { margin: 0 0 0.92em; padding-left: 1.25em; }
+.rd-body li { margin: 0 0 0.38em; padding-left: 0.2em; }
+.rd-body li > p { margin: 0; }
+.rd-body li::marker { color: var(--rd-quiet); font-size: 0.92em; }
+.rd-body blockquote {
+  margin: 1.5em 0; padding: 0.05em 0 0.05em 1.1em;
+  border-left: 1.5px solid color-mix(in oklab, var(--rd-accent) 48%, transparent);
+  font-style: italic; color: color-mix(in oklab, var(--rd-text) 86%, var(--rd-paper));
+}
+.rd-body blockquote p:last-child { margin-bottom: 0; }
+.rd-body hr {
+  width: 48px; height: 1px; margin: 2.4em auto; border: 0;
+  background: var(--rd-hair-strong);
+}
+.rd-body code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.78em;
+  padding: 0.08em 0.3em; border-radius: 4px; background: var(--rd-wash);
+}
+.rd-body pre {
+  margin: 1.4em 0; padding: 14px 16px; border-radius: 8px; overflow-x: auto;
+  background: var(--rd-wash); line-height: 1.5;
+}
+.rd-body pre code { padding: 0; background: none; font-size: 13px; }
+.rd-body s { text-decoration-thickness: 1px; text-decoration-color: color-mix(in oklab, var(--rd-text) 70%, transparent); }
+.rd-body sup, .rd-body sub { font-size: 0.6em; line-height: 0; }
+.rd-body sup a {
+  margin-left: 0.08em; padding: 0 0.12em;
+  font-family: var(--rd-sans); font-weight: 600; text-decoration: none; color: var(--rd-accent);
+}
+
+/* images: a little wider than the text, with their captions in the small print */
+.rd-body figure { margin: 2.1em calc(-0.55 * var(--rd-pad)); }
+.rd-body figure > a { display: block; text-decoration: none; }
+.rd-body img {
+  display: block; max-width: 100%; height: auto; margin: 0 auto;
+  border-radius: 3px;
+  background: var(--rd-wash);
+}
+/* a video of his (copied into the site with its poster frame): the player's own controls, at its real aspect */
+.rd-body video {
+  display: block; width: 100%; height: auto; margin: 0 auto;
+  border-radius: 3px; background: var(--rd-wash); outline: none;
+}
+.rd-body figcaption {
+  margin: 0.95em auto 0; max-width: 600px; padding: 0 calc(0.55 * var(--rd-pad));
+  font-family: var(--rd-sans); font-size: 12.5px; font-weight: 400; line-height: 1.5;
+  text-align: center; color: var(--rd-quiet);
+}
+.rd-body figcaption a { text-decoration-color: var(--rd-hair-strong); }
+/* a gallery: images in a row at one height (reader.js sets each one's share of the row) */
+.rd-body figure.rd-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.rd-body figure.rd-row > img { min-width: 0; width: 0; flex-basis: 0; height: auto; margin: 0; }
+/* (the caption takes a line of its own: the measure's max-width would shrink its 100 % basis and keep it on the photos'
+   line, leaving them a few dozen pixels; live room 2) */
+.rd-body figure.rd-row > figcaption { flex: 1 0 100%; max-width: none; }
+/* an embedded post (a tweet): a quiet card, inside the measure */
+.rd-body figure.rd-card {
+  margin: 1.8em 0; padding: 18px 20px 16px;
+  border: 1px solid var(--rd-hair); border-radius: 12px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+}
+.rd-body figure.rd-card > blockquote {
+  grid-column: 1 / -1; margin: 0 0 10px; padding: 0; border: 0;
+  font-family: var(--rd-sans); font-style: normal; font-size: 15px; line-height: 1.55; color: var(--rd-text);
+}
+.rd-body figure.rd-card > img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 6px; }
+.rd-body figure.rd-card > figcaption { grid-column: 1 / -1; margin-top: 8px; padding: 0; text-align: left; }
+/* footnotes */
+.rd-body ol.rd-notes {
+  list-style: none; margin: 3.2em 0 0; padding: 1.5em 0 0;
+  border-top: 1px solid var(--rd-hair);
+  font-family: var(--rd-sans); font-size: 13.5px; font-weight: 400; line-height: 1.6; color: var(--rd-quiet);
+}
+.rd-body ol.rd-notes li { display: grid; grid-template-columns: 1.7em 1fr; margin: 0 0 0.8em; padding: 0; }
+.rd-body ol.rd-notes li > a:first-child { text-decoration: none; font-weight: 600; color: var(--rd-accent); }
+.rd-body ol.rd-notes li > p { margin: 0 0 0.5em; grid-column: 2; }
+.rd-body :target, .rd-body .rd-flash { animation: rd-flash 1.6s ease-out; }
+@keyframes rd-flash { from { background: color-mix(in oklab, var(--rd-accent) 16%, transparent); } }
+
+/* titles take lining figures ("2024", not old-style); the running text keeps the book's old-style ones */
+.rd-title, .rd-sub, .rd-body h2, .rd-body h3, .rd-next a { font-variant-numeric: lining-nums; }
+
+/* ---------- the end: the neighbouring essays and the original ---------- */
+.rd-end { margin-top: 4.2em; padding-top: 1.7em; border-top: 1px solid var(--rd-hair); }
+.rd-next { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.rd-next a {
+  display: flex; gap: 0.6em; align-items: baseline;
+  font-family: var(--rd-serif); font-weight: 500; font-size: 0.92em; line-height: 1.3;
+  color: var(--rd-text); text-decoration: none;
+  transition: color 0.2s ease;
+}
+.rd-next a:hover { color: var(--rd-accent); }
+.rd-next a.older { grid-column: 2; justify-content: flex-end; text-align: right; }
+.rd-next a > span:not(.arrow) { text-wrap: balance; }
+.rd-next .arrow { flex: none; font-family: var(--rd-sans); font-size: 13px; color: var(--rd-faint); transition: transform 0.25s var(--ease-out, ease), color 0.2s ease; }
+.rd-next a:hover .arrow { color: currentColor; }
+.rd-next a.newer:hover .arrow { transform: translateX(-3px); }
+.rd-next a.older:hover .arrow { transform: translateX(3px); }
+.rd-orig { display: flex; justify-content: center; margin-top: 2.6em; }
+.rd-orig a {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  color: var(--rd-faint); transition: color 0.2s ease, background-color 0.2s ease;
+}
+.rd-orig a:hover { color: #ff6719; background: var(--rd-wash); }
+.rd-orig svg { width: 17px; height: 17px; fill: currentColor; }
+
+/* ---------- a page of the site's own (nav-r1): About, Social without the 3D, the Projects page on phones ----------
+   About and Social are as tall as their words, centred in the room; the paper, its shadows and its motion are the
+   essays' own. Projects (a frame of the real page) takes the full sheet, below a band of paper for the cross. */
+.rd[data-kind="page"] .rd-sheet, .rd[data-kind="small"] .rd-sheet {
+  display: flex; height: fit-content; max-height: calc(100% - 2 * var(--rd-gap)); margin: auto;
+}
+.rd[data-kind="page"] .rd-sheet { width: min(680px, calc(100vw - 2 * var(--rd-gap))); }
+.rd[data-kind="small"] .rd-sheet { width: min(380px, calc(100vw - 2 * var(--rd-gap))); }
+.rd[data-kind="page"] .rd-paper, .rd[data-kind="small"] .rd-paper,
+.rd[data-kind="page"] .rd-inner, .rd[data-kind="small"] .rd-inner,
+.rd[data-kind="page"] .rd-scroll, .rd[data-kind="small"] .rd-scroll { position: relative; inset: auto; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.rd[data-kind="page"] .rd-scroll, .rd[data-kind="small"] .rd-scroll { display: block; }
+.rd[data-kind] .rd-progress { display: none; }
+.rd .rd-own { padding: 64px var(--rd-pad) 52px; }
+.rd[data-kind="small"] .rd-own { padding: 58px 28px 40px; }
+/* the bio: the reading sheet's type, his paragraphs as they are */
+.rd-bio p:last-child { margin-bottom: 0; }
+/* Social: his five marks in a row, the lock screen's order */
+.rd-social { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.rd-social a {
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%;
+  color: var(--rd-text); transition: color 0.2s ease, background-color 0.2s ease;
+}
+.rd-social a:hover { color: var(--rd-accent); background: var(--rd-wash); }
+.rd-social svg { width: 21px; height: 21px; fill: currentColor; }
+/* the Projects page: a frame that scrolls itself, below the paper's band */
+.rd[data-kind="frame"] .rd-scroll { top: 56px; overflow: hidden; }
+.rd[data-kind="frame"] .rd-own { position: absolute; inset: 0; padding: 0; max-width: none; }
+.rd-frame { position: absolute; inset: 0; display: block; }
+
+/* ---------- phones: a bottom sheet ---------- */
+@media (max-width: 640px) {
+  .rd[data-kind="page"] .rd-sheet, .rd[data-kind="small"] .rd-sheet {
+    top: auto; bottom: 0; width: 100%; margin: 0; max-height: calc(100% - max(40px, calc(env(safe-area-inset-top) + 18px)));
+  }
+  .rd .rd-own { padding: 52px var(--rd-pad) calc(40px + env(safe-area-inset-bottom)); }
+  .rd[data-kind="small"] .rd-own { padding: 50px 18px calc(36px + env(safe-area-inset-bottom)); }
+  .rd[data-kind="frame"] .rd-scroll { top: 48px; }
+  .rd {
+    --rd-pad: 22px;
+    --rd-size: 19px;
+    --rd-radius: 16px;
+  }
+  .rd-sheet {
+    top: max(40px, calc(env(safe-area-inset-top) + 18px)); bottom: 0;
+    width: 100%;
+  }
+  .rd-shadow, .rd-paper { border-radius: var(--rd-radius) var(--rd-radius) 0 0; }
+  .rd-shadow.lift { box-shadow: 0 -1px 0 rgba(30, 18, 6, 0.05), 0 -12px 40px -10px rgba(20, 12, 4, 0.35); }
+  .rd-grip {
+    display: block; position: absolute; z-index: 2; left: 0; right: 0; top: 0; height: 30px;
+    touch-action: none;
+    /* the words slip under the handle instead of being crossed by it */
+    background: linear-gradient(var(--rd-paper) 55%, color-mix(in oklab, var(--rd-paper) 0%, transparent));
+  }
+  .rd-grip::before {
+    content: ""; position: absolute; left: 50%; top: 8px; width: 38px; height: 4px; margin-left: -19px;
+    border-radius: 4px; background: var(--rd-hair-strong);
+  }
+  .rd-close { top: 10px; right: 10px; width: 34px; height: 34px; }
+  .rd-article { padding: 64px var(--rd-pad) calc(56px + env(safe-area-inset-bottom)); line-height: 1.58; }
+  .rd-title { font-size: 1.9em; }
+  .rd-head { margin-bottom: 2.2em; }
+  .rd-body figure { margin-left: calc(-1 * var(--rd-pad)); margin-right: calc(-1 * var(--rd-pad)); }
+  .rd-body figure > img, .rd-body figure > a > img, .rd-body figure > video { border-radius: 0; }
+  .rd-body figure.rd-card { margin-left: 0; margin-right: 0; padding: 14px 14px 12px; }
+  .rd-body figure.rd-card > img { border-radius: 6px; }
+  .rd-body figure.rd-row { gap: 4px; }
+  .rd-next { gap: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rd-next .arrow { transition: none; }
+  .rd-body :target, .rd-body .rd-flash { animation: none; }
+}
