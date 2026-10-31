@@ -1,0 +1,35 @@
+{
+ "format": "rgb-u8, red fastest, then green, then blue",
+ "size": 33,
+ "shaper": {
+  "kind": "log2",
+  "lo": -11.0,
+  "hi": 7.0,
+  "note": "s = clamp((log2(max(x, 2^lo)) - lo) / (hi - lo), 0, 1) per channel on exposed scene-linear Rec.709"
+ },
+ "source": {
+  "config": "Applications/Blender.app/Contents/Resources/5.2/datafiles/colormanagement/config.ocio",
+  "config_sha1": "4aa74e665c94a403046898a67277b42e0562cf69",
+  "ocio": "2.6.0",
+  "look": "AgX - Medium High Contrast",
+  "view": "AgX",
+  "display": "sRGB"
+ },
+ "accuracy_vs_ocio": {
+  "colours": 4096,
+  "max_255": 3.531,
+  "p99_255": 0.984,
+  "mean_255": 0.326,
+  "share_within_1_255": 0.991,
+  "saturation_below_0.6": {
+   "max_255": 1.14,
+   "p99_255": 0.839,
+   "share_within_1_255": 0.998
+  },
+  "grey_0.18": [
+   0.46132,
+   0.46131,
+   0.46135
+  ]
+ }
+}

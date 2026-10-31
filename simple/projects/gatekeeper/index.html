@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>@view-transition{navigation:auto}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}</style>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<title>Gatekeeper - Akshay Chintalapati</title>
+<meta name="description" content="What if your screen time blocker was smart?">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-61SVW4TL71"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+        
+          gtag('config', 'G-61SVW4TL71');
+        </script>
+<link rel="stylesheet" href="/simple/simple.css?v=8ca6ac58da">
+</head>
+<body>
+<div id="root">
+<div class="page-shell page-shell--wide">
+<header class="site-header">
+<a class="brand" href="/simple/" aria-label="Akshay Chintalapati, home">Akshay Chintalapati</a>
+<nav aria-label="Primary navigation"><a href="/simple/writing/">Writing</a><a href="/simple/books/">Books</a><a href="/simple/quotes/">Quotes</a><a href="/simple/hi/">Say hi</a></nav>
+</header>
+<main class="project-page">
+<a class="back-link" href="/simple/"><span aria-hidden="true">←</span> Projects</a>
+<header class="project-header"><div><h1>Gatekeeper</h1></div><p class="project-dek">What if your screen time blocker was smart?</p></header>
+<dl class="project-facts"><div><dt>Built</dt><dd>July–August 2026</dd></div></dl>
+<article class="project-story project-story--note"><section><p>I've tried screen-time blocking apps, and I found them to be too rigid.</p><p>There's a list of apps that are eating your time, you disable them - and then if you tried to use them - they're unavailable for the duration you picked.</p><p>Generally, a lot of times when you try to open the app - the app being blocked is good because it's preventing you from getting distracted.</p><p>But there's times when accessing them is actually useful - maybe there's someone you need to reply to asap, you're at an event and you're trying to connect with someone, and the app's blocked for 5 more hours.</p><p>Then you'd have to entirely disable the blocker, which didn't seem like a good experience.</p><p>What if the screen time blocker was smart, and when you tried to open an app you selected to be blocked, it would ask you why you're trying to open it, it'd ask you what your reason is.</p><p>If it made sense, it'd disable the blocker for a duration it picks - 5 or 10 or 15 minutes. If your reason wasn't valid, it'd reject and the apps stay blocked.</p><p>You'd say - hey the AIs are stupid, I'll just come up with some emergency every single time and it'd open the gate every time.</p><p>No - here's where it remembers the previous interactions it's had, and if it sees a pattern, it's not going to give in.</p><p>Built this for a hackathon. People actually loved it, and wanted to try it out. But as I was trying to make it reliable, there's some Apple restrictions that do not let your app identify the apps picked - so it couldn't tell which app you were trying to open, which it needs to judge your reason.</p><p>So the workaround was users having to tag the apps they blocked with their names. I spent a few days trying other ways around it before settling on that.</p><p>Later I tweaked it for my own use, so it changed to fit what I needed: the AI gate went away, I added time windows, and it became a simple blocker with a couple of passes that let you unblock apps for 15 minutes.</p></section></article><figure class="project-video project-video--phones"><div class="project-video-row"><video controls playsinline preload="none" poster="/projects/gatekeeper-gate-refuses-poster.jpg" aria-label="Gatekeeper refusing to unlock LinkedIn and calling out repeated attempts"><source src="/projects/gatekeeper-gate-refuses.mp4" type="video/mp4"></video><video controls playsinline preload="none" poster="/projects/gatekeeper-gate-opens-poster.jpg" aria-label="Gatekeeper opening the gate for five minutes after a margin-call claim, then pushing back on the next attempt"><source src="/projects/gatekeeper-gate-opens.mp4" type="video/mp4"></video></div><figcaption>Recorded on my phone at the hack night, July 7, 2026. Left: it refuses and remembers I've been back before. Right: it opens the gate for five minutes. The chat header says &quot;App 1&quot; and &quot;App 3&quot; because it couldn't read the app names.</figcaption></figure>
+<nav class="project-pagination" aria-label="Project navigation"><a href="/simple/projects/readaily/"><span>Next project</span><strong>Readaily →</strong></a></nav>
+</main>
+<footer><a href="/projects/#/project/gatekeeper">See it as a room</a></footer>
+</div>
+</div>
+</body>
+</html>

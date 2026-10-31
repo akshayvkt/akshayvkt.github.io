@@ -1,0 +1,410 @@
+{
+ "version": 1,
+ "model_hash": "a38ca2f07fbd5d79",
+ "quality": 80,
+ "quality_for": {},
+ "subsampling": "4:4:4",
+ "textures": {
+  "tex/print_base.jpg": {
+   "file": "print_base.avif",
+   "src_sha256": "7513c7764223240472005928a37d5401089b3d3c7a38ea304d50a830bba98984",
+   "src_bytes": 55169,
+   "bytes": 621,
+   "q": 80,
+   "size": [
+    768,
+    1024
+   ],
+   "mode": "RGB",
+   "mean_diff": 0.684,
+   "max_diff": 5
+  },
+  "tex/props_base.jpg": {
+   "file": "props_base.avif",
+   "src_sha256": "92cc992ad6831b394a3b62c90581acaacc90848bd3dac4f6ebeef2226cac2709",
+   "src_bytes": 580054,
+   "bytes": 234823,
+   "q": 80,
+   "size": [
+    2048,
+    2048
+   ],
+   "mode": "RGB",
+   "mean_diff": 0.557,
+   "max_diff": 27
+  },
+  "tex/props_orm.png": {
+   "file": "props_orm.avif",
+   "src_sha256": "235eb08116a35c2eca17675cfd64df2f67999aa3394cb5c771dad33a8e61f0df",
+   "src_bytes": 208231,
+   "bytes": 61762,
+   "q": 80,
+   "size": [
+    2048,
+    2048
+   ],
+   "mode": "RGB",
+   "mean_diff": 0.615,
+   "max_diff": 27
+  },
+  "tex/props_normal.png": {
+   "file": "props_normal.avif",
+   "src_sha256": "1f01887d2215cfacc891cedaee13a18f65f6fba06bc5fd920dfa43816db44b62",
+   "src_bytes": 737022,
+   "bytes": 121309,
+   "q": 80,
+   "size": [
+    2048,
+    2048
+   ],
+   "mode": "RGB",
+   "mean_diff": 0.507,
+   "max_diff": 29
+  },
+  "tex/walnut_base.jpg": {
+   "file": "walnut_base.avif",
+   "src_sha256": "0e6e118bd8e5ae17c2a119228f174d2e08b2cd5244f1a9aab0d1e49fba453fcd",
+   "src_bytes": 190170,
+   "bytes": 112567,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGB",
+   "mean_diff": 1.005,
+   "max_diff": 8
+  },
+  "tex/walnut_rough.jpg": {
+   "file": "walnut_rough.avif",
+   "src_sha256": "80324f638a5721068846cb041c6835561ff7ddecd0b2f7a1aca86b6c27650bc5",
+   "src_bytes": 287825,
+   "bytes": 215742,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "L",
+   "mean_diff": 1.114,
+   "max_diff": 8
+  },
+  "tex/walnut_normal.jpg": {
+   "file": "walnut_normal.avif",
+   "src_sha256": "4ecfcd38902d81f49595878c91ed8bd170a5940d8dd0d20a9d72a8e0b7b013c0",
+   "src_bytes": 86438,
+   "bytes": 16242,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGB",
+   "mean_diff": 0.802,
+   "max_diff": 7
+  },
+  "tex/walnut_coat_rough_desk.png": {
+   "file": "walnut_coat_rough_desk.avif",
+   "src_sha256": "7e423401ccc54d36f8672ec7a853f1ecce5211c59cab679688c8c8abc87238da",
+   "src_bytes": 46683,
+   "bytes": 2924,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "L",
+   "mean_diff": 0.121,
+   "max_diff": 16
+  },
+  "tex/art_base.jpg": {
+   "file": "art_base.avif",
+   "src_sha256": "f07699de82c2a140f5e90bb778fc4d693440be5b101e59d654702c1fa18d7e92",
+   "src_bytes": 123724,
+   "bytes": 56894,
+   "q": 80,
+   "size": [
+    1024,
+    750
+   ],
+   "mode": "RGB",
+   "mean_diff": 1.025,
+   "max_diff": 10
+  },
+  "tex/books_base.jpg": {
+   "file": "books_base.avif",
+   "src_sha256": "0e1dc40f53be24c507b1296fceb365c6889142336166951ec7a3f69f02870e68",
+   "src_bytes": 712772,
+   "bytes": 346869,
+   "q": 80,
+   "size": [
+    2048,
+    2048
+   ],
+   "mode": "RGB",
+   "mean_diff": 0.852,
+   "max_diff": 29
+  },
+  "tex/books_orm.png": {
+   "file": "books_orm.avif",
+   "src_sha256": "ac48231fed0c36a38c3bb694eacc7886d6187d5ebadb8f07791d57d145db1751",
+   "src_bytes": 16361,
+   "bytes": 5188,
+   "q": 80,
+   "size": [
+    2048,
+    2048
+   ],
+   "mode": "RGB",
+   "mean_diff": 0.472,
+   "max_diff": 28
+  },
+  "tex/books_normal.png": {
+   "file": "books_normal.avif",
+   "src_sha256": "e3e151f0145b6a7d0bfa3f6da4d53563a950eea2e5244c6ef504c3864922feeb",
+   "src_bytes": 15786,
+   "bytes": 480,
+   "q": 80,
+   "size": [
+    2048,
+    2048
+   ],
+   "mode": "RGB",
+   "mean_diff": 0.333,
+   "max_diff": 1
+  },
+  "tex/leaves_base.png": {
+   "file": "leaves_base.avif",
+   "src_sha256": "6947319e3246ca2a174f6adae2e8aab8cc450a867b23e3f39356b8b80a118532",
+   "src_bytes": 1541804,
+   "bytes": 238198,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGBA",
+   "mean_diff": 1.15,
+   "max_diff": 27
+  },
+  "tex/leaves_rough.png": {
+   "file": "leaves_rough.avif",
+   "src_sha256": "ed2595fcf3159455009cb594f8b5c649d891f97d4d24ce107a37daa64ce745ac",
+   "src_bytes": 2385,
+   "bytes": 343,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "L",
+   "mean_diff": 0.0,
+   "max_diff": 0
+  },
+  "tex/leaves_normal.png": {
+   "file": "leaves_normal.avif",
+   "src_sha256": "b4e18d22f0f3182ff8d56199704f8dfb21d0be9945133a17071d283aa090f813",
+   "src_bytes": 1113330,
+   "bytes": 103692,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGB",
+   "mean_diff": 1.164,
+   "max_diff": 24
+  },
+  "tex/rug_base.jpg": {
+   "file": "rug_base.avif",
+   "src_sha256": "2dcd74bcbe750af0898184a16d9a15f2231f2d926c05d06fd46c99287fc568af",
+   "src_bytes": 360332,
+   "bytes": 279967,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGB",
+   "mean_diff": 1.291,
+   "max_diff": 10
+  },
+  "tex/rug_rough.jpg": {
+   "file": "rug_rough.avif",
+   "src_sha256": "1a843f4fc792561a75dd30d7aa195979f896dec9836fbb805079cfd7a2197606",
+   "src_bytes": 388998,
+   "bytes": 312893,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "L",
+   "mean_diff": 1.318,
+   "max_diff": 9
+  },
+  "tex/rug_normal.jpg": {
+   "file": "rug_normal.avif",
+   "src_sha256": "7199c60d56b8b17d51a7608c87a1e4c63ba2b4d36fab5b6794b007e9fb05bd81",
+   "src_bytes": 338366,
+   "bytes": 263945,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGB",
+   "mean_diff": 1.504,
+   "max_diff": 13
+  },
+  "tex/walnut_coat_rough_furniture.png": {
+   "file": "walnut_coat_rough_furniture.avif",
+   "src_sha256": "cfafe322c7a7605bc39d7b4992b1a0a5d4e53722e669f636c0abbabd68369b98",
+   "src_bytes": 10055,
+   "bytes": 1862,
+   "q": 80,
+   "size": [
+    512,
+    512
+   ],
+   "mode": "L",
+   "mean_diff": 0.078,
+   "max_diff": 10
+  },
+  "tex/floor_base.jpg": {
+   "file": "floor_base.avif",
+   "src_sha256": "2a0649ea5507d6e8c264ed282290e53b63bb577661eda3b9050f66d4b8f912cb",
+   "src_bytes": 253728,
+   "bytes": 174657,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGB",
+   "mean_diff": 1.209,
+   "max_diff": 9
+  },
+  "tex/floor_rough.jpg": {
+   "file": "floor_rough.avif",
+   "src_sha256": "151fdc2152ee722fa2ba80643d1a7ae0c10d6f81c69275e1b9446db8cf0365b5",
+   "src_bytes": 190111,
+   "bytes": 109980,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "L",
+   "mean_diff": 1.049,
+   "max_diff": 7
+  },
+  "tex/floor_normal.jpg": {
+   "file": "floor_normal.avif",
+   "src_sha256": "206a4a254015e38bcaaf07a04066673697ca198de5cccd6a53fb4e47ecc367c2",
+   "src_bytes": 84535,
+   "bytes": 14602,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGB",
+   "mean_diff": 0.93,
+   "max_diff": 8
+  },
+  "tex/plaster_base.jpg": {
+   "file": "plaster_base.avif",
+   "src_sha256": "af05ef5f8daa2e1733e3816b3bbe6eebcc4d86d696cd026fb4b313d1a65f3f7e",
+   "src_bytes": 96187,
+   "bytes": 12093,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGB",
+   "mean_diff": 0.89,
+   "max_diff": 9
+  },
+  "tex/plaster_rough.jpg": {
+   "file": "plaster_rough.avif",
+   "src_sha256": "d05676a7a2ac4bb3d453231bcd115a3f2f24809b531cacb5df4effdaeb6d0f5f",
+   "src_bytes": 78353,
+   "bytes": 4936,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "L",
+   "mean_diff": 0.794,
+   "max_diff": 9
+  },
+  "tex/plaster_normal.jpg": {
+   "file": "plaster_normal.avif",
+   "src_sha256": "d82032680a186c5c3d296fef40f844f0cda8555e04794505dd7c002bbe2dc0c6",
+   "src_bytes": 131608,
+   "bytes": 49435,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGB",
+   "mean_diff": 1.04,
+   "max_diff": 12
+  },
+  "tex/oak_base.jpg": {
+   "file": "oak_base.avif",
+   "src_sha256": "b98fe5a7991844280ac242d5dddbadee28ab23015c967a467e7eeadfa30f8c78",
+   "src_bytes": 222402,
+   "bytes": 122370,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGB",
+   "mean_diff": 1.203,
+   "max_diff": 10
+  },
+  "tex/oak_rough.jpg": {
+   "file": "oak_rough.avif",
+   "src_sha256": "0c7cbb733e8293e1143a1886bc8dc078d53f704c5821e061634df2e550f938f0",
+   "src_bytes": 396107,
+   "bytes": 311832,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "L",
+   "mean_diff": 1.28,
+   "max_diff": 10
+  },
+  "tex/oak_normal.jpg": {
+   "file": "oak_normal.avif",
+   "src_sha256": "d94e68da54d5ddc32bfef027be72400f5d5484896613c008d91328457c2cc637",
+   "src_bytes": 103323,
+   "bytes": 29173,
+   "q": 80,
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGB",
+   "mean_diff": 0.98,
+   "max_diff": 9
+  }
+ },
+ "skipped": {},
+ "bytes": {
+  "originals": 8543739,
+  "light": 3265341
+ },
+ "made_by": "scripts/live/light_tex.py",
+ "left_out": {
+  "tex/screen_base.jpg": "the site serves another file here (an overlay laid over the set's texture)"
+ }
+}

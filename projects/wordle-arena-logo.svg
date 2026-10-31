@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Wordle Arena: one guess row, absent / present / correct (Wordle's grey, yellow, green), on a 24-unit grid -->
+  <rect width="24" height="24" fill="#fff"/>
+  <rect x="2" y="9" width="6" height="6" rx=".6" fill="#787c7e"/>
+  <rect x="9" y="9" width="6" height="6" rx=".6" fill="#c9b458"/>
+  <rect x="16" y="9" width="6" height="6" rx=".6" fill="#6aaa64"/>
+</svg>

@@ -1,0 +1,286 @@
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/geist-latin.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --wall --desk --sky --paper --ink --muted --accent and data-scheme come from the moment
+   (shared/sky-head.js before first paint, then applyPalette). These are only fallbacks. */
+:root {
+  --wall: #4a331e; --desk: #715134; --sky: #24222b;
+  --paper: #f3eee6; --ink: #1f1b16; --muted: #736c64; --accent: #794d2c;
+  --on-scene: #f4efe6;
+  --on-scene-soft: rgba(244, 239, 230, 0.74);
+  --on-scene-faint: rgba(244, 239, 230, 0.28);
+  --hair: color-mix(in srgb, var(--ink) 14%, transparent);
+  color-scheme: light;
+}
+:root[data-scheme="dark"] { color-scheme: dark; }
+
+@view-transition { navigation: auto; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--paper); }
+body {
+  font-family: "Geist", -apple-system, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  color: var(--ink);
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }
+
+/* ---------- the scene ---------- */
+.scene {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 520px;
+  overflow: hidden;
+  /* first paint, before any image: the moment's sky over its desk */
+  background: linear-gradient(180deg, var(--sky) 0%, var(--sky) 40%, var(--wall) 72%, var(--desk) 100%);
+}
+.stage { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }   /* app.js sizes it exactly */
+/* the blurred preview sits over the photographs until they are both ready, then dissolves into them.
+   Once the stage has the room's own shape, cover is an exact fit. */
+.lqip {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: var(--lqip, none);
+  background-size: cover;
+  background-position: var(--lqip-pos, 50% 50%);
+  filter: blur(22px) saturate(1.05);
+  transform: scale(1.08);
+  transition: opacity 0.7s ease;
+}
+.layer { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+.layer.ext, #halo { will-change: transform; }
+.layer.glass { mix-blend-mode: screen; will-change: transform; }
+.layer.room { will-change: transform; }
+.layer.halo { mix-blend-mode: screen; }
+/* halation is spilled light, not colour: toward warm white, so the mullions glow rather than tint */
+.halo .pic { filter: saturate(0.4); }
+
+.pic {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: block; opacity: 0;
+  user-select: none; -webkit-user-select: none; -webkit-user-drag: none;
+}
+.ext .pic, .glass .pic, .halo .pic { transition: opacity 0.9s ease; }
+.room .pic { transition: none; }
+
+/* the living view: a WebGL canvas over the first-paint images, then in place of them */
+.ext canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.6s ease; }
+.ext.live-on canvas { opacity: 1; }
+.ext.live-settled .pic { visibility: hidden; }
+.room canvas { position: absolute; display: block; pointer-events: none; }
+
+.hotspots { position: absolute; left: 0; top: 0; width: 100%; height: 100%; will-change: transform; }
+.hotspots .hit { fill: transparent; cursor: pointer; outline: none; }
+/* no outline or tint over the objects (Akshay, 2026-10-15): keyboard focus shows the object's name in the tip */
+
+.veil {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 68%, rgba(8, 6, 4, 0.55) 100%);
+}
+
+.masthead {
+  position: absolute; z-index: 3; left: 0; right: 0; bottom: 0;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 1rem;
+  padding: 1.5rem 2rem 1.4rem;
+  padding-bottom: max(1.4rem, env(safe-area-inset-bottom));
+  color: var(--on-scene);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+.masthead > * { pointer-events: auto; }
+/* each block takes taps over its own words only: stretched across its grid column, its empty width swallowed taps meant
+   for the room behind it (the phone on the desk on a 390x844 phone, qa-night B-F1). The words do not move. */
+.masthead > .who { justify-self: start; }
+.masthead > nav { justify-self: end; }
+.who h1 { margin: 0; font-size: 15px; font-weight: 500; letter-spacing: -0.005em; }
+.who p { margin: 0; color: var(--on-scene-soft); }
+.clock { display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+.now {
+  margin: 0; padding: 0; border: 0; background: none; cursor: pointer;
+  font: inherit; font-size: 13px; color: var(--on-scene-soft); text-shadow: inherit;
+  border-bottom: 1px solid var(--on-scene-faint);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.now:hover, .now[aria-expanded="true"] { color: var(--on-scene); border-bottom-color: rgba(244, 239, 230, 0.6); }
+.dial { display: flex; gap: 0.8rem; align-items: center; font-size: 12px; }
+.dial[hidden] { display: none; }
+.dial input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 220px; height: 18px; margin: 0; background: transparent; cursor: pointer;
+}
+.dial input[type="range"]::-webkit-slider-runnable-track { height: 1px; background: rgba(244, 239, 230, 0.5); }
+.dial input[type="range"]::-moz-range-track { height: 1px; background: rgba(244, 239, 230, 0.5); }
+.dial input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 11px; height: 11px; margin-top: -5px; border: 0; border-radius: 50%;
+  background: var(--on-scene); box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.18), 0 1px 8px rgba(0, 0, 0, 0.4);
+}
+.dial input[type="range"]::-moz-range-thumb {
+  width: 11px; height: 11px; border: 0; border-radius: 50%;
+  background: var(--on-scene); box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.18), 0 1px 8px rgba(0, 0, 0, 0.4);
+}
+.dial input[type="range"]:focus-visible { outline: none; }
+.dial input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5), 0 0 0 4px var(--on-scene); }
+.dial input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5), 0 0 0 4px var(--on-scene); }
+.dial button {
+  padding: 0; border: 0; background: none; color: var(--on-scene-soft); font: inherit; cursor: pointer;
+  text-decoration: underline; text-decoration-color: var(--on-scene-faint); text-underline-offset: 3px;
+}
+.dial button:hover { color: var(--on-scene); }
+/* "Back to now" is a small icon (its name is the button's aria-label): no words beside the dial */
+.dial #dial-reset { display: inline-flex; padding: 4px; margin: -4px; border-radius: 50%; text-decoration: none; transition: color 0.2s ease; }
+.dial #dial-reset svg { display: block; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.4)); }
+.dial #dial-reset:focus-visible { outline: 2px solid var(--on-scene); outline-offset: 1px; }
+nav { display: flex; gap: 1.15rem; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+nav a { color: var(--on-scene-soft); text-decoration: none; transition: color 0.2s ease; -webkit-tap-highlight-color: transparent; }
+nav a:hover { color: var(--on-scene); }
+.icons { display: inline-flex; gap: 0.95rem; align-items: center; }
+a.icon { display: inline-flex; }
+a.icon svg { width: 1.05em; height: 1.05em; fill: currentColor; filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.4)); }
+
+.tip {
+  position: fixed; z-index: 5; left: 0; top: 0; pointer-events: none;
+  padding: 0.32rem 0.7rem; border-radius: 999px;
+  background: rgba(20, 18, 16, 0.66); color: #f4f1ea;
+  font-size: 13px; line-height: 1.4; white-space: nowrap;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transform: translate(14px, 14px);
+}
+.tip.at-focus { transform: translate(-50%, -50%); }
+
+/* ---------- below the window ---------- */
+.about { background: var(--paper); color: var(--ink); }
+.about .col { max-width: 32rem; margin: 0 auto; padding: 5.5rem 1.5rem 6rem; }
+.about p { margin: 0 0 1em; }
+.about a { text-decoration: none; border-bottom: 1px solid var(--hair); transition: border-color 0.2s ease; }
+.about a:hover { border-bottom-color: var(--ink); }
+.links { list-style: none; margin: 3rem 0 0; padding: 0; }
+.links li { padding: 0.55rem 0; border-top: 1px solid var(--hair); }
+.links li:last-child { border-bottom: 1px solid var(--hair); }
+.links a { border: 0; font-weight: 500; }
+.credit { margin-top: 3rem !important; font-size: 13px; color: var(--muted); }
+
+/* tablets: name and links on one line, the clock under them */
+@media (min-width: 761px) and (max-width: 1080px) {
+  .masthead { grid-template-columns: 1fr auto; grid-template-areas: "who nav" "clock clock"; row-gap: 0.8rem; }
+  .who { grid-area: who; }
+  nav { grid-area: nav; flex-wrap: nowrap; }
+  .clock { grid-area: clock; align-items: flex-start; }
+  .masthead > .clock { justify-self: start; }
+}
+@media (max-width: 760px) {
+  .masthead { grid-template-columns: 1fr; gap: 0.6rem; padding: 1.1rem 1.1rem 1.2rem; padding-bottom: max(1.2rem, env(safe-area-inset-bottom)); }
+  .clock { align-items: flex-start; order: 3; }
+  .dial input { width: min(220px, 52vw); }
+  nav { justify-content: flex-start; gap: min(0.9rem, 3.3vw); font-size: 14px; }   /* six words on one line down to 360 px */
+  .masthead > nav, .masthead > .clock { justify-self: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lqip, .pic, .ext canvas { transition: none !important; }
+  @view-transition { navigation: none; }
+}
+
+/* The menu's About and Social blocks are read by the router and the phone, never shown in the page's flow: `nav` and
+   `.about` set a display that beat the hidden attribute (a row of icons and a strip below the room, 17 Oct). Without
+   scripts, /#about and /#social still show them over the photograph (:target, index.html's noscript styles). */
+#about[hidden]:not(:target), #social[hidden]:not(:target), .sfw-js #about[hidden], .sfw-js #social[hidden] { display: none !important; }
+
+/* A calmer masthead (masthead-r2, Akshay 20 Oct: "drop the 'always learning' ... put the How it's made somewhere
+   else ... that area will be less crowded"). The page is about the view, so How it's made follows the view's line, the
+   sky caption and its speaker, as a quiet "· How it's made" in the caption's own size and tone. Phones under 410 px,
+   where the two do not fit on one line, put it on its own line under the caption, never on the menu's line; the
+   masthead is still no taller than it was with "Always learning" (the room's framing reads its height, router.js
+   reserveFor). The window spot's docked clock is the dial alone, as before. */
+.clock-line { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; }
+.masthead .made {
+  font-size: 13px; color: var(--on-scene-soft); text-decoration: none; white-space: nowrap;
+  transition: color 0.2s ease; -webkit-tap-highlight-color: transparent;
+}
+.masthead .made:hover { color: var(--on-scene); }
+.masthead .made::before { content: "\00B7"; content: "\00B7" / ""; margin: 0 0.5em; }   /* (the dot is not read out) */
+.clock-line > .sfw-now-row + .made { margin-left: 24px; }   /* past the speaker, which hangs after the caption (sound.js) */
+html.sfw-at-window .masthead .made { display: none; }
+@media (max-width: 760px) { .clock-line { justify-content: flex-start; } }
+@media (max-width: 409px) {
+  .clock-line { flex-direction: column; align-items: flex-start; }
+  .masthead .made::before { content: none; }
+  .clock-line > .sfw-now-row + .made { margin-left: 0; }
+}
+/* narrow desktops with the plain list (1081-1299 px, no live room): its six links do not fit beside a one-line middle
+   (take 1, 1180 px: "Social" fell to a second line), so How it's made goes under the caption there too */
+@media (min-width: 1081px) and (max-width: 1299px) {
+  html:not(.sfw-room-menu) .clock-line { flex-direction: column; align-items: flex-start; }
+  html:not(.sfw-room-menu) .masthead .made::before { content: none; }
+  html:not(.sfw-room-menu) .clock-line > .sfw-now-row + .made { margin-left: 0; }
+}
+/* the live room's menu: Projects, Books and Quotes are the laptop, the Almanack and the print (shared/sky-head.js) */
+html.sfw-room-menu .masthead nav a.plain { display: none; }
+/* (DYS-31, Akshay 29 Oct, option C) the Quiet version (/simple/) on its own in the page's top-right corner, on every
+   screen size; the bottom menu is again the one line it was before the link. The menu's own type (15 px, 14 px on
+   phones, as nav) and the link's quieter tone (0.7); the masthead's side margin (2rem; the room's tablet bar 1.5rem;
+   phones 1.1rem) and a top inset that mirrors the bar's bottom one (its line box as far from the top as the menu's is
+   from the bottom); the safe areas kept. Shown with the room's menu, as the menu's link was (without the room the
+   menu's own links lead to the Quiet version). It steps aside while "Back to the desk" holds that corner (router.js
+   .sfw-close: at every spot), while a page comes in over the hidden desk (sfw-pre-page: Books, Quotes, the laptop's
+   lean-in from /projects/) and under the name's card at the desk (sfw-home-card: top right; phones a top sheet). */
+:root { --qc-top: max(1.4rem, env(safe-area-inset-top)); --qc-right: max(2rem, env(safe-area-inset-right)); --qc-size: 15px; }
+@media (min-width: 761px) and (max-width: 1080px) { :root { --qc-right: max(1.5rem, env(safe-area-inset-right)); } }
+@media (max-width: 760px) { :root { --qc-top: max(1.2rem, env(safe-area-inset-top)); --qc-right: max(1.1rem, env(safe-area-inset-right)); --qc-size: 14px; } }
+.quiet-corner {
+  position: absolute; z-index: 3; top: var(--qc-top); right: var(--qc-right);
+  font-size: var(--qc-size); line-height: 1.65; white-space: nowrap; text-decoration: none;
+  color: var(--qc-ink, var(--on-scene-soft)); opacity: 0.7; text-shadow: var(--qc-halo, 0 1px 14px rgba(0, 0, 0, 0.45));
+  transition: color 0.2s ease; -webkit-tap-highlight-color: transparent;
+}
+.quiet-corner:hover { color: var(--qc-ink-hover, var(--on-scene)); }
+html:not(.sfw-room-menu) .quiet-corner, html.sfw-pre-page .quiet-corner, html.sfw-home-card .quiet-corner { display: none; }
+html:has(.sfw-close:not([hidden])) .quiet-corner { display: none; }   /* (a rule of its own: a browser without :has() keeps the others) */
+/* (DYS-138, Akshay's option 1) dark ink where the corner's backdrop is bright, the light ink only over the dark sky (the
+   light link read 1.6-1.8:1 on the midday sky, 1.1-1.2:1 on a portrait tablet's lamp-lit ceiling at night). Over the
+   sky the moment says which: data-scheme, "light" while the sun is above -2 degrees (scripts/build_web.py palette(),
+   whose sky sample at the window's top is bright from sunrise to sunset), "dark" at dawn, dusk, blue and night. (Not
+   data-ink: the deployed frames say "light" at every moment.) On portrait tablets the ceiling holds that corner instead
+   (grey by day, lit by the lamp at night): dark at every moment. Those are the screens framed with the desk's portrait
+   lens (shared/framing.js: 3:4 or taller and wider than the phone camera's 500 px; phones and wider shapes have sky
+   there), a layout fact CSS can read where the room's pose is only exposed for debugging (__sfwNav). The ink: the
+   day's #1f1b16 a step deeper, so its 0.7 holds 3:1 on the grey daytime ceiling, and a faint light halo in place of
+   the dark one. */
+html[data-scheme="light"] { --qc-ink: #14110e; --qc-ink-hover: #000; --qc-halo: 0 0 12px rgba(244, 239, 230, 0.45); }
+/* (DYS-138 r2) the ceiling holds the corner up to 4:5, not only to 3:4: framing.js blends the portrait lens into the
+   landscape one from 3:4 to square, and the ceiling stays behind the link to about 0.80 (the window head from 0.82,
+   the sky from 0.92); the portrait photograph also runs to 0.8 (sky.js homeViewFor). At a dark moment with the lamp
+   switched off (router.js data-lamp) that ceiling is dark (the night's light without the lamp, about 3 % of it):
+   the light ink again there. */
+/* (DYS-138 IK2, B 30 Oct: back to 3:4: at 880x1100 (4:5) the corner is over the night sky, not the ceiling, dark ink
+   1.06:1 there) */
+@media (min-width: 501px) and (max-aspect-ratio: 3/4) {
+  :root { --qc-ink: #14110e; --qc-ink-hover: #000; --qc-halo: 0 0 12px rgba(244, 239, 230, 0.45); }
+  html[data-scheme="dark"][data-lamp="off"] { --qc-ink: initial; --qc-ink-hover: initial; --qc-halo: initial; }
+}
+/* the phones' edge tabs (router.js .sfw-edge: Books and Quotes at the desk, by touch; on portrait screens on the wall
+   above the window) start 8 px under its line: their own place put the Quotes tab's top beside its words on phones
+   (390x844: 41 px, 360x780: 35 px; its line ends at 42 px), so those move down to 50 px (from 2 px at 430x932 to 25 px
+   on a 667 px tall phone); tablets keep their own place, already lower (768x1024: 56 px) */
+@media (orientation: portrait) {
+  html.sfw-room-menu .sfw-edge { top: max(calc(var(--qc-top) + var(--qc-size) * 1.65 + 8px), calc(env(safe-area-inset-top) / 2 + 8.5% - 31px)); }
+}
+/* tablets with the live room's menu (tablet-menu, 23 Oct; backlog-d.md item 2): the name, the sky caption with How it's
+   made, and About Writing Social on one line, as on desktops. They need ~660 px (139 + 352 + 169 at 768 px), so the
+   columns take their own widths ("auto 1fr auto", the caption centred between the name and the menu; the desktop's even
+   "1fr auto 1fr" left the menu 160 px) and the sides 1.5rem: 28 px to spare at 768. The bar is the desktop's 71 px, not
+   106; on a portrait tablet's first view the menu no longer lies on the desk's phone (qa-tablet-notes.md T-F1). The
+   plain list of six (photographs only, ~370 px) does not fit and keeps the two rows above. */
+@media (min-width: 761px) and (max-width: 1080px) {
+  html.sfw-room-menu .masthead { grid-template-columns: auto 1fr auto; grid-template-areas: "who clock nav"; padding-left: 1.5rem; padding-right: 1.5rem; }
+  html.sfw-room-menu .masthead > .clock { justify-self: center; align-items: center; }
+}
+

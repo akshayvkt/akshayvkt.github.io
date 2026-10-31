@@ -1,0 +1,166 @@
+{
+ "el": [
+  -28.0,
+  -3.0
+ ],
+ "levels": {
+  "L0": 88,
+  "L1": 44,
+  "L2": 22
+ },
+ "back": {
+  "levels": {
+   "L1": 44,
+   "L2": 22
+  },
+  "alpha": "coverage"
+ },
+ "columns": 7,
+ "column_deg": 16.0,
+ "gutter": 2,
+ "premultiplied": true,
+ "moments": {
+  "afternoon": {
+   "near-L0": 2031663,
+   "near-L1": 563466,
+   "near-L2": 142457,
+   "nearback-L1": 351931,
+   "nearback-L2": 106867
+  },
+  "blue": {
+   "near-L0": 353361,
+   "near-L1": 110178,
+   "near-L2": 33732,
+   "nearback-L1": 87488,
+   "nearback-L2": 29672,
+   "nearx-L1": 25097
+  },
+  "dawn": {
+   "near-L0": 355354,
+   "near-L1": 107771,
+   "near-L2": 32041,
+   "nearback-L1": 80698,
+   "nearback-L2": 25927,
+   "nearx-L1": 12116
+  },
+  "dusk": {
+   "near-L0": 488247,
+   "near-L1": 154084,
+   "near-L2": 47203,
+   "nearback-L1": 127868,
+   "nearback-L2": 43157,
+   "nearx-L1": 25479
+  },
+  "golden": {
+   "near-L0": 687713,
+   "near-L1": 204863,
+   "near-L2": 59541,
+   "nearback-L1": 156884,
+   "nearback-L2": 52073
+  },
+  "lateafternoon": {
+   "near-L0": 1584457,
+   "near-L1": 452239,
+   "near-L2": 116286,
+   "nearback-L1": 276070,
+   "nearback-L2": 87637
+  },
+  "latemorning": {
+   "near-L0": 2203068,
+   "near-L1": 623951,
+   "near-L2": 156815,
+   "nearback-L1": 375414,
+   "nearback-L2": 115789
+  },
+  "lowsun": {
+   "near-L0": 854802,
+   "near-L1": 257512,
+   "near-L2": 72808,
+   "nearback-L1": 181796,
+   "nearback-L2": 59957
+  },
+  "midday": {
+   "near-L0": 2512624,
+   "near-L1": 704726,
+   "near-L2": 176991,
+   "nearback-L1": 424129,
+   "nearback-L2": 128033
+  },
+  "morning": {
+   "near-L0": 1700839,
+   "near-L1": 490872,
+   "near-L2": 126650,
+   "nearback-L1": 270225,
+   "nearback-L2": 87106
+  },
+  "night": {
+   "near-L0": 342490,
+   "near-L1": 106292,
+   "near-L2": 32450,
+   "nearback-L1": 81622,
+   "nearback-L2": 27746,
+   "nearx-L1": 22009
+  },
+  "predawn": {
+   "near-L0": 292973,
+   "near-L1": 87207,
+   "near-L2": 25638,
+   "nearback-L1": 59146,
+   "nearback-L2": 19239,
+   "nearx-L1": 12279
+  },
+  "sunrise": {
+   "near-L0": 1140790,
+   "near-L1": 327975,
+   "near-L2": 89637,
+   "nearback-L1": 202296,
+   "nearback-L2": 66927
+  },
+  "sunset": {
+   "near-L0": 763242,
+   "near-L1": 223968,
+   "near-L2": 64758,
+   "nearback-L1": 163048,
+   "nearback-L2": 54048
+  }
+ },
+ "depth": {
+  "file": "aux/near-depth.png",
+  "ppd": 44,
+  "yaw": [
+   -56.25,
+   56.25
+  ],
+  "el": [
+   -28.25,
+   -2.75
+  ],
+  "size": [
+   4950,
+   1122
+  ],
+  "depth_m": [
+   2.0,
+   2000.0
+  ],
+  "clip_m": 350.0,
+  "encoding": "q16 = ln(d / d0) / ln(d1 / d0) * 65535; R,G = front (hi, lo), B,A = back; 65535 = none",
+  "tiles": "aux/near-depth-L1-{col}.png",
+  "tiles_ppd": 44,
+  "tiles_encoding": "RGB8: R,G = the front's q16 (hi, lo); B = the back's q16 >> 8; none = 65535 / 255"
+ },
+ "extra": {
+  "tiles": "nearx-L1-{col}.avif",
+  "ppd": 44,
+  "dial_default": 0.0,
+  "add": "RGB over the near layer",
+  "moments": [
+   "blue",
+   "dawn",
+   "dusk",
+   "night",
+   "predawn"
+  ],
+  "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
+ }
+}

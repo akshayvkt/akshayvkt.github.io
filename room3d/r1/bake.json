@@ -1,0 +1,3125 @@
+{
+ "version": 1,
+ "model": "room.glb",
+ "model_hash": "a38ca2f07fbd5d79",
+ "encoding": "cbrt",
+ "atlases": {
+  "shell": {
+   "size": 1024
+  },
+  "window": {
+   "size": 1024
+  },
+  "desk": {
+   "size": 2048
+  },
+  "furniture": {
+   "size": 2048
+  }
+ },
+ "box": [
+  [
+   -2.0,
+   0.0,
+   -1.45
+  ],
+  [
+   2.0,
+   2.9,
+   4.0
+  ]
+ ],
+ "info": {
+  "heading_deg": 291.6564,
+  "eye": [
+   37.8011,
+   -122.4195,
+   112.64
+  ],
+  "eye_room": [
+   0.0,
+   1.17,
+   1.05
+  ],
+  "note": "eye = the desk eye (engine eye_room); alt in metres above the terrain datum"
+ },
+ "moments": {
+  "afternoon": {
+   "exposure": -0.2,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.0
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/afternoon/ambient_desk.avif",
+     "scale": [
+      27.964392,
+      13.311797,
+      9.796415
+     ]
+    },
+    "furniture": {
+     "file": "bake/afternoon/ambient_furniture.avif",
+     "scale": [
+      10.00285,
+      10.757753,
+      8.51582
+     ]
+    },
+    "shell": {
+     "file": "bake/afternoon/ambient_shell.avif",
+     "scale": [
+      9.44215,
+      7.719136,
+      7.206258
+     ]
+    },
+    "window": {
+     "file": "bake/afternoon/ambient_window.avif",
+     "scale": [
+      10.001385,
+      8.111107,
+      7.789083
+     ]
+    }
+   },
+   "sun": {
+    "desk": {
+     "file": "bake/afternoon/sun_desk.avif",
+     "scale": [
+      50.65625,
+      43.03125,
+      33.0
+     ]
+    },
+    "furniture": {
+     "file": "bake/afternoon/sun_furniture.avif",
+     "scale": [
+      50.0,
+      42.46875,
+      32.5625
+     ]
+    },
+    "shell": {
+     "file": "bake/afternoon/sun_shell.avif",
+     "scale": [
+      36.3125,
+      30.84375,
+      23.65625
+     ]
+    },
+    "window": {
+     "file": "bake/afternoon/sun_window.avif",
+     "scale": [
+      46.6875,
+      39.65625,
+      30.421875
+     ]
+    }
+   },
+   "sun_light": {
+    "direction": [
+     -0.51737,
+     0.7065,
+     -0.4829
+    ],
+    "colour": [
+     1.0,
+     0.8493785063676293,
+     0.651543677258913
+    ],
+    "strength": 159.44898,
+    "angle_deg": 0.53,
+    "note": "direction points toward the sun (engine axes); strength x colour = the calibrated Cycles sun lamp (W/m2)"
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/afternoon/probe_desk.avif",
+     "scale": [
+      63.297138,
+      36.070805,
+      28.057936
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/afternoon/probe_shelf.avif",
+     "scale": [
+      34.040516,
+      29.587082,
+      22.453516
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  },
+  "blue": {
+   "exposure": 1.5,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.0
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/blue/ambient_desk.avif",
+     "scale": [
+      0.085876,
+      0.040894,
+      0.018692
+     ]
+    },
+    "furniture": {
+     "file": "bake/blue/ambient_furniture.avif",
+     "scale": [
+      0.025984,
+      0.011225,
+      0.016435
+     ]
+    },
+    "shell": {
+     "file": "bake/blue/ambient_shell.avif",
+     "scale": [
+      0.007029,
+      0.006085,
+      0.010906
+     ]
+    },
+    "window": {
+     "file": "bake/blue/ambient_window.avif",
+     "scale": [
+      0.034661,
+      0.013072,
+      0.017529
+     ]
+    }
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/blue/probe_desk.avif",
+     "scale": [
+      2.196567,
+      2.197888,
+      2.179554
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/blue/probe_shelf.avif",
+     "scale": [
+      6.172251,
+      2.966943,
+      1.91397
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  },
+  "dawn": {
+   "exposure": 1.4,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.0
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/dawn/ambient_desk.avif",
+     "scale": [
+      0.042694,
+      0.017328,
+      0.066468
+     ]
+    },
+    "furniture": {
+     "file": "bake/dawn/ambient_furniture.avif",
+     "scale": [
+      0.102966,
+      0.036804,
+      0.086625
+     ]
+    },
+    "shell": {
+     "file": "bake/dawn/ambient_shell.avif",
+     "scale": [
+      0.014773,
+      0.011058,
+      0.052616
+     ]
+    },
+    "window": {
+     "file": "bake/dawn/ambient_window.avif",
+     "scale": [
+      0.081032,
+      0.042409,
+      0.075172
+     ]
+    }
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/dawn/probe_desk.avif",
+     "scale": [
+      2.196388,
+      2.196216,
+      2.180166
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/dawn/probe_shelf.avif",
+     "scale": [
+      6.747728,
+      3.042363,
+      1.910094
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  },
+  "dusk": {
+   "exposure": 0.9,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.0
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/dusk/ambient_desk.avif",
+     "scale": [
+      0.05542,
+      0.03577,
+      0.085527
+     ]
+    },
+    "furniture": {
+     "file": "bake/dusk/ambient_furniture.avif",
+     "scale": [
+      0.102112,
+      0.032623,
+      0.079384
+     ]
+    },
+    "shell": {
+     "file": "bake/dusk/ambient_shell.avif",
+     "scale": [
+      0.020827,
+      0.018969,
+      0.061395
+     ]
+    },
+    "window": {
+     "file": "bake/dusk/ambient_window.avif",
+     "scale": [
+      0.08133,
+      0.040652,
+      0.095684
+     ]
+    }
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/dusk/probe_desk.avif",
+     "scale": [
+      2.198233,
+      2.194743,
+      2.180768
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/dusk/probe_shelf.avif",
+     "scale": [
+      6.305996,
+      2.873855,
+      1.909403
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  },
+  "golden": {
+   "exposure": -0.5,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.02
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/golden/ambient_desk.avif",
+     "scale": [
+      30.47604,
+      13.049767,
+      5.339384
+     ]
+    },
+    "furniture": {
+     "file": "bake/golden/ambient_furniture.avif",
+     "scale": [
+      13.039062,
+      5.972656,
+      3.014729
+     ]
+    },
+    "shell": {
+     "file": "bake/golden/ambient_shell.avif",
+     "scale": [
+      8.645939,
+      5.499046,
+      3.376099
+     ]
+    },
+    "window": {
+     "file": "bake/golden/ambient_window.avif",
+     "scale": [
+      12.079074,
+      8.160026,
+      3.952043
+     ]
+    }
+   },
+   "sun": {
+    "desk": {
+     "file": "bake/golden/sun_desk.avif",
+     "scale": [
+      34.4375,
+      22.953125,
+      10.242188
+     ]
+    },
+    "furniture": {
+     "file": "bake/golden/sun_furniture.avif",
+     "scale": [
+      25.921875,
+      17.265625,
+      7.707031
+     ]
+    },
+    "shell": {
+     "file": "bake/golden/sun_shell.avif",
+     "scale": [
+      32.875,
+      21.90625,
+      9.78125
+     ]
+    },
+    "window": {
+     "file": "bake/golden/sun_window.avif",
+     "scale": [
+      34.28125,
+      22.84375,
+      10.195312
+     ]
+    }
+   },
+   "sun_light": {
+    "direction": [
+     -0.25871,
+     0.17301,
+     -0.95033
+    ],
+    "colour": [
+     1.0,
+     0.6663896616292547,
+     0.29738184549044844
+    ],
+    "strength": 108.19526,
+    "angle_deg": 0.53,
+    "note": "direction points toward the sun (engine axes); strength x colour = the calibrated Cycles sun lamp (W/m2)"
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/golden/probe_desk.avif",
+     "scale": [
+      368.493835,
+      141.717133,
+      56.176029
+     ],
+     "size": [
+      512,
+      256
+     ],
+     "lamp": {
+      "file": "bake/lamp/probe_desk.avif",
+      "scale": [
+       35.207848,
+       17.815954,
+       8.146281
+      ]
+     }
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/golden/probe_shelf.avif",
+     "scale": [
+      26.847309,
+      14.822001,
+      7.517628
+     ],
+     "size": [
+      512,
+      256
+     ],
+     "lamp": {
+      "file": "bake/lamp/probe_shelf.avif",
+      "scale": [
+       19.334963,
+       8.053359,
+       2.811491
+      ]
+     }
+    }
+   ]
+  },
+  "lateafternoon": {
+   "exposure": -0.4,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.01
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/lateafternoon/ambient_desk.avif",
+     "scale": [
+      36.762165,
+      18.934551,
+      8.388766
+     ]
+    },
+    "furniture": {
+     "file": "bake/lateafternoon/ambient_furniture.avif",
+     "scale": [
+      10.177969,
+      7.296109,
+      5.529804
+     ]
+    },
+    "shell": {
+     "file": "bake/lateafternoon/ambient_shell.avif",
+     "scale": [
+      10.291451,
+      7.788151,
+      6.470712
+     ]
+    },
+    "window": {
+     "file": "bake/lateafternoon/ambient_window.avif",
+     "scale": [
+      14.957029,
+      12.112525,
+      8.489535
+     ]
+    }
+   },
+   "sun": {
+    "desk": {
+     "file": "bake/lateafternoon/sun_desk.avif",
+     "scale": [
+      46.40625,
+      37.1875,
+      25.03125
+     ]
+    },
+    "furniture": {
+     "file": "bake/lateafternoon/sun_furniture.avif",
+     "scale": [
+      46.3125,
+      37.09375,
+      24.984375
+     ]
+    },
+    "shell": {
+     "file": "bake/lateafternoon/sun_shell.avif",
+     "scale": [
+      19.671875,
+      15.734375,
+      10.578125
+     ]
+    },
+    "window": {
+     "file": "bake/lateafternoon/sun_window.avif",
+     "scale": [
+      44.59375,
+      35.71875,
+      24.046875
+     ]
+    }
+   },
+   "sun_light": {
+    "direction": [
+     -0.40162,
+     0.40638,
+     -0.82071
+    ],
+    "colour": [
+     1.0,
+     0.800839492718091,
+     0.5392114783877504
+    ],
+    "strength": 146.0322,
+    "angle_deg": 0.53,
+    "note": "direction points toward the sun (engine axes); strength x colour = the calibrated Cycles sun lamp (W/m2)"
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/lateafternoon/probe_desk.avif",
+     "scale": [
+      360.099823,
+      289.823273,
+      197.369827
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/lateafternoon/probe_shelf.avif",
+     "scale": [
+      33.174454,
+      26.71056,
+      19.738689
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  },
+  "latemorning": {
+   "exposure": 0.3,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.0
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/latemorning/ambient_desk.avif",
+     "scale": [
+      2.980646,
+      2.593923,
+      4.495573
+     ]
+    },
+    "furniture": {
+     "file": "bake/latemorning/ambient_furniture.avif",
+     "scale": [
+      2.703124,
+      3.093755,
+      5.734074
+     ]
+    },
+    "shell": {
+     "file": "bake/latemorning/ambient_shell.avif",
+     "scale": [
+      1.697506,
+      1.798352,
+      3.137731
+     ]
+    },
+    "window": {
+     "file": "bake/latemorning/ambient_window.avif",
+     "scale": [
+      2.347407,
+      3.610687,
+      5.578316
+     ]
+    }
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/latemorning/probe_desk.avif",
+     "scale": [
+      22.153805,
+      17.476582,
+      17.693987
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/latemorning/probe_shelf.avif",
+     "scale": [
+      19.137457,
+      14.785911,
+      15.693844
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  },
+  "lowsun": {
+   "exposure": -0.2,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.02
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/lowsun/ambient_desk.avif",
+     "scale": [
+      25.07564,
+      8.986553,
+      1.910803
+     ]
+    },
+    "furniture": {
+     "file": "bake/lowsun/ambient_furniture.avif",
+     "scale": [
+      12.167969,
+      4.806519,
+      1.569897
+     ]
+    },
+    "shell": {
+     "file": "bake/lowsun/ambient_shell.avif",
+     "scale": [
+      6.158497,
+      3.119421,
+      1.554077
+     ]
+    },
+    "window": {
+     "file": "bake/lowsun/ambient_window.avif",
+     "scale": [
+      13.663931,
+      5.062268,
+      1.850155
+     ]
+    }
+   },
+   "sun": {
+    "desk": {
+     "file": "bake/lowsun/sun_desk.avif",
+     "scale": [
+      23.0,
+      11.960938,
+      2.867188
+     ]
+    },
+    "furniture": {
+     "file": "bake/lowsun/sun_furniture.avif",
+     "scale": [
+      16.265625,
+      8.460938,
+      2.027344
+     ]
+    },
+    "shell": {
+     "file": "bake/lowsun/sun_shell.avif",
+     "scale": [
+      22.515625,
+      11.703125,
+      2.806641
+     ]
+    },
+    "window": {
+     "file": "bake/lowsun/sun_window.avif",
+     "scale": [
+      23.0,
+      11.953125,
+      2.865234
+     ]
+    }
+   },
+   "sun_light": {
+    "direction": [
+     -0.20097,
+     0.0918,
+     -0.97529
+    ],
+    "colour": [
+     1.0,
+     0.5199089207745837,
+     0.12461107537968326
+    ],
+    "strength": 72.29696,
+    "angle_deg": 0.53,
+    "note": "direction points toward the sun (engine axes); strength x colour = the calibrated Cycles sun lamp (W/m2)"
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/lowsun/probe_desk.avif",
+     "scale": [
+      500.539185,
+      260.161224,
+      58.060196
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/lowsun/probe_shelf.avif",
+     "scale": [
+      13.082705,
+      6.895318,
+      4.406364
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  },
+  "midday": {
+   "exposure": 0.1,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.0
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/midday/ambient_desk.avif",
+     "scale": [
+      3.953529,
+      4.388018,
+      5.084149
+     ]
+    },
+    "furniture": {
+     "file": "bake/midday/ambient_furniture.avif",
+     "scale": [
+      3.488281,
+      3.421875,
+      5.965789
+     ]
+    },
+    "shell": {
+     "file": "bake/midday/ambient_shell.avif",
+     "scale": [
+      1.85007,
+      2.358448,
+      3.910207
+     ]
+    },
+    "window": {
+     "file": "bake/midday/ambient_window.avif",
+     "scale": [
+      2.466498,
+      3.902861,
+      6.39804
+     ]
+    }
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/midday/probe_desk.avif",
+     "scale": [
+      14.132288,
+      16.977774,
+      17.711521
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/midday/probe_shelf.avif",
+     "scale": [
+      21.293865,
+      19.805582,
+      17.902138
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  },
+  "morning": {
+   "exposure": 0.5,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.0
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/morning/ambient_desk.avif",
+     "scale": [
+      3.082501,
+      1.929065,
+      3.074471
+     ]
+    },
+    "furniture": {
+     "file": "bake/morning/ambient_furniture.avif",
+     "scale": [
+      2.694612,
+      2.931319,
+      3.768857
+     ]
+    },
+    "shell": {
+     "file": "bake/morning/ambient_shell.avif",
+     "scale": [
+      0.661151,
+      1.012748,
+      2.17621
+     ]
+    },
+    "window": {
+     "file": "bake/morning/ambient_window.avif",
+     "scale": [
+      1.24652,
+      2.113117,
+      3.50434
+     ]
+    }
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/morning/probe_desk.avif",
+     "scale": [
+      23.840816,
+      17.029837,
+      11.230033
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/morning/probe_shelf.avif",
+     "scale": [
+      11.667955,
+      7.85019,
+      8.324124
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  },
+  "night": {
+   "exposure": 1.8,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.0
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/night/ambient_desk.avif",
+     "scale": [
+      0.0755,
+      0.035278,
+      0.013817
+     ]
+    },
+    "furniture": {
+     "file": "bake/night/ambient_furniture.avif",
+     "scale": [
+      0.029861,
+      0.010345,
+      0.006551
+     ]
+    },
+    "shell": {
+     "file": "bake/night/ambient_shell.avif",
+     "scale": [
+      0.007855,
+      0.005235,
+      0.003668
+     ]
+    },
+    "window": {
+     "file": "bake/night/ambient_window.avif",
+     "scale": [
+      0.018321,
+      0.008476,
+      0.005311
+     ]
+    }
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/night/probe_desk.avif",
+     "scale": [
+      2.197039,
+      2.207589,
+      2.17162
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/night/probe_shelf.avif",
+     "scale": [
+      5.623455,
+      2.864744,
+      1.920656
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  },
+  "predawn": {
+   "exposure": 2.0,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.0
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/predawn/ambient_desk.avif",
+     "scale": [
+      0.084229,
+      0.039917,
+      0.017838
+     ]
+    },
+    "furniture": {
+     "file": "bake/predawn/ambient_furniture.avif",
+     "scale": [
+      0.024469,
+      0.010992,
+      0.01519
+     ]
+    },
+    "shell": {
+     "file": "bake/predawn/ambient_shell.avif",
+     "scale": [
+      0.006906,
+      0.005689,
+      0.009361
+     ]
+    },
+    "window": {
+     "file": "bake/predawn/ambient_window.avif",
+     "scale": [
+      0.043496,
+      0.01431,
+      0.014706
+     ]
+    }
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/predawn/probe_desk.avif",
+     "scale": [
+      2.197663,
+      2.205177,
+      2.179104
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/predawn/probe_shelf.avif",
+     "scale": [
+      6.175587,
+      2.967414,
+      1.914912
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  },
+  "sunrise": {
+   "exposure": 0.9,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.0
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/sunrise/ambient_desk.avif",
+     "scale": [
+      0.652532,
+      0.520556,
+      0.678293
+     ]
+    },
+    "furniture": {
+     "file": "bake/sunrise/ambient_furniture.avif",
+     "scale": [
+      1.326977,
+      0.721209,
+      0.789559
+     ]
+    },
+    "shell": {
+     "file": "bake/sunrise/ambient_shell.avif",
+     "scale": [
+      0.315083,
+      0.356415,
+      0.550617
+     ]
+    },
+    "window": {
+     "file": "bake/sunrise/ambient_window.avif",
+     "scale": [
+      0.510291,
+      0.574219,
+      0.736781
+     ]
+    }
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/sunrise/probe_desk.avif",
+     "scale": [
+      3.967149,
+      2.410198,
+      2.1961
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/sunrise/probe_shelf.avif",
+     "scale": [
+      2.781567,
+      1.918938,
+      1.912772
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  },
+  "sunset": {
+   "exposure": 0.2,
+   "grade": {
+    "contrast": 1.02,
+    "saturation": 1.0,
+    "gamma": 1.0,
+    "warmth": 0.02
+   },
+   "matrix": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "ambient": {
+    "desk": {
+     "file": "bake/sunset/ambient_desk.avif",
+     "scale": [
+      2.954592,
+      0.462591,
+      0.409895
+     ]
+    },
+    "furniture": {
+     "file": "bake/sunset/ambient_furniture.avif",
+     "scale": [
+      0.664503,
+      0.317823,
+      0.436209
+     ]
+    },
+    "shell": {
+     "file": "bake/sunset/ambient_shell.avif",
+     "scale": [
+      0.516932,
+      0.259208,
+      0.33826
+     ]
+    },
+    "window": {
+     "file": "bake/sunset/ambient_window.avif",
+     "scale": [
+      1.901275,
+      0.475119,
+      0.441859
+     ]
+    }
+   },
+   "sun": {
+    "desk": {
+     "file": "bake/sunset/sun_desk.avif",
+     "scale": [
+      0.878906,
+      0.120911,
+      0.000474
+     ]
+    },
+    "furniture": {
+     "file": "bake/sunset/sun_furniture.avif",
+     "scale": [
+      0.58252,
+      0.080139,
+      0.000314
+     ]
+    },
+    "shell": {
+     "file": "bake/sunset/sun_shell.avif",
+     "scale": [
+      0.87207,
+      0.119934,
+      0.000471
+     ]
+    },
+    "window": {
+     "file": "bake/sunset/sun_window.avif",
+     "scale": [
+      0.878906,
+      0.120911,
+      0.000474
+     ]
+    }
+   },
+   "sun_light": {
+    "direction": [
+     -0.1342,
+     0.00418,
+     -0.99095
+    ],
+    "colour": [
+     1.0,
+     0.13757357129295614,
+     0.0005397488404893
+    ],
+    "strength": 2.76155,
+    "angle_deg": 0.53,
+    "note": "direction points toward the sun (engine axes); strength x colour = the calibrated Cycles sun lamp (W/m2)"
+   },
+   "probes": [
+    {
+     "name": "desk",
+     "position": [
+      0.0,
+      1.0,
+      -0.7
+     ],
+     "file": "bake/sunset/probe_desk.avif",
+     "scale": [
+      28.725107,
+      6.083809,
+      2.188734
+     ],
+     "size": [
+      512,
+      256
+     ]
+    },
+    {
+     "name": "shelf",
+     "position": [
+      -1.5,
+      1.6,
+      -0.6
+     ],
+     "file": "bake/sunset/probe_shelf.avif",
+     "scale": [
+      2.014937,
+      1.921172,
+      1.904948
+     ],
+     "size": [
+      512,
+      256
+     ]
+    }
+   ]
+  }
+ },
+ "layers": {
+  "lamp": {
+   "desk": {
+    "file": "bake/lamp/lamp_desk.avif",
+    "scale": [
+     26.421875,
+     18.3125,
+     10.913709
+    ]
+   },
+   "furniture": {
+    "file": "bake/lamp/lamp_furniture.avif",
+    "scale": [
+     1.99893,
+     1.355581,
+     1.069009
+    ]
+   },
+   "shell": {
+    "file": "bake/lamp/lamp_shell.avif",
+    "scale": [
+     0.962496,
+     0.66256,
+     0.387404
+    ]
+   },
+   "window": {
+    "file": "bake/lamp/lamp_window.avif",
+    "scale": [
+     3.983724,
+     2.779495,
+     1.656844
+    ]
+   }
+  },
+  "screen": {
+   "desk": {
+    "file": "bake/screen/screen_desk.avif",
+    "scale": [
+     2.264414,
+     2.264413,
+     2.264941
+    ]
+   },
+   "furniture": {
+    "file": "bake/screen/screen_furniture.avif",
+    "scale": [
+     0.049876,
+     0.041457,
+     0.033709
+    ]
+   },
+   "shell": {
+    "file": "bake/screen/screen_shell.avif",
+    "scale": [
+     0.013962,
+     0.011421,
+     0.009033
+    ]
+   },
+   "window": {
+    "file": "bake/screen/screen_window.avif",
+    "scale": [
+     0.016022,
+     0.0159,
+     0.015778
+    ]
+   }
+  },
+  "detail": {
+   "file": "bake/detail.avif",
+   "uv": 2,
+   "size": 2048,
+   "encoding": "linear",
+   "white_uv": [
+    0.995,
+    0.995
+   ],
+   "mean_ratio_on_detail": 0.7794
+  }
+ },
+ "checks": {
+  "golden_lamp_linearity_dE2000": {
+   "desk": {
+    "mean": 1.257,
+    "p95": 3.902
+   },
+   "furniture": {
+    "mean": 0.595,
+    "p95": 2.175
+   },
+   "shell": {
+    "mean": 0.734,
+    "p95": 1.669
+   },
+   "window": {
+    "mean": 0.934,
+    "p95": 2.904
+   }
+  }
+ },
+ "encode_stats": {
+  "afternoon": {
+   "afternoon/ambient_desk": {
+    "bytes": 160910,
+    "rel_err_median": 0.013,
+    "rel_err_p95": 0.0515
+   },
+   "afternoon/ambient_furniture": {
+    "bytes": 223848,
+    "rel_err_median": 0.0167,
+    "rel_err_p95": 0.0681
+   },
+   "afternoon/ambient_shell": {
+    "bytes": 9274,
+    "rel_err_median": 0.0159,
+    "rel_err_p95": 0.0527
+   },
+   "afternoon/ambient_window": {
+    "bytes": 32892,
+    "rel_err_median": 0.0151,
+    "rel_err_p95": 0.0584
+   },
+   "afternoon/sun_desk": {
+    "bytes": 60632,
+    "rel_err_median": 0.0052,
+    "rel_err_p95": 0.0259
+   },
+   "afternoon/sun_furniture": {
+    "bytes": 27105,
+    "rel_err_median": 0.0104,
+    "rel_err_p95": 0.1177
+   },
+   "afternoon/sun_shell": {
+    "bytes": 2030,
+    "rel_err_median": 0.0025,
+    "rel_err_p95": 0.0392
+   },
+   "afternoon/sun_window": {
+    "bytes": 7917,
+    "rel_err_median": 0.0078,
+    "rel_err_p95": 0.0812
+   },
+   "afternoon/probe_desk": {
+    "bytes": 8844,
+    "rel_err_median": 0.019,
+    "rel_err_p95": 0.0959
+   },
+   "afternoon/probe_shelf": {
+    "bytes": 6589,
+    "rel_err_median": 0.0289,
+    "rel_err_p95": 0.1382
+   }
+  },
+  "blue": {
+   "blue/ambient_desk": {
+    "bytes": 157412,
+    "rel_err_median": 0.0172,
+    "rel_err_p95": 0.0836
+   },
+   "blue/ambient_furniture": {
+    "bytes": 239744,
+    "rel_err_median": 0.0208,
+    "rel_err_p95": 0.0982
+   },
+   "blue/ambient_shell": {
+    "bytes": 38541,
+    "rel_err_median": 0.0175,
+    "rel_err_p95": 0.0876
+   },
+   "blue/ambient_window": {
+    "bytes": 81177,
+    "rel_err_median": 0.0165,
+    "rel_err_p95": 0.0893
+   },
+   "blue/probe_desk": {
+    "bytes": 4098,
+    "rel_err_median": 0.0193,
+    "rel_err_p95": 0.1172
+   },
+   "blue/probe_shelf": {
+    "bytes": 2654,
+    "rel_err_median": 0.0324,
+    "rel_err_p95": 0.1587
+   }
+  },
+  "dawn": {
+   "dawn/ambient_desk": {
+    "bytes": 207039,
+    "rel_err_median": 0.0127,
+    "rel_err_p95": 0.0619
+   },
+   "dawn/ambient_furniture": {
+    "bytes": 198809,
+    "rel_err_median": 0.0226,
+    "rel_err_p95": 0.1043
+   },
+   "dawn/ambient_shell": {
+    "bytes": 30448,
+    "rel_err_median": 0.0177,
+    "rel_err_p95": 0.0764
+   },
+   "dawn/ambient_window": {
+    "bytes": 54955,
+    "rel_err_median": 0.018,
+    "rel_err_p95": 0.1136
+   },
+   "dawn/probe_desk": {
+    "bytes": 4657,
+    "rel_err_median": 0.0257,
+    "rel_err_p95": 0.1522
+   },
+   "dawn/probe_shelf": {
+    "bytes": 3107,
+    "rel_err_median": 0.0298,
+    "rel_err_p95": 0.1546
+   }
+  },
+  "dusk": {
+   "dusk/ambient_desk": {
+    "bytes": 212781,
+    "rel_err_median": 0.0121,
+    "rel_err_p95": 0.0485
+   },
+   "dusk/ambient_furniture": {
+    "bytes": 229407,
+    "rel_err_median": 0.0174,
+    "rel_err_p95": 0.0744
+   },
+   "dusk/ambient_shell": {
+    "bytes": 21427,
+    "rel_err_median": 0.013,
+    "rel_err_p95": 0.0527
+   },
+   "dusk/ambient_window": {
+    "bytes": 56276,
+    "rel_err_median": 0.0155,
+    "rel_err_p95": 0.09
+   },
+   "dusk/probe_desk": {
+    "bytes": 4796,
+    "rel_err_median": 0.0208,
+    "rel_err_p95": 0.0927
+   },
+   "dusk/probe_shelf": {
+    "bytes": 3195,
+    "rel_err_median": 0.0306,
+    "rel_err_p95": 0.1399
+   }
+  },
+  "golden": {
+   "golden/ambient_desk": {
+    "bytes": 163464,
+    "rel_err_median": 0.0139,
+    "rel_err_p95": 0.0518
+   },
+   "golden/ambient_furniture": {
+    "bytes": 250325,
+    "rel_err_median": 0.0147,
+    "rel_err_p95": 0.0621
+   },
+   "golden/ambient_shell": {
+    "bytes": 11219,
+    "rel_err_median": 0.0126,
+    "rel_err_p95": 0.0445
+   },
+   "golden/ambient_window": {
+    "bytes": 35112,
+    "rel_err_median": 0.014,
+    "rel_err_p95": 0.0546
+   },
+   "golden/sun_desk": {
+    "bytes": 63839,
+    "rel_err_median": 0.0211,
+    "rel_err_p95": 0.1031
+   },
+   "golden/sun_furniture": {
+    "bytes": 3149,
+    "rel_err_median": 0.0228,
+    "rel_err_p95": 0.1134
+   },
+   "golden/sun_shell": {
+    "bytes": 3055,
+    "rel_err_median": 0.0048,
+    "rel_err_p95": 0.0548
+   },
+   "golden/sun_window": {
+    "bytes": 6765,
+    "rel_err_median": 0.0116,
+    "rel_err_p95": 0.1134
+   },
+   "golden/probe_desk": {
+    "bytes": 5495,
+    "rel_err_median": 0.0219,
+    "rel_err_p95": 0.1021
+   },
+   "lamp/probe_desk": {
+    "bytes": 3214,
+    "rel_err_median": 0.0604,
+    "rel_err_p95": 0.1878
+   },
+   "golden/probe_shelf": {
+    "bytes": 7048,
+    "rel_err_median": 0.0279,
+    "rel_err_p95": 0.1166
+   },
+   "lamp/probe_shelf": {
+    "bytes": 4221,
+    "rel_err_median": 0.0579,
+    "rel_err_p95": 0.1911
+   },
+   "lamp/lamp_desk": {
+    "bytes": 68352,
+    "rel_err_median": 0.0093,
+    "rel_err_p95": 0.0363
+   },
+   "lamp/lamp_furniture": {
+    "bytes": 220382,
+    "rel_err_median": 0.0153,
+    "rel_err_p95": 0.0638
+   },
+   "lamp/lamp_shell": {
+    "bytes": 10668,
+    "rel_err_median": 0.0159,
+    "rel_err_p95": 0.0499
+   },
+   "lamp/lamp_window": {
+    "bytes": 19507,
+    "rel_err_median": 0.0149,
+    "rel_err_p95": 0.0569
+   },
+   "screen/screen_desk": {
+    "bytes": 51697,
+    "rel_err_median": 0.0111,
+    "rel_err_p95": 0.0491
+   },
+   "screen/screen_furniture": {
+    "bytes": 153407,
+    "rel_err_median": 0.0171,
+    "rel_err_p95": 0.0552
+   },
+   "screen/screen_shell": {
+    "bytes": 8698,
+    "rel_err_median": 0.012,
+    "rel_err_p95": 0.0419
+   },
+   "screen/screen_window": {
+    "bytes": 25988,
+    "rel_err_median": 0.0186,
+    "rel_err_p95": 0.0648
+   },
+   "detail": {
+    "bytes": 288887
+   }
+  },
+  "lateafternoon": {
+   "lateafternoon/ambient_desk": {
+    "bytes": 156181,
+    "rel_err_median": 0.0137,
+    "rel_err_p95": 0.0516
+   },
+   "lateafternoon/ambient_furniture": {
+    "bytes": 243066,
+    "rel_err_median": 0.0156,
+    "rel_err_p95": 0.0694
+   },
+   "lateafternoon/ambient_shell": {
+    "bytes": 9703,
+    "rel_err_median": 0.0143,
+    "rel_err_p95": 0.0507
+   },
+   "lateafternoon/ambient_window": {
+    "bytes": 30074,
+    "rel_err_median": 0.0146,
+    "rel_err_p95": 0.0566
+   },
+   "lateafternoon/sun_desk": {
+    "bytes": 83296,
+    "rel_err_median": 0.0086,
+    "rel_err_p95": 0.0411
+   },
+   "lateafternoon/sun_furniture": {
+    "bytes": 12475,
+    "rel_err_median": 0.0097,
+    "rel_err_p95": 0.079
+   },
+   "lateafternoon/sun_shell": {
+    "bytes": 2979,
+    "rel_err_median": 0.0056,
+    "rel_err_p95": 0.0432
+   },
+   "lateafternoon/sun_window": {
+    "bytes": 7624,
+    "rel_err_median": 0.0122,
+    "rel_err_p95": 0.1273
+   },
+   "lateafternoon/probe_desk": {
+    "bytes": 5620,
+    "rel_err_median": 0.0255,
+    "rel_err_p95": 0.2163
+   },
+   "lateafternoon/probe_shelf": {
+    "bytes": 6825,
+    "rel_err_median": 0.0251,
+    "rel_err_p95": 0.1351
+   }
+  },
+  "latemorning": {
+   "latemorning/ambient_desk": {
+    "bytes": 147848,
+    "rel_err_median": 0.0107,
+    "rel_err_p95": 0.0429
+   },
+   "latemorning/ambient_furniture": {
+    "bytes": 221555,
+    "rel_err_median": 0.0143,
+    "rel_err_p95": 0.0547
+   },
+   "latemorning/ambient_shell": {
+    "bytes": 8352,
+    "rel_err_median": 0.012,
+    "rel_err_p95": 0.0412
+   },
+   "latemorning/ambient_window": {
+    "bytes": 26195,
+    "rel_err_median": 0.0139,
+    "rel_err_p95": 0.054
+   },
+   "latemorning/probe_desk": {
+    "bytes": 6734,
+    "rel_err_median": 0.0148,
+    "rel_err_p95": 0.0959
+   },
+   "latemorning/probe_shelf": {
+    "bytes": 6464,
+    "rel_err_median": 0.0209,
+    "rel_err_p95": 0.118
+   }
+  },
+  "lowsun": {
+   "lowsun/ambient_desk": {
+    "bytes": 161667,
+    "rel_err_median": 0.0128,
+    "rel_err_p95": 0.0486
+   },
+   "lowsun/ambient_furniture": {
+    "bytes": 239453,
+    "rel_err_median": 0.014,
+    "rel_err_p95": 0.0557
+   },
+   "lowsun/ambient_shell": {
+    "bytes": 11360,
+    "rel_err_median": 0.0123,
+    "rel_err_p95": 0.044
+   },
+   "lowsun/ambient_window": {
+    "bytes": 33061,
+    "rel_err_median": 0.0147,
+    "rel_err_p95": 0.0552
+   },
+   "lowsun/sun_desk": {
+    "bytes": 42362,
+    "rel_err_median": 0.0328,
+    "rel_err_p95": 0.1463
+   },
+   "lowsun/sun_furniture": {
+    "bytes": 1475,
+    "rel_err_median": 0.0142,
+    "rel_err_p95": 0.0793
+   },
+   "lowsun/sun_shell": {
+    "bytes": 2248,
+    "rel_err_median": 0.0051,
+    "rel_err_p95": 0.0497
+   },
+   "lowsun/sun_window": {
+    "bytes": 6969,
+    "rel_err_median": 0.0106,
+    "rel_err_p95": 0.0819
+   },
+   "lowsun/probe_desk": {
+    "bytes": 4127,
+    "rel_err_median": 0.0309,
+    "rel_err_p95": 0.1832
+   },
+   "lowsun/probe_shelf": {
+    "bytes": 7447,
+    "rel_err_median": 0.0192,
+    "rel_err_p95": 0.0841
+   }
+  },
+  "midday": {
+   "midday/ambient_desk": {
+    "bytes": 140017,
+    "rel_err_median": 0.0119,
+    "rel_err_p95": 0.048
+   },
+   "midday/ambient_furniture": {
+    "bytes": 214876,
+    "rel_err_median": 0.0138,
+    "rel_err_p95": 0.0569
+   },
+   "midday/ambient_shell": {
+    "bytes": 8056,
+    "rel_err_median": 0.0126,
+    "rel_err_p95": 0.043
+   },
+   "midday/ambient_window": {
+    "bytes": 26521,
+    "rel_err_median": 0.0141,
+    "rel_err_p95": 0.0553
+   },
+   "midday/probe_desk": {
+    "bytes": 7050,
+    "rel_err_median": 0.0172,
+    "rel_err_p95": 0.1032
+   },
+   "midday/probe_shelf": {
+    "bytes": 6186,
+    "rel_err_median": 0.0198,
+    "rel_err_p95": 0.1366
+   }
+  },
+  "morning": {
+   "morning/ambient_desk": {
+    "bytes": 148257,
+    "rel_err_median": 0.0117,
+    "rel_err_p95": 0.046
+   },
+   "morning/ambient_furniture": {
+    "bytes": 207506,
+    "rel_err_median": 0.0145,
+    "rel_err_p95": 0.0582
+   },
+   "morning/ambient_shell": {
+    "bytes": 9446,
+    "rel_err_median": 0.011,
+    "rel_err_p95": 0.0433
+   },
+   "morning/ambient_window": {
+    "bytes": 28095,
+    "rel_err_median": 0.0132,
+    "rel_err_p95": 0.0548
+   },
+   "morning/probe_desk": {
+    "bytes": 6595,
+    "rel_err_median": 0.0131,
+    "rel_err_p95": 0.6277
+   },
+   "morning/probe_shelf": {
+    "bytes": 6807,
+    "rel_err_median": 0.0233,
+    "rel_err_p95": 0.1289
+   }
+  },
+  "night": {
+   "night/ambient_desk": {
+    "bytes": 141914,
+    "rel_err_median": 0.015,
+    "rel_err_p95": 0.0557
+   },
+   "night/ambient_furniture": {
+    "bytes": 224387,
+    "rel_err_median": 0.0176,
+    "rel_err_p95": 0.0939
+   },
+   "night/ambient_shell": {
+    "bytes": 35771,
+    "rel_err_median": 0.0172,
+    "rel_err_p95": 0.083
+   },
+   "night/ambient_window": {
+    "bytes": 89362,
+    "rel_err_median": 0.0159,
+    "rel_err_p95": 0.1239
+   },
+   "night/probe_desk": {
+    "bytes": 3591,
+    "rel_err_median": 0.0135,
+    "rel_err_p95": 0.1055
+   },
+   "night/probe_shelf": {
+    "bytes": 2497,
+    "rel_err_median": 0.0358,
+    "rel_err_p95": 0.1561
+   }
+  },
+  "predawn": {
+   "predawn/ambient_desk": {
+    "bytes": 156895,
+    "rel_err_median": 0.0178,
+    "rel_err_p95": 0.0778
+   },
+   "predawn/ambient_furniture": {
+    "bytes": 242163,
+    "rel_err_median": 0.0216,
+    "rel_err_p95": 0.1002
+   },
+   "predawn/ambient_shell": {
+    "bytes": 39484,
+    "rel_err_median": 0.0184,
+    "rel_err_p95": 0.0948
+   },
+   "predawn/ambient_window": {
+    "bytes": 81354,
+    "rel_err_median": 0.0165,
+    "rel_err_p95": 0.0793
+   },
+   "predawn/probe_desk": {
+    "bytes": 3930,
+    "rel_err_median": 0.015,
+    "rel_err_p95": 0.1077
+   },
+   "predawn/probe_shelf": {
+    "bytes": 2676,
+    "rel_err_median": 0.0296,
+    "rel_err_p95": 0.1523
+   }
+  },
+  "sunrise": {
+   "sunrise/ambient_desk": {
+    "bytes": 221514,
+    "rel_err_median": 0.0105,
+    "rel_err_p95": 0.0397
+   },
+   "sunrise/ambient_furniture": {
+    "bytes": 219521,
+    "rel_err_median": 0.0159,
+    "rel_err_p95": 0.0587
+   },
+   "sunrise/ambient_shell": {
+    "bytes": 12305,
+    "rel_err_median": 0.0134,
+    "rel_err_p95": 0.0477
+   },
+   "sunrise/ambient_window": {
+    "bytes": 43196,
+    "rel_err_median": 0.0137,
+    "rel_err_p95": 0.0699
+   },
+   "sunrise/probe_desk": {
+    "bytes": 6511,
+    "rel_err_median": 0.0128,
+    "rel_err_p95": 0.085
+   },
+   "sunrise/probe_shelf": {
+    "bytes": 5182,
+    "rel_err_median": 0.0269,
+    "rel_err_p95": 0.1433
+   }
+  },
+  "sunset": {
+   "sunset/ambient_desk": {
+    "bytes": 227062,
+    "rel_err_median": 0.0114,
+    "rel_err_p95": 0.046
+   },
+   "sunset/ambient_furniture": {
+    "bytes": 299512,
+    "rel_err_median": 0.0169,
+    "rel_err_p95": 0.0839
+   },
+   "sunset/ambient_shell": {
+    "bytes": 16393,
+    "rel_err_median": 0.0151,
+    "rel_err_p95": 0.0644
+   },
+   "sunset/ambient_window": {
+    "bytes": 48006,
+    "rel_err_median": 0.0153,
+    "rel_err_p95": 0.0698
+   },
+   "sunset/sun_desk": {
+    "bytes": 32312,
+    "rel_err_median": 0.0278,
+    "rel_err_p95": 0.1204
+   },
+   "sunset/sun_furniture": {
+    "bytes": 2845,
+    "rel_err_median": 0.0167,
+    "rel_err_p95": 0.0926
+   },
+   "sunset/sun_shell": {
+    "bytes": 1932,
+    "rel_err_median": 0.0011,
+    "rel_err_p95": 0.0549
+   },
+   "sunset/sun_window": {
+    "bytes": 7505,
+    "rel_err_median": 0.0124,
+    "rel_err_p95": 0.0772
+   },
+   "sunset/probe_desk": {
+    "bytes": 5880,
+    "rel_err_median": 0.0153,
+    "rel_err_p95": 0.0736
+   },
+   "sunset/probe_shelf": {
+    "bytes": 5820,
+    "rel_err_median": 0.0353,
+    "rel_err_p95": 0.165
+   }
+  }
+ },
+ "bake_reports": {
+  "afternoon": {
+   "2026-10-17T22:04": {
+    "bakes": [
+     {
+      "label": "afternoon/ambient_indirect",
+      "seconds": 75.6,
+      "samples": 256,
+      "filter": [
+       "INDIRECT"
+      ]
+     },
+     {
+      "label": "afternoon/ambient_direct",
+      "seconds": 27.6,
+      "samples": 128,
+      "filter": [
+       "DIRECT"
+      ]
+     },
+     {
+      "label": "afternoon/sun",
+      "seconds": 16.9,
+      "samples": 128,
+      "filter": [
+       "DIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "afternoon_probe_desk",
+      "seconds": 2.8
+     },
+     {
+      "name": "afternoon_probe_shelf",
+      "seconds": 2.9
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "afternoon": {
+      "strength": 159.44897502990798,
+      "colour": [
+       1.0,
+       0.8493785063676293,
+       0.651543677258913
+      ],
+      "dir_room": [
+       -0.517367320695932,
+       0.4829031301366713,
+       0.706495309524499
+      ]
+     }
+    },
+    "seconds": 130.1,
+    "peak_memory_gb": 9.09,
+    "seconds_per_moment": {
+     "afternoon": 120.1
+    }
+   }
+  },
+  "blue": {
+   "2026-10-17T22:17": {
+    "bakes": [
+     {
+      "label": "blue/ambient",
+      "seconds": 32.3,
+      "samples": 512,
+      "filter": [
+       "DIRECT",
+       "INDIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "blue_probe_desk",
+      "seconds": 2.4
+     },
+     {
+      "name": "blue_probe_shelf",
+      "seconds": 2.4
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "blue": {
+      "strength": 0.00011334721041806571,
+      "colour": [
+       1.0,
+       0.8280846670108415,
+       0.0
+      ],
+      "dir_room": [
+       -0.007931645720180291,
+       0.9891683963268254,
+       -0.14657070888955318
+      ]
+     }
+    },
+    "seconds": 39.1,
+    "peak_memory_gb": 9.09,
+    "seconds_per_moment": {
+     "blue": 32.3
+    }
+   }
+  },
+  "dawn": {
+   "2026-10-17T21:50": {
+    "bakes": [
+     {
+      "label": "dawn/ambient",
+      "seconds": 41.3,
+      "samples": 256,
+      "filter": [
+       "DIRECT",
+       "INDIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "dawn_probe_desk",
+      "seconds": 3.7
+     },
+     {
+      "name": "dawn_probe_shelf",
+      "seconds": 3.1
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "dawn": {
+      "strength": 2.106607937558268e-06,
+      "colour": [
+       1.0,
+       0.0,
+       0.0
+      ],
+      "dir_room": [
+       0.6269727434609451,
+       -0.7766039724871197,
+       -0.06157474217795097
+      ]
+     }
+    },
+    "seconds": 52.3,
+    "peak_memory_gb": 8.67,
+    "seconds_per_moment": {
+     "dawn": 41.3
+    }
+   }
+  },
+  "dusk": {
+   "2026-10-17T22:15": {
+    "bakes": [
+     {
+      "label": "dusk/ambient",
+      "seconds": 33.6,
+      "samples": 256,
+      "filter": [
+       "DIRECT",
+       "INDIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "dusk_probe_desk",
+      "seconds": 2.5
+     },
+     {
+      "name": "dusk_probe_shelf",
+      "seconds": 2.6
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "dusk": {
+      "strength": 0.0,
+      "colour": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "dir_room": [
+       -0.08037304891314101,
+       0.9948166232756386,
+       -0.06229012010633868
+      ]
+     }
+    },
+    "seconds": 40.5,
+    "peak_memory_gb": 9.05,
+    "seconds_per_moment": {
+     "dusk": 33.6
+    }
+   }
+  },
+  "golden": {
+   "2026-10-17T21:44": {
+    "bakes": [
+     {
+      "label": "golden/ambient_indirect",
+      "seconds": 73.4,
+      "samples": 256,
+      "filter": [
+       "INDIRECT"
+      ]
+     },
+     {
+      "label": "golden/ambient_direct",
+      "seconds": 26.5,
+      "samples": 128,
+      "filter": [
+       "DIRECT"
+      ]
+     },
+     {
+      "label": "golden/sun",
+      "seconds": 16.6,
+      "samples": 128,
+      "filter": [
+       "DIRECT"
+      ]
+     },
+     {
+      "label": "lamp",
+      "seconds": 38.8,
+      "samples": 256,
+      "filter": [
+       "DIRECT",
+       "INDIRECT"
+      ]
+     },
+     {
+      "label": "screen",
+      "seconds": 33.0,
+      "samples": 256,
+      "filter": [
+       "DIRECT",
+       "INDIRECT"
+      ]
+     },
+     {
+      "label": "detail_ao",
+      "seconds": 7.7,
+      "samples": 64,
+      "filter": null
+     },
+     {
+      "label": "golden/check_all",
+      "seconds": 98.3,
+      "samples": 256,
+      "filter": [
+       "DIRECT",
+       "INDIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "golden_probe_desk",
+      "seconds": 2.7
+     },
+     {
+      "name": "golden_probe_shelf",
+      "seconds": 2.7
+     },
+     {
+      "name": "lamp_probe_desk",
+      "seconds": 2.1
+     },
+     {
+      "name": "lamp_probe_shelf",
+      "seconds": 2.1
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "golden": {
+      "strength": 108.19526383040777,
+      "colour": [
+       1.0,
+       0.6663896616292547,
+       0.29738184549044844
+      ],
+      "dir_room": [
+       -0.2587116879809485,
+       0.9503342685710717,
+       0.17301167729819406
+      ]
+     }
+    },
+    "seconds": 312.1,
+    "peak_memory_gb": 11.06,
+    "seconds_per_moment": {
+     "golden": 214.8,
+     "once": 79.5
+    }
+   }
+  },
+  "lateafternoon": {
+   "2026-10-17T22:07": {
+    "bakes": [
+     {
+      "label": "lateafternoon/ambient_indirect",
+      "seconds": 76.1,
+      "samples": 256,
+      "filter": [
+       "INDIRECT"
+      ]
+     },
+     {
+      "label": "lateafternoon/ambient_direct",
+      "seconds": 26.8,
+      "samples": 128,
+      "filter": [
+       "DIRECT"
+      ]
+     },
+     {
+      "label": "lateafternoon/sun",
+      "seconds": 16.9,
+      "samples": 128,
+      "filter": [
+       "DIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "lateafternoon_probe_desk",
+      "seconds": 2.7
+     },
+     {
+      "name": "lateafternoon_probe_shelf",
+      "seconds": 2.8
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "lateafternoon": {
+      "strength": 146.0322044177441,
+      "colour": [
+       1.0,
+       0.800839492718091,
+       0.5392114783877504
+      ],
+      "dir_room": [
+       -0.40161947119963126,
+       0.8207074054450665,
+       0.40637563288287354
+      ]
+     }
+    },
+    "seconds": 129.4,
+    "peak_memory_gb": 9.09,
+    "seconds_per_moment": {
+     "lateafternoon": 119.8
+    }
+   }
+  },
+  "latemorning": {
+   "2026-10-17T21:57": {
+    "bakes": [
+     {
+      "label": "latemorning/ambient",
+      "seconds": 84.6,
+      "samples": 256,
+      "filter": [
+       "DIRECT",
+       "INDIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "latemorning_probe_desk",
+      "seconds": 3.6
+     },
+     {
+      "name": "latemorning_probe_shelf",
+      "seconds": 3.4
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "latemorning": {
+      "strength": 158.32371495160302,
+      "colour": [
+       1.0,
+       0.8431802317928726,
+       0.6363849975234247
+      ],
+      "dir_room": [
+       0.03358507492720131,
+       -0.7654577062172675,
+       0.6426091679510445
+      ]
+     }
+    },
+    "seconds": 94.3,
+    "peak_memory_gb": 8.61,
+    "seconds_per_moment": {
+     "latemorning": 84.6
+    }
+   }
+  },
+  "lowsun": {
+   "2026-10-17T22:11": {
+    "bakes": [
+     {
+      "label": "lowsun/ambient_indirect",
+      "seconds": 74.9,
+      "samples": 256,
+      "filter": [
+       "INDIRECT"
+      ]
+     },
+     {
+      "label": "lowsun/ambient_direct",
+      "seconds": 26.8,
+      "samples": 128,
+      "filter": [
+       "DIRECT"
+      ]
+     },
+     {
+      "label": "lowsun/sun",
+      "seconds": 17.0,
+      "samples": 128,
+      "filter": [
+       "DIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "lowsun_probe_desk",
+      "seconds": 2.9
+     },
+     {
+      "name": "lowsun_probe_shelf",
+      "seconds": 3.0
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "lowsun": {
+      "strength": 72.29695681758015,
+      "colour": [
+       1.0,
+       0.5199089207745837,
+       0.12461107537968326
+      ],
+      "dir_room": [
+       -0.2009720580930437,
+       0.9752859638508871,
+       0.09180152820782732
+      ]
+     }
+    },
+    "seconds": 128.9,
+    "peak_memory_gb": 9.05,
+    "seconds_per_moment": {
+     "lowsun": 118.7
+    }
+   }
+  },
+  "midday": {
+   "2026-10-17T22:00": {
+    "bakes": [
+     {
+      "label": "midday/ambient",
+      "seconds": 82.2,
+      "samples": 256,
+      "filter": [
+       "DIRECT",
+       "INDIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "midday_probe_desk",
+      "seconds": 3.4
+     },
+     {
+      "name": "midday_probe_shelf",
+      "seconds": 3.4
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "midday": {
+      "strength": 163.13507453061848,
+      "colour": [
+       1.0,
+       0.8640161756377918,
+       0.6885536829943406
+      ],
+      "dir_room": [
+       -0.41554052124686236,
+       -0.16602430478502714,
+       0.8942941380902227
+      ]
+     }
+    },
+    "seconds": 91.5,
+    "peak_memory_gb": 8.68,
+    "seconds_per_moment": {
+     "midday": 82.2
+    }
+   }
+  },
+  "morning": {
+   "2026-10-17T21:55": {
+    "bakes": [
+     {
+      "label": "morning/ambient",
+      "seconds": 74.5,
+      "samples": 256,
+      "filter": [
+       "DIRECT",
+       "INDIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "morning_probe_desk",
+      "seconds": 3.7
+     },
+     {
+      "name": "morning_probe_shelf",
+      "seconds": 3.4
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "morning": {
+      "strength": 123.77527923673381,
+      "colour": [
+       1.0,
+       0.735332448050983,
+       0.4115592281486868
+      ],
+      "dir_room": [
+       0.3986121041549955,
+       -0.8794023903735757,
+       0.2603071766708866
+      ]
+     }
+    },
+    "seconds": 84.7,
+    "peak_memory_gb": 8.65,
+    "seconds_per_moment": {
+     "morning": 74.5
+    }
+   }
+  },
+  "night": {
+   "2026-10-17T21:46": {
+    "bakes": [
+     {
+      "label": "night/ambient",
+      "seconds": 38.9,
+      "samples": 512,
+      "filter": [
+       "DIRECT",
+       "INDIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "night_probe_desk",
+      "seconds": 3.7
+     },
+     {
+      "name": "night_probe_shelf",
+      "seconds": 3.0
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "night": {
+      "strength": 7.19757711999075e-06,
+      "colour": [
+       0.0,
+       0.0,
+       1.0
+      ],
+      "dir_room": [
+       0.33077128207680373,
+       0.8174872274230092,
+       -0.47149230317525764
+      ]
+     }
+    },
+    "seconds": 49.1,
+    "peak_memory_gb": 8.6,
+    "seconds_per_moment": {
+     "night": 38.9
+    }
+   }
+  },
+  "predawn": {
+   "2026-10-17T21:48": {
+    "bakes": [
+     {
+      "label": "predawn/ambient",
+      "seconds": 36.8,
+      "samples": 512,
+      "filter": [
+       "DIRECT",
+       "INDIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "predawn_probe_desk",
+      "seconds": 3.0
+     },
+     {
+      "name": "predawn_probe_shelf",
+      "seconds": 2.9
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "predawn": {
+      "strength": 0.0,
+      "colour": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "dir_room": [
+       0.6809991085353249,
+       -0.7156695366482209,
+       -0.15510425038603431
+      ]
+     }
+    },
+    "seconds": 45.6,
+    "peak_memory_gb": 8.66,
+    "seconds_per_moment": {
+     "predawn": 36.8
+    }
+   }
+  },
+  "sunrise": {
+   "2026-10-17T21:52": {
+    "bakes": [
+     {
+      "label": "sunrise/ambient",
+      "seconds": 45.8,
+      "samples": 256,
+      "filter": [
+       "DIRECT",
+       "INDIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "sunrise_probe_desk",
+      "seconds": 4.0
+     },
+     {
+      "name": "sunrise_probe_shelf",
+      "seconds": 4.0
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "sunrise": {
+      "strength": 21.240779903709292,
+      "colour": [
+       1.0,
+       0.29271456902826126,
+       0.00035827329199555403
+      ],
+      "dir_room": [
+       0.5652197270870944,
+       -0.824203171708378,
+       0.03486820697197701
+      ]
+     }
+    },
+    "seconds": 56.8,
+    "peak_memory_gb": 9.17,
+    "seconds_per_moment": {
+     "sunrise": 45.8
+    }
+   }
+  },
+  "sunset": {
+   "2026-10-17T22:14": {
+    "bakes": [
+     {
+      "label": "sunset/ambient_indirect",
+      "seconds": 46.1,
+      "samples": 256,
+      "filter": [
+       "INDIRECT"
+      ]
+     },
+     {
+      "label": "sunset/ambient_direct",
+      "seconds": 20.0,
+      "samples": 128,
+      "filter": [
+       "DIRECT"
+      ]
+     },
+     {
+      "label": "sunset/sun",
+      "seconds": 14.9,
+      "samples": 128,
+      "filter": [
+       "DIRECT"
+      ]
+     }
+    ],
+    "probes": [
+     {
+      "name": "sunset_probe_desk",
+      "seconds": 2.6
+     },
+     {
+      "name": "sunset_probe_shelf",
+      "seconds": 2.8
+     }
+    ],
+    "skipped": [],
+    "sun_light": {
+     "sunset": {
+      "strength": 2.7615476639941616,
+      "colour": [
+       1.0,
+       0.13757357129295614,
+       0.0005397488404893
+      ],
+      "dir_room": [
+       -0.13419972458436502,
+       0.9909455042708049,
+       0.004176300631037452
+      ]
+     }
+    },
+    "seconds": 89.8,
+    "peak_memory_gb": 9.09,
+    "seconds_per_moment": {
+     "sunset": 81.0
+    }
+   }
+  }
+ },
+ "lamp": {
+  "position": [
+   1.025376558303833,
+   1.3580000400543213,
+   -0.9113789796829224
+  ],
+  "direction": [
+   0.0,
+   -1.0,
+   -0.0
+  ],
+  "colour": [
+   1.0,
+   0.7,
+   0.42
+  ],
+  "cone_deg": 120,
+  "watts": 55
+ }
+}

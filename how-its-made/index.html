@@ -1,0 +1,1782 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-61SVW4TL71"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-61SVW4TL71');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>How it's made | Akshay Chintalapati</title>
+<style>
+@font-face { font-family: "Geist"; src: url("/fonts/geist-latin.woff2") format("woff2"); font-weight: 400 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Cormorant Garamond"; src: url("/fonts/cormorant-garamond-latin.woff2") format("woff2"); font-weight: 300 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Cormorant Garamond"; src: url("/fonts/cormorant-garamond-italic-latin.woff2") format("woff2"); font-weight: 300 600; font-style: italic; font-display: swap; }
+
+:root {
+  --serif: "Cormorant Garamond", "Cormorant", Garamond, "Times New Roman", serif;
+  --sans: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  /* the golden moment's room colours (the site's frames-lite.js), lightened for reading */
+  --paper: #ebe4d9; --paper-2: #e2d9cc; --raised: #f4efe7;
+  --ink: #1f1b16; --text: #2b251f; --muted: #756e65; --faint: #a59c90; --accent: #80532f;
+  --hair: rgba(31, 27, 22, 0.13); --hair-2: rgba(31, 27, 22, 0.26);
+  --card: rgba(240, 234, 225, 0.86);
+  --on-scene: #f4efe6; --on-scene-soft: rgba(244, 239, 230, 0.74); --on-scene-faint: rgba(244, 239, 230, 0.3);
+  --gutter: clamp(16px, 3vw, 44px);
+  --ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  --fade: 0.9s;
+  color-scheme: light;
+}
+/* the night palette (the site's night moment) */
+.dark {
+  --paper: #17110b; --paper-2: #21180f; --raised: #261c13;
+  --ink: #f0e8db; --text: #e6ddcf; --muted: #a39889; --faint: #6f665b; --accent: #ffb36b;
+  --hair: rgba(240, 232, 219, 0.13); --hair-2: rgba(240, 232, 219, 0.26);
+  --card: rgba(26, 19, 12, 0.84);
+  color-scheme: dark;
+}
+.sec, .stage-sec, .dark, .card { color: var(--text); }
+* { box-sizing: border-box; }
+html { background: var(--paper); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--text);
+  font-family: var(--sans); font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility;
+  font-synthesis: none;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+::selection { background: color-mix(in oklab, var(--accent) 30%, transparent); }
+.vh { position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.num { font-variant-numeric: lining-nums tabular-nums; }
+
+/* ---------- type ---------- */
+.kicker { margin: 0 0 0.9rem; font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.title { margin: 0; font-family: var(--serif); font-weight: 300; font-size: clamp(40px, 6.2vw, 88px); line-height: 0.98; letter-spacing: -0.012em; color: var(--ink); }
+.title em { font-style: italic; }
+.lede { margin: 1.1rem 0 0; max-width: 34rem; font-size: 17px; color: var(--muted); }
+.big { margin: 0; font-family: var(--serif); font-weight: 300; font-size: clamp(56px, 8.4vw, 124px); line-height: 0.9; letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
+.big small { font-size: 0.42em; letter-spacing: 0; margin-left: 0.08em; }
+.unit { margin: 0.45rem 0 0; font-size: 15px; color: var(--ink); }
+.cap { margin: 0.8rem 0 0; font-size: 15px; line-height: 1.55; color: var(--muted); }
+.src { margin: 0.9rem 0 0; font-size: 12px; line-height: 1.5; color: var(--faint); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0.9rem 0 0; padding: 0; list-style: none; }
+.chips li { font-size: 12.5px; line-height: 1; padding: 6px 9px 6px; border-radius: 999px; border: 1px solid var(--hair); color: var(--text); white-space: nowrap; }
+.chips li b { font-weight: 500; font-variant-numeric: lining-nums tabular-nums; }
+
+.sec { position: relative; }
+.sec-head { padding: clamp(96px, 16vh, 168px) var(--gutter) clamp(40px, 7vh, 72px); max-width: 1320px; margin: 0 auto; }
+.wrap { max-width: 1320px; margin: 0 auto; padding: 0 var(--gutter); }
+
+/* ---------- the top bar ---------- */
+.bar {
+  position: fixed; z-index: 40; left: 0; right: 0; top: 0;
+  display: flex; align-items: center; gap: 1.5rem; justify-content: space-between;
+  padding: 12px var(--gutter); padding-top: max(12px, env(safe-area-inset-top));
+  font-size: 13px; color: var(--muted);
+  background: color-mix(in oklab, var(--paper) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05); backdrop-filter: blur(14px) saturate(1.05);
+  border-bottom: 1px solid var(--hair);
+  transform: translateY(-110%); transition: transform 0.45s var(--ease), background-color 0.6s ease, color 0.6s ease;
+}
+.bar.on { transform: none; }
+.bar .t { color: var(--ink); font-weight: 500; text-decoration: none; white-space: nowrap; }
+.bar nav { display: flex; gap: 1.1rem; overflow-x: auto; scrollbar-width: none; }
+.bar nav::-webkit-scrollbar { display: none; }
+.bar nav a { text-decoration: none; white-space: nowrap; transition: color 0.2s ease; }
+.bar nav a:hover, .bar nav a[aria-current="true"] { color: var(--ink); }
+.bar .here { display: none; color: var(--ink); }
+@media (max-width: 900px) { .bar nav { display: none; } .bar .here { display: block; } }
+
+/* ---------- 0. the window (the first picture of the layers' stage) ---------- */
+.pf .ext, .pf .room { position: absolute; display: block; will-change: transform, opacity; }
+.pf .ext { left: -4%; top: -4%; width: 108%; height: 108%; }
+.pf .room { left: 0; top: 0; width: 100%; height: 100%; }
+.pf picture, .pf picture img { display: block; width: 100%; height: 100%; }
+.hero .veil { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 62%, rgba(8,6,4,0.55) 100%); }
+.step.lift { min-height: 115vh; min-height: 115svh; }
+.hero .mast {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 4;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 1rem;
+  padding: 1.5rem 2rem 1.4rem; padding-bottom: max(1.4rem, env(safe-area-inset-bottom));
+  font-size: 15px; line-height: 1.65; color: var(--on-scene); text-shadow: 0 1px 14px rgba(0,0,0,0.45);
+}
+.hero h1 { margin: 0; font-size: 15px; font-weight: 500; letter-spacing: -0.005em; }
+.hero .mast p { margin: 0; color: var(--on-scene-soft); }
+.hero .mid { text-align: center; font-size: 13px; color: var(--on-scene-soft); }
+.hero .scroll { justify-self: end; display: flex; align-items: center; gap: 0.6rem; color: var(--on-scene-soft); font-size: 13px; }
+.hero .scroll i { display: block; width: 1px; height: 26px; background: var(--on-scene-faint); position: relative; overflow: hidden; }
+.hero .scroll i::after { content: ""; position: absolute; left: 0; top: -40%; width: 1px; height: 40%; background: var(--on-scene); animation: drip 2.4s var(--ease) infinite; }
+@keyframes drip { 0% { top: -40%; } 70%, 100% { top: 110%; } }
+@media (max-width: 760px) {
+  .hero .mast { grid-template-columns: 1fr auto; padding: 1.1rem 1.1rem 1.2rem; padding-bottom: max(1.2rem, env(safe-area-inset-bottom)); }
+  .hero .mid { display: none; }
+}
+
+/* ---------- sticky stages with cards (layers, scale, data) ---------- */
+.stage-sec { position: relative; }
+.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.steps { position: relative; margin-top: -100vh; margin-top: -100svh; pointer-events: none; }
+.step { min-height: 100vh; min-height: 100svh; display: flex; align-items: center; padding: 88px var(--gutter) 40px; }
+.step:first-child { min-height: 120svh; }
+.step:last-child { min-height: 130svh; }
+.step.right { justify-content: flex-end; }
+.card {
+  pointer-events: auto; width: min(400px, 100%);
+  padding: 22px 24px 20px; border-radius: 14px;
+  background: var(--card); color: var(--text);
+  -webkit-backdrop-filter: blur(16px) saturate(1.05); backdrop-filter: blur(16px) saturate(1.05);
+  box-shadow: 0 0 0 0.5px rgba(30, 18, 6, 0.08), 0 10px 24px -10px rgba(20, 12, 4, 0.28), 0 30px 80px -30px rgba(20, 12, 4, 0.4);
+  transition: background-color 0.6s ease, color 0.6s ease, opacity 0.5s ease;
+}
+.card .kicker { margin-bottom: 0.7rem; }
+.card .big { font-size: clamp(54px, 6.6vw, 96px); }
+.seg { display: inline-flex; margin-top: 14px; padding: 3px; gap: 2px; border-radius: 999px; border: 1px solid var(--hair); }
+.seg button { border: 0; background: none; padding: 5px 11px; border-radius: 999px; font-size: 12.5px; color: var(--muted); cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+/* the layers' pictures */
+.figs { position: absolute; inset: 0; background: #1b140d; }
+.pf { position: absolute; margin: 0; opacity: 0; transition: opacity var(--fade) ease; }
+.pf.on { opacity: 1; }
+.pf > img, .pf > .ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pf > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.pf .ph { display: none; }
+.pf.missing > img { display: none; }
+.pf.missing .ph { display: grid; place-items: center; background-size: cover; background-position: center; }
+.ph::before { content: ""; position: absolute; inset: 0; background: inherit; filter: grayscale(1) blur(18px) brightness(0.95); transform: scale(1.06); }
+.ph span {
+  position: relative; padding: 10px 16px; border-radius: 10px; border: 1px dashed rgba(244, 239, 230, 0.55);
+  background: rgba(20, 14, 8, 0.45); color: var(--on-scene); font-size: 13px; text-align: center; line-height: 1.45;
+}
+.ph span b { display: block; font-weight: 500; }
+.rail {
+  position: absolute; z-index: 3; right: var(--gutter); top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 9px; margin: 0; padding: 0; list-style: none;
+}
+.rail button {
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px; border: 0; background: none; padding: 2px 0; cursor: pointer;
+  font-size: 12px; color: var(--on-scene-soft); text-shadow: 0 1px 10px rgba(0,0,0,0.6);
+}
+.rail button span { opacity: 0; transform: translateX(6px); transition: opacity 0.25s, transform 0.25s; white-space: nowrap; }
+.rail button i { width: 18px; height: 1px; background: var(--on-scene-faint); transition: width 0.3s var(--ease), background-color 0.3s; }
+.rail button:hover span, .rail button:focus-visible span, .rail button[aria-current="true"] span { opacity: 1; transform: none; }
+.rail button[aria-current="true"] i { width: 34px; background: var(--on-scene); }
+.rail button[aria-current="true"] { color: var(--on-scene); }
+.ovl { pointer-events: none; }
+.ovl text { font-family: var(--sans); }
+.ovl .lab { fill: rgba(255, 247, 234, 0.96); filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 6px rgba(0, 0, 0, 0.35)); }
+
+@media (max-width: 760px), (max-aspect-ratio: 4/5) {
+  .step, .step:first-child, .step:last-child { min-height: 100vh; min-height: 100svh; }
+  .step { align-items: flex-end; padding: 0 12px 16px; }
+  .step.right { justify-content: center; }
+  .card { width: 100%; padding: 16px 18px 15px; }
+  .card .big { font-size: 52px; }
+  .card .cap { font-size: 14px; }
+  .rail { display: none; }
+}
+
+/* ---------- scale ---------- */
+.scale-sec .stage { background: var(--paper); }
+.dots { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.dots-label { position: absolute; z-index: 2; pointer-events: none; font-size: 12.5px; font-weight: 500; color: var(--ink); white-space: nowrap; transform: translate(-50%, -140%); opacity: 0; transition: opacity 0.6s ease;
+  text-shadow: 0 0 3px var(--paper), 0 0 3px var(--paper), 0 0 8px var(--paper); }
+.dots-label.on { opacity: 1; }
+.dots-label.home::after { content: ""; position: absolute; left: 50%; top: 140%; width: 7px; height: 7px; margin: -2px 0 0 -3.5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 25%, transparent); }
+
+/* ---------- up close: instruments ---------- */
+.inst { margin: 0 auto clamp(72px, 12vh, 140px); max-width: 1320px; padding: 0 var(--gutter); }
+.inst-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.4rem 2rem; margin: 0 0 18px; }
+.inst-head h3 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(26px, 3vw, 38px); line-height: 1.1; color: var(--ink); }
+.inst-head p { margin: 0; max-width: 36rem; font-size: 15px; color: var(--muted); }
+.frame { position: relative; overflow: hidden; border-radius: 10px; background: #1b140d; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.frame img { -webkit-user-drag: none; user-select: none; }
+.ctl { display: flex; align-items: center; gap: 16px; margin-top: 14px; font-size: 13px; color: var(--muted); }
+.ctl output { min-width: 4.5em; color: var(--ink); font-variant-numeric: tabular-nums; }
+input[type="range"].rng { -webkit-appearance: none; appearance: none; flex: 1; height: 28px; margin: 0; background: transparent; cursor: pointer; }
+input[type="range"].rng::-webkit-slider-runnable-track { height: 1px; background: var(--hair-2); }
+input[type="range"].rng::-moz-range-track { height: 1px; background: var(--hair-2); }
+input[type="range"].rng::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; margin-top: -7px; border: 0; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 5px color-mix(in oklab, var(--ink) 12%, transparent); }
+input[type="range"].rng::-moz-range-thumb { width: 15px; height: 15px; border: 0; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 5px color-mix(in oklab, var(--ink) 12%, transparent); }
+input[type="range"].rng:focus-visible { outline: none; }
+input[type="range"].rng:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent); }
+.ticks { position: relative; height: 18px; margin: 0 7px; font-size: 12px; color: var(--muted); }
+.ticks span { position: absolute; top: 0; transform: translateX(-50%); }
+.zoomer { aspect-ratio: 16 / 9; }
+.zoomer img { position: absolute; max-width: none; transform-origin: 50% 50%; }
+.zoomer .z16, .zoomer .z4 {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent), linear-gradient(180deg, transparent, #000 5%, #000 95%, transparent);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent), linear-gradient(180deg, transparent, #000 5%, #000 95%, transparent);
+  mask-composite: intersect;
+}
+.zoomer .badge, .frame .badge {
+  position: absolute; z-index: 2; left: 14px; top: 12px; padding: 4px 9px; border-radius: 999px;
+  background: rgba(20, 16, 12, 0.5); color: #f4efe6; font-size: 12px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  font-variant-numeric: tabular-nums;
+}
+.frame .badge.r { left: auto; right: 14px; }
+.ab { aspect-ratio: 2010 / 1005; cursor: ew-resize; }
+.ab img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ab .after { clip-path: inset(0 0 0 var(--x, 50%)); }
+.ab .knob { position: absolute; z-index: 2; top: 0; bottom: 0; left: var(--x, 50%); width: 0; }
+.ab .knob::before { content: ""; position: absolute; top: 0; bottom: 0; left: -0.5px; width: 1px; background: rgba(244, 239, 230, 0.85); box-shadow: 0 0 12px rgba(0,0,0,0.4); }
+.ab .knob::after {
+  content: ""; position: absolute; top: 50%; left: -17px; width: 34px; height: 34px; margin-top: -17px; border-radius: 50%;
+  background: rgba(244, 239, 230, 0.92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Cpath d='M14 12l-5 5 5 5M20 12l5 5-5 5' fill='none' stroke='%231f1b16' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 34px no-repeat;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.35);
+}
+.ab input { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; opacity: 0; margin: 0; pointer-events: none; }
+.ab:has(input:focus-visible) .knob::after { box-shadow: 0 0 0 3px var(--accent), 0 2px 14px rgba(0,0,0,0.35); }
+.dial-frame { aspect-ratio: 2180 / 1000; }
+.dial-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.25s linear; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 56px); }
+@media (max-width: 900px) { .pair { grid-template-columns: 1fr; } }
+
+/* ---------- the day ---------- */
+.day-sec { transition: background-color 0.8s ease, color 0.8s ease; background: var(--paper); }
+.day-fig { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; background: #1b140d; }
+.day-in { width: min(100%, calc(70vh * 16 / 9)); margin: 0 auto; }
+.day-fig img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+.day-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 1.2rem; margin: 18px 0 10px; }
+.day-meta b { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 3.4vw, 44px); color: var(--ink); line-height: 1; }
+.day-meta span { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.strip { position: relative; margin-top: 8px; }
+.strip ol { display: grid; grid-template-columns: repeat(14, 1fr); gap: 4px; margin: 0; padding: 0; list-style: none; }
+.strip li { position: relative; }
+.strip li img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 4px; opacity: 0.62; transition: opacity 0.3s ease, transform 0.3s var(--ease); }
+.strip li.on img { opacity: 1; transform: translateY(-3px); }
+.strip li span { display: block; margin-top: 6px; font-size: 11px; color: var(--muted); text-align: center; font-variant-numeric: tabular-nums; }
+.strip input { position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: grab; }
+.strip input:active { cursor: grabbing; }
+.strip:has(input:focus-visible) li.on img { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 760px) {
+  .day-fig { aspect-ratio: 9 / 13; }
+  .strip li span { display: none; }
+  .strip li:nth-child(odd) span { display: block; font-size: 10px; }
+}
+
+/* ---------- data map ---------- */
+.data-sec .stage { background: var(--paper); }
+.mapbox { position: absolute; overflow: hidden; border-radius: 10px; isolation: isolate; box-shadow: 0 0 0 1px var(--hair); }
+.mapbox > * { position: absolute; }
+.mapbox img { width: 100%; height: 100%; transition: opacity var(--fade) ease; }
+.mapbox .mul { mix-blend-mode: multiply; }
+.mapbox svg { inset: 0; width: 100%; height: 100%; overflow: hidden; }
+.mapbox svg text { font-family: var(--sans); paint-order: stroke; stroke: rgba(244, 238, 228, 0.9); stroke-linejoin: round; }
+.maplegend { font-size: 12px; fill: var(--muted); }
+
+/* ---------- the bay (dark) ---------- */
+.bay { position: relative; aspect-ratio: 1800 / 1510; width: min(100%, calc(86vh * 1800 / 1510)); margin: 0 auto; border-radius: 10px; overflow: hidden; background: #141a1f; }
+.bay > img, .bay > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.bay-wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 64px); align-items: start; }
+.bay-wrap .side { position: sticky; top: 90px; }
+@media (max-width: 960px) { .bay-wrap { grid-template-columns: 1fr; } .bay-wrap .side { position: static; } }
+.legend { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 14px; color: var(--muted); }
+.legend li { display: flex; gap: 10px; align-items: baseline; }
+.legend i { flex: none; width: 22px; height: 0; border-top: 2px solid; transform: translateY(-4px); }
+.legend i.d { border-top-style: dashed; }
+.legend i.dot { width: 8px; height: 8px; border: 0; border-radius: 50%; transform: none; }
+.legend b { color: var(--ink); font-weight: 500; }
+.chart { margin-top: clamp(56px, 9vh, 96px); }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart text { font-family: var(--sans); }
+.yr { margin-top: clamp(48px, 8vh, 80px); }
+.yr svg { display: block; width: 100%; height: auto; }
+
+/* ---------- the room ---------- */
+.room-fig { position: relative; border-radius: 10px; overflow: hidden; }
+.room-fig img { width: 100%; }
+.pin {
+  position: absolute; z-index: 2; width: 24px; height: 24px; margin: -12px 0 0 -12px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 11.5px; font-weight: 500; color: #1f1b16; background: rgba(244, 239, 230, 0.92);
+  box-shadow: 0 1px 10px rgba(0,0,0,0.35); border: 0; cursor: default; font-variant-numeric: tabular-nums;
+}
+.room-list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px 28px; margin-top: 22px; }
+.room-list li { display: flex; gap: 12px; font-size: 14px; color: var(--muted); line-height: 1.45; }
+.room-list li b { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 500; color: var(--paper); background: var(--ink); }
+.room-list li strong { color: var(--ink); font-weight: 500; }
+.nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 28px 32px; margin: clamp(48px, 8vh, 80px) 0 0; }
+.nums div .big { font-size: clamp(48px, 6vw, 84px); }
+.nums div p { margin: 0.4rem 0 0; font-size: 14px; color: var(--muted); }
+
+.ho-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 26px; }
+.ho-row figure { margin: 0; }
+.ho-row figcaption { margin-top: 8px; font-size: 13.5px; color: var(--muted); }
+.ho-row .badge { font-size: 11px; padding: 3px 7px; top: 8px; left: 8px; }
+.ho-row .badge.r { left: auto; right: 8px; }
+@media (max-width: 760px) { .ho-row { grid-template-columns: 1fr; } }
+
+/* ---------- sound (dark) ---------- */
+.mix { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: clamp(40px, 7vh, 72px); border-top: 1px solid var(--hair); }
+.mix > div { padding: 22px 22px 8px 0; }
+.mix > div + div { padding-left: 22px; border-left: 1px solid var(--hair); }
+.mix h4 { margin: 0 0 12px; font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.mix ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 7px; font-size: 14.5px; color: var(--text); line-height: 1.4; }
+.mix ul span { color: var(--muted); }
+@media (max-width: 900px) { .mix { grid-template-columns: 1fr 1fr; } .mix > div:nth-child(3) { padding-left: 0; border-left: 0; } }
+@media (max-width: 520px) { .mix { grid-template-columns: 1fr; } .mix > div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--hair); } }
+.horns { margin-top: clamp(48px, 8vh, 80px); }
+.horns svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+/* ---------- the build ---------- */
+.bars { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.bars li { display: grid; grid-template-columns: 9.5rem 1fr 5rem; align-items: center; gap: 14px; font-size: 14px; color: var(--muted); }
+.bars li i { display: block; height: 10px; border-radius: 2px; background: var(--ink); opacity: 0.82; transform-origin: 0 50%; }
+.bars li b { color: var(--ink); font-weight: 500; text-align: right; font-variant-numeric: tabular-nums; }
+.bars li small { display: block; font-size: 12px; color: var(--faint); }
+@media (max-width: 600px) { .bars li { grid-template-columns: 7rem 1fr 3.6rem; gap: 10px; font-size: 13px; } }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(36px, 6vw, 96px); margin-top: clamp(48px, 8vh, 80px); }
+@media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+.cols h3 { margin: 0 0 18px; font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.outs { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--hair); }
+.outs li { display: flex; justify-content: space-between; gap: 18px; padding: 11px 0; border-bottom: 1px solid var(--hair); font-size: 14.5px; color: var(--muted); }
+.outs li b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---------- along the way ---------- */
+.gal-group { margin: 0 0 clamp(48px, 8vh, 80px); }
+.gal-group h3 { margin: 0 0 18px; font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.gal { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 28px 24px; margin: 0; padding: 0; list-style: none; }
+.gal figure { margin: 0; }
+.gal button { display: block; width: 100%; padding: 0; border: 0; background: var(--paper-2); border-radius: 8px; overflow: hidden; cursor: zoom-in; }
+.gal img { width: 100%; height: 220px; object-fit: cover; object-position: 50% 0; transition: transform 0.6s var(--ease); }
+.gal button:hover img { transform: scale(1.025); }
+.gal figcaption { margin-top: 10px; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+dialog.lb { width: 100vw; height: 100vh; height: 100svh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(14, 10, 6, 0.94); color: #f0e8db; }
+dialog.lb::backdrop { background: rgba(14, 10, 6, 0.6); }
+dialog.lb .in { position: absolute; inset: 0; overflow: auto; padding: 56px 16px 24px; display: grid; justify-items: center; align-content: start; gap: 14px; }
+dialog.lb img { max-width: min(100%, 1800px); height: auto; border-radius: 4px; }
+dialog.lb p { margin: 0; max-width: 52rem; font-size: 14px; color: #c9bfb1; text-align: center; }
+dialog.lb .x { position: fixed; top: 12px; right: 14px; z-index: 2; width: 40px; height: 40px; border: 0; border-radius: 50%; background: rgba(240, 232, 219, 0.12); color: #f0e8db; cursor: pointer; font-size: 18px; }
+
+footer { padding: clamp(72px, 12vh, 128px) var(--gutter) max(48px, env(safe-area-inset-bottom)); max-width: 1320px; margin: 0 auto; font-size: 13px; color: var(--muted); border-top: 1px solid var(--hair); }
+footer p { margin: 0 0 0.5rem; max-width: 46rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --fade: 0s; }
+  * { animation: none !important; scroll-behavior: auto !important; }
+  .bar, .pf, .card, .strip li img, .mapbox img, .dial-frame img, .dots-label { transition: none !important; }
+}
+</style>
+<script>
+/* A plain page, outside the site's cross-document dissolve: the pages that opt into it skip it when leaving for this one
+   (app.js, arrive.js), so it opens as an ordinary page load. In case one still arrives, this page takes part (the
+   @view-transition rule below), so the browser doesn't abort it (smoke making-of-1/-2: "InvalidStateError: Transition was
+   aborted ... opt-in disabled"); and it hands none on: leaving, it skips its own. Every promise a skip rejects is caught. */
+(function () {
+  var quiet = function () {};
+  var hush = function (vt) {
+    if (vt.ready && vt.ready.catch) vt.ready.catch(quiet);
+    if (vt.finished && vt.finished.catch) vt.finished.catch(quiet);
+    if (vt.updateCallbackDone && vt.updateCallbackDone.catch) vt.updateCallbackDone.catch(quiet);
+  };
+  addEventListener("pagereveal", function (e) { if (e.viewTransition) hush(e.viewTransition); });
+  addEventListener("pageswap", function (e) { if (e.viewTransition) { hush(e.viewTransition); e.viewTransition.skipTransition(); } });
+})();
+</script>
+<style>@view-transition { navigation: auto; } @media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }</style>
+<meta name="description" content="How the desk on Russian Hill was made: a laser-scanned San Francisco with 11,593 buildings and 107,737 trees, rendered at 14 moments of one day, with the bay on its real timetables and a sound made in the browser." />
+<link rel="canonical" href="https://akshaychintalapati.com/how-its-made/" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<meta property="og:title" content="How it's made" />
+<meta property="og:description" content="How the desk on Russian Hill was made: a laser-scanned San Francisco with 11,593 buildings and 107,737 trees, rendered at 14 moments of one day, with the bay on its real timetables and a sound made in the browser." />
+<meta property="og:image" content="https://akshaychintalapati.com/how-its-made/og.jpg" />
+<meta property="og:url" content="https://akshaychintalapati.com/how-its-made/" />
+<meta name="twitter:card" content="summary_large_image" />
+<style>
+/* ---------- the public page (scripts/live/build_making_of.py) ---------- */
+/* the opening masthead: the way home, the page's name, the site's menu (as the site's own mastheads) */
+.hero .mast .home { margin: 0 0 0.2rem; font-size: 13px; }
+.hero .mast .home a { color: var(--on-scene-soft); text-decoration: none; transition: color 0.2s ease; }
+.hero .mast .home a:hover { color: var(--on-scene); }
+.hero .mast > .scroll { justify-self: center; }
+.hero .mast nav { justify-self: end; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.3rem 1.15rem; max-width: 36rem; }
+.hero .mast nav a, footer nav a { text-decoration: none; transition: color 0.2s ease; -webkit-tap-highlight-color: transparent; }
+.hero .mast nav a { color: var(--on-scene-soft); }
+.hero .mast nav a:hover, .hero .mast nav a[aria-current="page"] { color: var(--on-scene); }
+@media (max-width: 760px) {
+  .hero .mast { grid-template-columns: 1fr auto; row-gap: 0.75rem; }
+  .hero .mast > .scroll { grid-column: 2; grid-row: 1; justify-self: end; }
+  .hero .mast nav { grid-column: 1 / -1; justify-self: start; justify-content: flex-start; gap: 0.3rem min(0.9rem, 3.3vw); font-size: 14px; }
+}
+/* reduced motion: the pseudo-elements too (the opening's "Scroll" drip is an ::after, which "*" does not reach) */
+@media (prefers-reduced-motion: reduce) { *::before, *::after { animation: none !important; transition: none !important; } }
+/* the build: the GPU time */
+.gpu-story { margin-top: 18px; display: grid; gap: 0.55rem; max-width: 34rem; }
+.gpu-story p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--muted); }
+.gpu-story p:first-child { color: var(--text); }
+/* phones: the day strip's times at 11 px (they were 10 px; every other moment carries one) */
+@media (max-width: 760px) { .strip li:nth-child(odd) span { font-size: 11px; } }
+/* phones and tablets (one column): each rental's date and what it rendered across the width, its bar and minutes
+   under it (in the 7-9.5rem label column the descriptions wrapped to four or five lines; making-of-phone) */
+@media (max-width: 900px) {
+  #gpus li { grid-template-columns: 1fr 3.6rem; row-gap: 6px; }
+  #gpus li span { grid-column: 1 / -1; }
+}
+/* credits and data */
+.credits-sec { padding: clamp(56px, 9vh, 96px) 0 clamp(48px, 8vh, 80px); }
+.credits-sec h3 { margin: 0 0 18px; font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.credits { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 14px 40px; border-top: 1px solid var(--hair); padding-top: 18px; }
+.credits li { font-size: 13.5px; line-height: 1.55; color: var(--muted); }
+.credits li b { display: block; font-weight: 500; color: var(--ink); }
+.credits a { text-decoration: none; border-bottom: 1px solid var(--hair-2); }
+.credits a:hover { border-bottom-color: var(--ink); }
+footer nav { display: flex; flex-wrap: wrap; gap: 0.4rem 1.15rem; margin-top: 1.4rem; font-size: 14px; }
+footer nav a { color: var(--muted); }
+footer nav a:hover, footer nav a[aria-current="page"] { color: var(--ink); }
+/* without JavaScript: the pictures the script would have shown, in plain figures */
+.nojs-pics { max-width: 1320px; margin: 0 auto; padding: clamp(56px, 9vh, 96px) var(--gutter) 0; }
+.nojs-pics h3 { margin: clamp(40px, 7vh, 64px) 0 18px; font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.nojs-pics .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 24px; margin: 0; padding: 0; list-style: none; }
+.nojs-pics figure { margin: 0; }
+.nojs-pics img { width: 100%; height: auto; border-radius: 8px; background: var(--paper-2); }
+.nojs-pics figcaption { margin-top: 8px; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+/* a finger, not a mouse (phones, tablets; making-of-phone): the sliders' handles are 30 px to the touch, drawn as the
+   same 15 px dot and ring; the slider is 44 px tall; a vertical swipe on a slider or the day strip still scrolls */
+@media (pointer: coarse) {
+  input[type="range"].rng { height: 44px; touch-action: pan-y; }
+  input[type="range"].rng::-webkit-slider-thumb { width: 30px; height: 30px; margin-top: -14.5px; box-shadow: none;
+    background: radial-gradient(circle, var(--ink) 0 7.5px, color-mix(in oklab, var(--ink) 12%, transparent) 7.5px 12.5px, transparent 12.5px); }
+  input[type="range"].rng::-moz-range-thumb { width: 30px; height: 30px; box-shadow: none;
+    background: radial-gradient(circle, var(--ink) 0 7.5px, color-mix(in oklab, var(--ink) 12%, transparent) 7.5px 12.5px, transparent 12.5px); }
+  .strip { touch-action: pan-y; }
+  .strip input { pointer-events: none; }     /* the strip itself takes a finger (PHONE_JS) */
+}
+/* the opening photograph on a phone held upright: a blurred 36x64 px copy inline, so a slow line shows the room and
+   the view at once instead of a dark screen, then the view alone, then the room popping in (slow 4G: ~9 s). It lies
+   over the view and under the room, and fades once both are in (PHONE_JS adds .shown); the figure is isolated, so
+   the layers' crossfades are untouched (making-of-phone) */
+@media (max-aspect-ratio: 4/5) {
+  #peel-figs .pf[data-k="view"] { isolation: isolate; }
+  #peel-figs .pf[data-k="view"]::before { content: ""; position: absolute; inset: 0; z-index: 1; background: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCABAACQDASIAAhEBAxEB/8QAGwAAAQUBAQAAAAAAAAAAAAAABgACAwQFAQf/xAAyEAABAwIEAwUGBwAAAAAAAAABAAIDBBEFEiExE0FRFHGBkZIGUlNhobEiMjNU0eHw/8QAGQEAAgMBAAAAAAAAAAAAAAAAAgQAAQMF/8QAIREAAgEDBAMBAAAAAAAAAAAAAAEDAhETEhRBUTFSYQT/2gAMAwEAAhEDEQA/AIC8gbJrZHW2TallbFDmMcRzENH4+ZNkzLXM3ii8Hf0k1FW+BrLR2T53dAucQ9FWdNVN3hj9ShdWVDd4WepFglfAL/REvNRe4jugSWd26f4MfqSU28vqVuofZBfitNlhpwRq6pjHfqmTUe+i2MYgF8Obf89bGPo4qeWibbe61pkaMnRcD56a3JUJaf5IuqKFt9PLqsuoow0E21TUcyFZIQcdT6pLXNNrskmMyFMAW4vm7ZhLTu6r+zHK3JG49V5zhtdjWJvp44Iny1NOXSgPeG30te505rRxGf2joaftFZG1kAIZfitJufkCuTjZ2VWgnmDLkGRtxyzBUpTAHFpmjuNxmC8+xbFq2oibEInu1zEsuPqPspaerxGbD31BgDRE8MLTcvIPNWqWuSm0+AydJSX/AF4vUkqpwSP91P5N/hJTV9Jj+ElLHU4ZSx4pRPbM2fNGBKy1hffQje2ikmrK7Fmtpa3gwQkhxextiCNt3HTwQk5riy2d1u9Nax3vu81SkVvAeN9hY/B6aB+WXEsrtxaIuBHeBZM7PkfaKqiMTrjiPblG3+3Qy0PG0jh4rtn/ABHeZQ610FpfYQNrZ2ANlqWNcOlPfTvzJIeyn3neaSC4Vj//2Q==") 50% 50% / 100% 100% no-repeat; filter: blur(10px); transform: scale(1.04); transition: opacity 0.5s ease; }
+  #peel-figs .pf[data-k="view"].shown::before { opacity: 0; }
+  #peel-figs .pf[data-k="view"] .room { z-index: 2; }
+  #peel-figs .pf[data-k="view"] .veil { z-index: 3; }
+}
+</style>
+<noscript><style>
+  /* without JavaScript the masthead and the cards stay readable over the opening photograph; the drawn parts (the
+     dots, the charts, the instruments' scrubbing) need the script and are left as they are */
+  .zoomer img { width: 100%; height: 100%; object-fit: cover; }
+  .zoomer .z16, .zoomer .z4, .ab .knob { display: none; }
+  .day-sec .day-in, #gallery { display: none; }
+</style></noscript>
+</head>
+<body>
+
+<header class="bar" id="bar">
+  <a class="t" href="#top">How it's made</a>
+  <span class="here" id="here"></span>
+  <nav aria-label="Sections">
+    <a href="#layers">Layers</a><a href="#scale">Scale</a><a href="#close">Up close</a><a href="#day">The day</a>
+    <a href="#data">Data</a><a href="#bay">The bay</a><a href="#room">The room</a><a href="#sound">Sound</a>
+    <a href="#build">The build</a><a href="#along">Along the way</a>
+  </nav>
+</header>
+
+<main>
+<section class="stage-sec hero" id="layers" aria-label="The window and its layers" style="background:#1b140d" data-bar="dark">
+  <span id="top"></span>
+  <div class="stage">
+    <div class="figs" id="peel-figs">
+      <figure class="pf on" data-k="view" data-full="1" data-ar="1.7778" data-fx="0.6" data-fy="0.52" data-arp="0.5625" data-fxp="0.49" data-fyp="0.5">
+        <div class="ext" id="hero-ext"><picture>
+          <source media="(max-aspect-ratio: 4/5)" srcset="page/hero/golden-home_p-still-1620-480.webp 480w, page/hero/golden-home_p-still-1620-720.webp 720w, page/hero/golden-home_p-still-1620-960.webp 960w, page/hero/golden-home_p-still-1620-1280.webp 1280w, page/hero/golden-home_p-still-1620-1600.webp 1600w, page/hero/golden-home_p-still-1620-1750.webp 1750w" sizes="61vh" />
+          <img src="page/hero/golden-home_l-still-3840.webp" alt="" fetchpriority="high" srcset="page/hero/golden-home_l-still-3840-480.webp 480w, page/hero/golden-home_l-still-3840-720.webp 720w, page/hero/golden-home_l-still-3840-960.webp 960w, page/hero/golden-home_l-still-3840-1280.webp 1280w, page/hero/golden-home_l-still-3840-1600.webp 1600w, page/hero/golden-home_l-still-3840-1920.webp 1920w, page/hero/golden-home_l-still-3840-2400.webp 2400w, page/hero/golden-home_l-still-3840-2880.webp 2880w" sizes="(max-aspect-ratio: 16/9) 192vh, 108vw" decoding="async" />
+        </picture></div>
+        <div class="room" id="hero-room"><picture>
+          <source media="(max-aspect-ratio: 4/5)" srcset="page/hero/golden-home_p-room-1620-480.webp 480w, page/hero/golden-home_p-room-1620-720.webp 720w, page/hero/golden-home_p-room-1620-960.webp 960w, page/hero/golden-home_p-room-1620-1280.webp 1280w, page/hero/golden-home_p-room-1620-1620.webp 1620w" sizes="61vh" />
+          <img src="page/hero/golden-home_l-room-3840.webp" alt="The desk by the window on Russian Hill at golden hour, looking out at the Golden Gate" fetchpriority="high" srcset="page/hero/golden-home_l-room-3840-480.webp 480w, page/hero/golden-home_l-room-3840-720.webp 720w, page/hero/golden-home_l-room-3840-960.webp 960w, page/hero/golden-home_l-room-3840-1280.webp 1280w, page/hero/golden-home_l-room-3840-1600.webp 1600w, page/hero/golden-home_l-room-3840-1920.webp 1920w, page/hero/golden-home_l-room-3840-2400.webp 2400w, page/hero/golden-home_l-room-3840-2880.webp 2880w" sizes="(max-aspect-ratio: 16/9) 192vh, 108vw" decoding="async" />
+        </picture></div>
+        <div class="veil" id="hero-veil"></div>
+      </figure>
+      <figure class="pf" data-k="a" data-ar="1.6" data-src="peel/a_clay.webp" data-srcset="peel/a_clay-480.webp 480w, peel/a_clay-720.webp 720w, peel/a_clay-960.webp 960w, peel/a_clay-1280.webp 1280w, peel/a_clay-1600.webp 1600w, peel/a_clay-1920.webp 1920w, peel/a_clay-2400.webp 2400w, peel/a_clay-2880.webp 2880w" data-sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-width: 760px) 96vh, (max-aspect-ratio: 4/5) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-aspect-ratio: 4/5) 96vh, (max-aspect-ratio: 1600/1000) and (-webkit-min-device-pixel-ratio: 2.5) 106.7vh, (max-aspect-ratio: 1600/1000) 160vh, (-webkit-min-device-pixel-ratio: 2.5) 66.67vw, 100vw"><img alt="The city as plain grey clay" /></figure>
+      <figure class="pf" data-k="b" data-ar="1.6" data-src="peel/b_detail.webp" data-srcset="peel/b_detail-480.webp 480w, peel/b_detail-720.webp 720w, peel/b_detail-960.webp 960w, peel/b_detail-1280.webp 1280w, peel/b_detail-1600.webp 1600w, peel/b_detail-1920.webp 1920w, peel/b_detail-2400.webp 2400w, peel/b_detail-2880.webp 2880w" data-sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-width: 760px) 96vh, (max-aspect-ratio: 4/5) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-aspect-ratio: 4/5) 96vh, (max-aspect-ratio: 1600/1000) and (-webkit-min-device-pixel-ratio: 2.5) 106.7vh, (max-aspect-ratio: 1600/1000) 160vh, (-webkit-min-device-pixel-ratio: 2.5) 66.67vw, 100vw"><img alt="The new detail, still in clay" /></figure>
+      <figure class="pf" data-k="g" data-ar="1.6" data-src="peel/g_xray.webp" data-srcset="peel/g_xray-480.webp 480w, peel/g_xray-720.webp 720w, peel/g_xray-960.webp 960w, peel/g_xray-1280.webp 1280w, peel/g_xray-1600.webp 1600w, peel/g_xray-1920.webp 1920w, peel/g_xray-2400.webp 2400w, peel/g_xray-2880.webp 2880w" data-sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-width: 760px) 96vh, (max-aspect-ratio: 4/5) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-aspect-ratio: 4/5) 96vh, (max-aspect-ratio: 1600/1000) and (-webkit-min-device-pixel-ratio: 2.5) 106.7vh, (max-aspect-ratio: 1600/1000) 160vh, (-webkit-min-device-pixel-ratio: 2.5) 66.67vw, 100vw"><img alt="X-ray: every surface coloured by what it is, with its triangles' edges" /></figure>
+      <figure class="pf" data-k="gn" data-ar="1.6" data-src="peel/g_xray_near.webp" data-srcset="peel/g_xray_near-480.webp 480w, peel/g_xray_near-720.webp 720w, peel/g_xray_near-960.webp 960w, peel/g_xray_near-1280.webp 1280w, peel/g_xray_near-1600.webp 1600w, peel/g_xray_near-1920.webp 1920w, peel/g_xray_near-2400.webp 2400w, peel/g_xray_near-2880.webp 2880w" data-sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-width: 760px) 96vh, (max-aspect-ratio: 4/5) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-aspect-ratio: 4/5) 96vh, (max-aspect-ratio: 1600/1000) and (-webkit-min-device-pixel-ratio: 2.5) 106.7vh, (max-aspect-ratio: 1600/1000) 160vh, (-webkit-min-device-pixel-ratio: 2.5) 66.67vw, 100vw"><img alt="X-ray of the near blocks at 2x" /></figure>
+      <figure class="pf" data-k="c" data-ar="1.6" data-src="peel/c_trees.webp" data-srcset="peel/c_trees-480.webp 480w, peel/c_trees-720.webp 720w, peel/c_trees-960.webp 960w, peel/c_trees-1280.webp 1280w, peel/c_trees-1600.webp 1600w, peel/c_trees-1920.webp 1920w, peel/c_trees-2400.webp 2400w, peel/c_trees-2880.webp 2880w" data-sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-width: 760px) 96vh, (max-aspect-ratio: 4/5) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-aspect-ratio: 4/5) 96vh, (max-aspect-ratio: 1600/1000) and (-webkit-min-device-pixel-ratio: 2.5) 106.7vh, (max-aspect-ratio: 1600/1000) 160vh, (-webkit-min-device-pixel-ratio: 2.5) 66.67vw, 100vw"><img alt="Clay city with the trees" /></figure>
+      <figure class="pf" data-k="d" data-ar="1.6" data-src="peel/d_materials.webp" data-srcset="peel/d_materials-480.webp 480w, peel/d_materials-720.webp 720w, peel/d_materials-960.webp 960w, peel/d_materials-1280.webp 1280w, peel/d_materials-1600.webp 1600w, peel/d_materials-1920.webp 1920w, peel/d_materials-2400.webp 2400w, peel/d_materials-2880.webp 2880w" data-sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-width: 760px) 96vh, (max-aspect-ratio: 4/5) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-aspect-ratio: 4/5) 96vh, (max-aspect-ratio: 1600/1000) and (-webkit-min-device-pixel-ratio: 2.5) 106.7vh, (max-aspect-ratio: 1600/1000) 160vh, (-webkit-min-device-pixel-ratio: 2.5) 66.67vw, 100vw"><img alt="With materials, before the air" /></figure>
+      <figure class="pf" data-k="e" data-ar="1.6" data-src="peel/e_golden.webp" data-srcset="peel/e_golden-480.webp 480w, peel/e_golden-720.webp 720w, peel/e_golden-960.webp 960w, peel/e_golden-1280.webp 1280w, peel/e_golden-1600.webp 1600w, peel/e_golden-1920.webp 1920w, peel/e_golden-2400.webp 2400w, peel/e_golden-2880.webp 2880w" data-sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-width: 760px) 96vh, (max-aspect-ratio: 4/5) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-aspect-ratio: 4/5) 96vh, (max-aspect-ratio: 1600/1000) and (-webkit-min-device-pixel-ratio: 2.5) 106.7vh, (max-aspect-ratio: 1600/1000) 160vh, (-webkit-min-device-pixel-ratio: 2.5) 66.67vw, 100vw"><img alt="Fully lit at golden hour" /></figure>
+      <figure class="pf" data-k="f" data-ar="1.6" data-src="peel/f_night.webp" data-srcset="peel/f_night-480.webp 480w, peel/f_night-720.webp 720w, peel/f_night-960.webp 960w, peel/f_night-1280.webp 1280w, peel/f_night-1600.webp 1600w, peel/f_night-1920.webp 1920w, peel/f_night-2400.webp 2400w, peel/f_night-2880.webp 2880w" data-sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-width: 760px) 96vh, (max-aspect-ratio: 4/5) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-aspect-ratio: 4/5) 96vh, (max-aspect-ratio: 1600/1000) and (-webkit-min-device-pixel-ratio: 2.5) 106.7vh, (max-aspect-ratio: 1600/1000) 160vh, (-webkit-min-device-pixel-ratio: 2.5) 66.67vw, 100vw"><img alt="Night at 22:30, the base look" /></figure>
+      <figure class="pf" data-k="fx" data-ar="1.6" data-src="peel/f_night_extra.webp" data-srcset="peel/f_night_extra-480.webp 480w, peel/f_night_extra-720.webp 720w, peel/f_night_extra-960.webp 960w, peel/f_night_extra-1280.webp 1280w, peel/f_night_extra-1600.webp 1600w, peel/f_night_extra-1920.webp 1920w, peel/f_night_extra-2400.webp 2400w, peel/f_night_extra-2880.webp 2880w" data-sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-width: 760px) 96vh, (max-aspect-ratio: 4/5) and (-webkit-min-device-pixel-ratio: 2.5) 64vh, (max-aspect-ratio: 4/5) 96vh, (max-aspect-ratio: 1600/1000) and (-webkit-min-device-pixel-ratio: 2.5) 106.7vh, (max-aspect-ratio: 1600/1000) 160vh, (-webkit-min-device-pixel-ratio: 2.5) 66.67vw, 100vw"><img alt="Night with the extra window layer at dial 1" /></figure>
+      <figure class="pf" data-k="living" data-ar="1.7794" data-fx="0.56" data-fy="0.52" data-src="page/hero/golden-home_l-still-3840.webp" data-srcset="page/hero/golden-home_l-still-3840-480.webp 480w, page/hero/golden-home_l-still-3840-720.webp 720w, page/hero/golden-home_l-still-3840-960.webp 960w, page/hero/golden-home_l-still-3840-1280.webp 1280w, page/hero/golden-home_l-still-3840-1600.webp 1600w, page/hero/golden-home_l-still-3840-1920.webp 1920w, page/hero/golden-home_l-still-3840-2400.webp 2400w, page/hero/golden-home_l-still-3840-2880.webp 2880w" data-sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 71.33vh, (max-width: 760px) 107vh, (max-aspect-ratio: 4/5) and (-webkit-min-device-pixel-ratio: 2.5) 71.33vh, (max-aspect-ratio: 4/5) 107vh, (max-aspect-ratio: 1779/1000) and (-webkit-min-device-pixel-ratio: 2.5) 118.7vh, (max-aspect-ratio: 1779/1000) 178vh, (-webkit-min-device-pixel-ratio: 2.5) 66.67vw, 100vw"><img alt="The view with the paths of what moves in it" /><svg class="ovl" id="win-ovl" viewBox="0 0 1 0.5622" preserveAspectRatio="none" aria-hidden="true"></svg></figure>
+      <figure class="pf" data-k="sound" data-ar="1.7794" data-fx="0.5" data-fy="0.52" data-src="page/hero/night-home_l-still-3840.webp" data-srcset="page/hero/night-home_l-still-3840-480.webp 480w, page/hero/night-home_l-still-3840-720.webp 720w, page/hero/night-home_l-still-3840-960.webp 960w, page/hero/night-home_l-still-3840-1280.webp 1280w, page/hero/night-home_l-still-3840-1600.webp 1600w, page/hero/night-home_l-still-3840-1920.webp 1920w, page/hero/night-home_l-still-3840-2400.webp 2400w, page/hero/night-home_l-still-3840-2880.webp 2880w" data-sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 71.33vh, (max-width: 760px) 107vh, (max-aspect-ratio: 4/5) and (-webkit-min-device-pixel-ratio: 2.5) 71.33vh, (max-aspect-ratio: 4/5) 107vh, (max-aspect-ratio: 1779/1000) and (-webkit-min-device-pixel-ratio: 2.5) 118.7vh, (max-aspect-ratio: 1779/1000) 178vh, (-webkit-min-device-pixel-ratio: 2.5) 66.67vw, 100vw"><img alt="The view at night, with the foghorns sounding" style="filter: brightness(0.8)" /><svg class="ovl" id="horn-ovl" viewBox="0 0 1 0.5622" preserveAspectRatio="none" aria-hidden="true"></svg></figure>
+    </div>
+    <div class="mast" id="hero-mast">
+      <div><p class="home"><a href="/">Akshay Chintalapati</a></p><h1>How it's made</h1><p>The window on Russian Hill, taken apart</p></div>
+      <div class="scroll" aria-hidden="true">Scroll <i></i></div>
+      <nav aria-label="Primary">
+        <a href="/#about">About</a>
+        <a href="/writing/">Writing</a>
+        <a href="/#social">Social</a>
+        <a href="/how-its-made/" aria-current="page">How it's made</a>
+      </nav>
+    </div>
+    <ol class="rail" id="peel-rail" aria-label="Layers"></ol>
+  </div>
+  <div class="steps" id="peel-steps">
+    <div class="step lift" data-k="view" data-label="The window" aria-hidden="true"></div>
+    <div class="step" data-k="view" data-label="The view"><article class="card">
+      <p class="kicker">00 · The view</p>
+      <p class="big"><span class="num" data-n="9.2" data-d="1">9.2</span><small>km²</small></p>
+      <p class="unit">of San Francisco, laser-scanned and rebuilt</p>
+      <p class="cap">This is the window at golden hour. Nothing out there is a photograph: it is a model of the real city, made from public data and rendered in Blender. Here it is, taken apart.</p>
+      <p class="src">The area the 2023 USGS lidar was read for: the view from the window, out to 3.6 km</p>
+    </article></div>
+    <div class="step" data-k="a" data-label="Raw shapes"><article class="card">
+      <p class="kicker">01 · Raw shapes</p>
+      <p class="big"><span class="num" data-n="11593">11,593</span></p>
+      <p class="unit">buildings, as plain grey clay</p>
+      <p class="cap">The ground and every building, from OpenStreetMap's footprints, raised to the heights the laser scan measured. No detail, no colour, no air. Of the trees, only the park's planting below the window, so its beds and paths read.</p>
+      <ul class="chips"><li><b>17,536</b> footprints in the area</li><li><b>7,818</b> roofs shaped by the scan</li><li><b>6,028</b> left out, behind the room</li></ul>
+      <p class="src">Footprints © OpenStreetMap contributors; heights from the 2023 USGS lidar</p>
+    </article></div>
+    <div class="step" data-k="b" data-label="The detail"><article class="card">
+      <p class="kicker">02 · The detail</p>
+      <p class="big"><span class="num" data-n="19564">19,564</span></p>
+      <p class="unit">real windows, cut into the near walls</p>
+      <p class="cap">Within 360 m of the window the walls get openings, sills and blinds; the roofs get vents and hatches out to 1.6 km.</p>
+      <ul class="chips"><li><b>1,867</b> walls</li><li><b>728</b> bay windows</li><li><b>494</b> window boxes</li><li><b>458</b> downpipes</li><li><b>128</b> AC units</li><li><b>14</b> fire escapes</li><li><b>113</b> roofs in full</li><li><b>1,720</b> roof kits</li></ul>
+      <p class="src">On the site since 18 October (the first build had 20,043 windows; a fix for the night re-fitted the storeys)</p>
+    </article></div>
+    <div class="step" data-k="g" data-label="X-ray"><article class="card">
+      <p class="kicker">03 · X-ray</p>
+      <p class="big"><span class="num" data-n="2.97" data-d="2">2.97</span><small>billion</small></p>
+      <p class="unit">triangles in the golden scene, every copy counted</p>
+      <p class="cap">Every surface coloured by what it is, with its triangles' edges drawn in. Blue: the plain buildings. Grey: the new detail. Tan: the scanned ground. Red-brown: the courts' deck. The trees come out dark: their edges are that dense.</p>
+      <ul class="chips"><li><b>2.95 bn</b> of them in trees</li><li><b>17.8 M</b> stored once, then copied</li><li><b>789,622</b> faces of new detail</li></ul>
+      <div class="seg" role="group" aria-label="X-ray view"><button type="button" data-fig="g" aria-pressed="true">The view</button><button type="button" data-fig="gn" aria-pressed="false">Near blocks, 2x</button></div>
+      <p class="src">Counted inside Blender, in the golden-hour scene</p>
+    </article></div>
+    <div class="step" data-k="c" data-label="Trees"><article class="card">
+      <p class="kicker">04 · Trees</p>
+      <p class="big"><span class="num" data-n="107737">107,737</span></p>
+      <p class="unit">trees, each where a real one stands</p>
+      <p class="cap">Positions from the 2023 laser scan and the city's street tree list. The 2,807 nearest use 16 detailed models.</p>
+      <ul class="chips"><li><b>8.6 M</b> triangles in the 16 near models</li><li><b>64</b> tree models in all</li><li><b>39,559</b> found in the scan</li></ul>
+      <p class="src">Positions from the 2023 USGS lidar and DataSF's Street Tree List</p>
+    </article></div>
+    <div class="step" data-k="d" data-label="Materials"><article class="card">
+      <p class="kicker">05 · Materials</p>
+      <p class="big"><span class="num" data-n="59">59</span></p>
+      <p class="unit">materials on the city</p>
+      <p class="cap">Colour and texture for walls, roofs, streets, water and trees, before the air goes in. Most of it is made by code, not photographs. The street life arrives here too.</p>
+      <ul class="chips"><li><b>144</b> image textures</li><li><b>17,492</b> parked cars</li><li><b>7,425</b> street lamps</li><li><b>687</b> moored boats</li><li><b>18,820</b> riprap rocks</li></ul>
+      <p class="src">Counted in the scene itself</p>
+    </article></div>
+    <div class="step" data-k="e" data-label="Golden light"><article class="card">
+      <p class="kicker">06 · Light</p>
+      <p class="big"><span class="num" data-n="14">14</span></p>
+      <p class="unit">moments of one day, each rendered on its own</p>
+      <p class="cap">Golden hour, 18:56: the sun 10° up, the sky, the haze over the bay and the clouds. The site shows the moment nearest the real sun in San Francisco.</p>
+      <p class="src">Day of the renders: 23 August 2026, predawn 05:49 to night 22:30</p>
+    </article></div>
+    <div class="step dark" data-k="f" data-label="Night"><article class="card">
+      <p class="kicker">07 · Night</p>
+      <p class="big"><span class="num" data-n="54">54</span><small>%</small></p>
+      <p class="unit">of flats with a light on at 22:30</p>
+      <p class="cap">Plus street lamps, harbour lights and the bridge. The share follows the hour, from residential lighting data. An extra layer can light more windows.</p>
+      <div class="seg" role="group" aria-label="Extra window layer"><button type="button" data-fig="f" aria-pressed="true">Base look</button><button type="button" data-fig="fx" aria-pressed="false">+ extra, dial 1</button></div>
+      <p class="src">The extra layer: 19,816 more lit panes at night</p>
+    </article></div>
+    <div class="step" data-k="living" data-label="What moves"><article class="card">
+      <p class="kicker">08 · What moves</p>
+      <p class="big"><span class="num" data-n="15.1" data-d="1">15.1</span></p>
+      <p class="unit">big ships a day across the Golden Gate</p>
+      <p class="cap">The view runs on real timetables: ships, the Sausalito ferry, tour boats, sailboats, bridge traffic and planes. Every visitor sees the same ship at the same second.</p>
+      <ul class="chips"><li><b>89</b> cruise calls in 2026</li><li><b>14</b> ferry trips a weekday</li><li><b>~95,000</b> cars a weekday</li><li><b>8</b> flight corridors</li></ul>
+      <p class="src">San Francisco Bar Pilots, 2024: 5,529 crossings · the Port of San Francisco's 2026 cruise calendar · Golden Gate Ferry's timetable · Caltrans PeMS</p>
+    </article></div>
+    <div class="step dark" data-k="sound" data-label="Sound"><article class="card">
+      <p class="kicker">09 · Sound</p>
+      <p class="big"><span class="num" data-n="0">0</span></p>
+      <p class="unit">recordings</p>
+      <p class="cap">Every sound is made in the browser, from the same clock as the view: four foghorns with their Coast Guard patterns, the cable car's bell, gulls, and a felt piano in five moods set by the sun.</p>
+      <p class="src">The rings: the foghorns' real rhythms, in step with UTC, drawn where they stand</p>
+    </article></div>
+  </div>
+</section>
+
+<section class="stage-sec scale-sec" id="scale" aria-label="Scale">
+  <div class="sec-head" style="padding-bottom: 0">
+    <p class="kicker">Scale</p>
+    <h2 class="title">One dot, <em>one thing.</em></h2>
+    <p class="lede">The same dot for everything, so the numbers can be compared by eye.</p>
+  </div>
+  <div class="stage" id="dots-stage">
+    <canvas class="dots" id="dots" aria-hidden="true"></canvas>
+    <div class="dots-label home" id="lbl-desk">the desk</div>
+    <div class="dots-label" id="lbl-presidio">Presidio</div>
+    <div class="dots-label" id="lbl-marina">Marina</div>
+    <div class="dots-label" id="lbl-pac">Pacific Heights</div>
+  </div>
+  <div class="steps" id="dots-steps">
+    <div class="step right" data-n="54"><article class="card"><p class="kicker">On the shelf</p><p class="big"><span class="num" data-n="54">54</span></p><p class="unit">books</p><p class="cap">The short line at the top left.</p></article></div>
+    <div class="step right" data-n="1182"><article class="card"><p class="kicker">Photographs</p><p class="big"><span class="num" data-n="1182">1,182</span></p><p class="unit">photograph files</p><p class="cap">What the site can show before the 3D loads: 14 moments, every view, every screen size, two formats.</p></article></div>
+    <div class="step right" data-n="9016"><article class="card"><p class="kicker">Zoom</p><p class="big"><span class="num" data-n="9016">9,016</span></p><p class="unit">4x zoom tiles</p><p class="cap">644 one-degree squares of the city, at each of the 14 moments.</p></article></div>
+    <div class="step right" data-n="11593"><article class="card"><p class="kicker">The city</p><p class="big"><span class="num" data-n="11593">11,593</span></p><p class="unit">buildings</p></article></div>
+    <div class="step right" data-n="19564"><article class="card"><p class="kicker">Up close</p><p class="big"><span class="num" data-n="19564">19,564</span></p><p class="unit">windows with sills and blinds</p></article></div>
+    <div class="step right" data-n="107737"><article class="card"><p class="kicker">Trees</p><p class="big"><span class="num" data-n="107737">107,737</span></p><p class="unit">trees</p><p class="cap">Every dot on the screen.</p></article></div>
+    <div class="step right" data-n="107737" data-map="1"><article class="card"><p class="kicker">Where they stand</p><p class="big"><span class="num" data-n="107737">107,737</span></p><p class="unit">trees, at their real positions</p><p class="cap">The same dots, moved to where each tree is. The dense dark patch is the Presidio; the city's grid shows in its street trees.</p><p class="src">109,680 in the merged list; the scene plants 107,737 (the rest stand on water or roofs)</p></article></div>
+  </div>
+</section>
+
+<section class="sec" id="close" aria-label="Up close">
+  <div class="sec-head">
+    <p class="kicker">Up close</p>
+    <h2 class="title">It holds up <em>when you lean in.</em></h2>
+    <p class="lede">Three instruments. Drag them.</p>
+  </div>
+
+  <div class="inst">
+    <div class="inst-head"><h3>Zoom, 1x to 4x</h3><p>Three renders from the same spot (40, 64 and 160 mm lenses), laid exactly on top of each other. Scrub toward the block with the fire escape.</p></div>
+    <div class="frame zoomer" id="zoomer">
+      <img class="z1" src="page/zoom/z1.webp" alt="The view at golden hour, 1x" loading="lazy" srcset="page/zoom/z1-480.webp 480w, page/zoom/z1-720.webp 720w, page/zoom/z1-960.webp 960w, page/zoom/z1-1280.webp 1280w, page/zoom/z1-1600.webp 1600w, page/zoom/z1-1920.webp 1920w" sizes="(max-width: 1320px) calc(100vw - 32px), 1232px" decoding="async" />
+      <img class="z16" src="page/zoom/z16.webp" alt="" loading="lazy" srcset="page/zoom/z16-480.webp 480w, page/zoom/z16-720.webp 720w, page/zoom/z16-960.webp 960w, page/zoom/z16-1280.webp 1280w, page/zoom/z16-1600.webp 1600w, page/zoom/z16-1920.webp 1920w, page/zoom/z16-2010.webp 2010w" sizes="(max-width: 1320px) calc(100vw - 32px), 1232px" decoding="async" />
+      <img class="z4" src="page/zoom/z4.webp" alt="" loading="lazy" srcset="page/zoom/z4-480.webp 480w, page/zoom/z4-720.webp 720w, page/zoom/z4-960.webp 960w, page/zoom/z4-1280.webp 1280w, page/zoom/z4-1600.webp 1600w, page/zoom/z4-1920.webp 1920w, page/zoom/z4-2400.webp 2400w, page/zoom/z4-2880.webp 2880w" sizes="(max-width: 1320px) calc(100vw - 32px), 1232px" decoding="async" />
+      <span class="badge" id="zoom-badge">1.0x</span>
+    </div>
+    <div class="ctl"><input class="rng" id="zoom-r" type="range" min="0" max="1000" value="0" aria-label="Zoom" /><output id="zoom-o" for="zoom-r">1.0x</output></div>
+    <div class="ticks" id="zoom-ticks" aria-hidden="true"></div>
+  </div>
+
+  <div class="inst">
+    <div class="inst-head"><h3>Before and after the detail</h3><p>The same render at 1.6x, the camera untouched. Left: the live city until 18 October. Right: with the new detail.</p></div>
+    <div class="frame ab" id="ab" style="--x: 46%">
+      <img src="page/ab/today.webp" alt="The near blocks before the detail: painted windows on flat walls" loading="lazy" srcset="page/ab/today-480.webp 480w, page/ab/today-720.webp 720w, page/ab/today-960.webp 960w, page/ab/today-1280.webp 1280w, page/ab/today-1600.webp 1600w, page/ab/today-1920.webp 1920w, page/ab/today-2010.webp 2010w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" />
+      <img class="after" src="page/ab/detail.webp" alt="The near blocks with the new detail: real windows, balconies, a fire escape" loading="lazy" srcset="page/ab/detail-480.webp 480w, page/ab/detail-720.webp 720w, page/ab/detail-960.webp 960w, page/ab/detail-1280.webp 1280w, page/ab/detail-1600.webp 1600w, page/ab/detail-1920.webp 1920w, page/ab/detail-2010.webp 2010w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" />
+      <span class="badge">Before</span><span class="badge r">With the detail</span>
+      <div class="knob" aria-hidden="true"></div>
+      <input type="range" min="0" max="100" step="0.1" value="46" aria-label="Divider between before and after" />
+    </div>
+  </div>
+
+  <div class="inst">
+    <div class="inst-head"><h3>The night dial</h3><p>The live site at 22:00, looking down from the window. The base lights 54 % of flats; the dial adds the extra window layer on top, as the site does by the hour.</p></div>
+    <div class="frame dial-frame" id="dial">
+      <img class="base" src="page/night/base.webp" alt="Night, the base look" loading="lazy" srcset="page/night/base-480.webp 480w, page/night/base-720.webp 720w, page/night/base-960.webp 960w, page/night/base-1280.webp 1280w, page/night/base-1600.webp 1600w, page/night/base-1920.webp 1920w, page/night/base-2180.webp 2180w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" />
+      <img class="extra" src="page/night/extra.webp" alt="Night with the extra window layer" loading="lazy" style="opacity: 0" srcset="page/night/extra-480.webp 480w, page/night/extra-720.webp 720w, page/night/extra-960.webp 960w, page/night/extra-1280.webp 1280w, page/night/extra-1600.webp 1600w, page/night/extra-1920.webp 1920w, page/night/extra-2180.webp 2180w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" />
+      <img class="before" src="page/night/before.webp" alt="Night on the live site before the detail" loading="lazy" style="opacity: 0" srcset="page/night/before-480.webp 480w, page/night/before-720.webp 720w, page/night/before-960.webp 960w, page/night/before-1280.webp 1280w, page/night/before-1600.webp 1600w, page/night/before-1920.webp 1920w, page/night/before-2180.webp 2180w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" />
+      <span class="badge" id="dial-badge">Dial 0.00</span>
+    </div>
+    <div class="ctl"><input class="rng" id="dial-r" type="range" min="0" max="1" step="0.01" value="0" aria-label="Extra window layer dial" /><output id="dial-o" for="dial-r">0.00</output>
+      <div class="seg" role="group" aria-label="Compare" style="margin-top: 0"><button type="button" id="dial-before" aria-pressed="false">Before the detail</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec day-sec" id="day" aria-label="The day">
+  <div class="sec-head">
+    <p class="kicker">The day</p>
+    <h2 class="title">Fourteen moments, <em>one day.</em></h2>
+    <p class="lede">The photographs the homepage opens on. The page's own colours follow the moment, as the site's do.</p>
+  </div>
+  <div class="wrap"><div class="day-in">
+    <div class="day-fig" id="day-fig"></div>
+    <div class="day-meta"><b id="day-name">Golden</b><span id="day-time">18:56 · sun 10.0° up</span></div>
+    <div class="strip" id="strip"><ol id="strip-ol"></ol><input id="strip-r" type="range" min="0" max="13" step="0.01" value="8" aria-label="Time of day" /></div>
+  </div></div>
+</section>
+
+<section class="stage-sec data-sec" id="data" aria-label="The data">
+  <div class="sec-head" style="padding-bottom: 0">
+    <p class="kicker">The data</p>
+    <h2 class="title">Five public sources, <em>one place.</em></h2>
+    <p class="lede">Laid on top of each other, as the build reads them. The desk is the warm dot; the pale wedge is what the window sees.</p>
+  </div>
+  <div class="stage">
+    <div class="mapbox" id="mapA">
+      <img class="lay" data-l="elev" src="page/map/a_elevation.webp" alt="Elevation and the bay floor" loading="lazy" style="left:0;top:0" srcset="page/map/a_elevation-480.webp 480w, page/map/a_elevation-720.webp 720w, page/map/a_elevation-960.webp 960w, page/map/a_elevation-1280.webp 1280w, page/map/a_elevation-1600.webp 1600w, page/map/a_elevation-1800.webp 1800w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 10.67px), (max-width: 760px) calc(100vw - 16px), (-webkit-min-device-pixel-ratio: 2.5) 626.7px, 940px" decoding="async" />
+      <img class="lay mul" data-l="aerial" src="page/map/a_aerial.webp" alt="Aerial photograph" loading="lazy" style="left:31.378%;top:26.154%;width:52.744%;height:52.708%;opacity:0" srcset="page/map/a_aerial-480.webp 480w, page/map/a_aerial-720.webp 720w, page/map/a_aerial-960.webp 960w, page/map/a_aerial-1280.webp 1280w, page/map/a_aerial-1600.webp 1600w, page/map/a_aerial-1920.webp 1920w, page/map/a_aerial-2057.webp 2057w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 35.33vw, (max-width: 760px) 53vw, (-webkit-min-device-pixel-ratio: 2.5) 333.3px, 500px" decoding="async" />
+      <img class="lay mul" data-l="lidar" src="page/map/a_lidar.webp" alt="Laser scan relief" loading="lazy" style="left:31.378%;top:26.154%;width:52.718%;height:52.677%;opacity:0" srcset="page/map/a_lidar-480.webp 480w, page/map/a_lidar-720.webp 720w, page/map/a_lidar-960.webp 960w, page/map/a_lidar-1280.webp 1280w, page/map/a_lidar-1600.webp 1600w, page/map/a_lidar-1920.webp 1920w, page/map/a_lidar-2056.webp 2056w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) 35.33vw, (max-width: 760px) 53vw, (-webkit-min-device-pixel-ratio: 2.5) 333.3px, 500px" decoding="async" />
+      <img class="lay mul" data-l="foot" src="page/map/a_footprints.webp" alt="Building footprints" loading="lazy" style="left:0;top:0;opacity:0" srcset="page/map/a_footprints-480.webp 480w, page/map/a_footprints-720.webp 720w, page/map/a_footprints-960.webp 960w, page/map/a_footprints-1280.webp 1280w, page/map/a_footprints-1600.webp 1600w, page/map/a_footprints-1800.webp 1800w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 10.67px), (max-width: 760px) calc(100vw - 16px), (-webkit-min-device-pixel-ratio: 2.5) 626.7px, 940px" decoding="async" />
+      <img class="lay mul" data-l="trees" src="page/map/a_trees.webp" alt="Trees" loading="lazy" style="left:0;top:0;opacity:0" srcset="page/map/a_trees-480.webp 480w, page/map/a_trees-720.webp 720w, page/map/a_trees-960.webp 960w, page/map/a_trees-1280.webp 1280w, page/map/a_trees-1600.webp 1600w, page/map/a_trees-1800.webp 1800w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 10.67px), (max-width: 760px) calc(100vw - 16px), (-webkit-min-device-pixel-ratio: 2.5) 626.7px, 940px" decoding="async" />
+      <svg id="mapA-ovl" viewBox="0 0 1 0.8333" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </div>
+  </div>
+  <div class="steps" id="map-steps">
+    <div class="step" data-l="elev"><article class="card"><p class="kicker">1 · The ground</p><p class="big"><span class="num" data-n="1406920">1,406,920</span></p><p class="unit">quads of terrain, and the bay floor</p><p class="cap">Elevation from 205 open terrain tiles (AWS Open Data). Near the window the ground is the laser scan's own: 463,540 triangles.</p><p class="src">Terrain Tiles on AWS Open Data, from USGS and NOAA elevation data</p></article></div>
+    <div class="step" data-l="lidar"><article class="card"><p class="kicker">2 · The laser scan</p><p class="big"><span class="num" data-n="747">747</span><small>M</small></p><p class="unit">laser points, streamed and gridded</p><p class="cap">USGS lidar flown on 20 April 2023: about 78 returns per square metre, 91 near the window. It gives every roof its height and finds the trees.</p><p class="src">The USGS 3D Elevation Program's 2023 San Francisco survey, gridded at 0.5 m, and 0.25 m near the window</p></article></div>
+    <div class="step" data-l="aerial"><article class="card"><p class="kicker">3 · From above</p><p class="big"><span class="num" data-n="25">25</span><small>cm</small></p><p class="unit">per pixel, NOAA aerial photo</p><p class="cap">Flown in August 2022 and aligned to the scan; used to check it. The ground's colour comes from a NAIP aerial image.</p><p class="src">NOAA Office for Coastal Management, 2022 orthoimagery (CC0)</p></article></div>
+    <div class="step" data-l="foot"><article class="card"><p class="kicker">4 · Footprints</p><p class="big"><span class="num" data-n="17536">17,536</span></p><p class="unit">building outlines, OpenStreetMap</p><p class="cap">Fetched on 14 October. 11,593 of them become buildings; the rest sit behind the room, out of sight.</p><p class="src">© OpenStreetMap contributors (ODbL)</p></article></div>
+    <div class="step" data-l="trees"><article class="card"><p class="kicker">5 · Trees</p><p class="big"><span class="num" data-n="109680">109,680</span></p><p class="unit">trees in the merged list</p><p class="cap">39,559 found in the scan, the rest from the older list outside it. Their kinds come from DataSF's Street Tree List (45,125 rows).</p><p class="src">DataSF's Street Tree List (public domain), merged with the trees the lidar found</p></article></div>
+    <div class="step" data-l="all"><article class="card"><p class="kicker">Together</p><p class="big"><span class="num" data-n="5">5</span></p><p class="unit">sources, all public</p><p class="cap">Elevation, laser scan, aerial photo, footprints and trees, in one frame: renderer metres, the desk at zero.</p></article></div>
+  </div>
+</section>
+
+<section class="sec dark" id="bay" aria-label="The bay" style="background: var(--paper)">
+  <div class="sec-head">
+    <p class="kicker">The bay</p>
+    <h2 class="title">On the real <em>timetables.</em></h2>
+    <p class="lede">The routes the living layer uses, and the navigation lights blinking with their real characters.</p>
+  </div>
+  <div class="wrap">
+    <div class="bay-wrap">
+      <div class="bay" id="bay-map"><img src="page/map/b_night.webp" alt="A dark chart of the Golden Gate and the bay" loading="lazy" srcset="page/map/b_night-480.webp 480w, page/map/b_night-720.webp 720w, page/map/b_night-960.webp 960w, page/map/b_night-1280.webp 1280w, page/map/b_night-1600.webp 1600w, page/map/b_night-1800.webp 1800w" sizes="(max-width: 960px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 960px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 480px, 720px" decoding="async" /><svg id="bay-ovl" viewBox="0 0 1 0.8387" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+      <div class="side">
+        <p class="big"><span class="num" data-n="27">27</span></p>
+        <p class="unit">navigation lights, each with its own rhythm</p>
+        <p class="cap">From the Coast Guard's Light List: Point Bonita occults every 4 s, the bridge's south pier flashes red every 15 s, Point Diablo is isophase 6 s.</p>
+        <ul class="legend">
+          <li><i style="border-color:#d8b48a"></i><span><b>Ship channel</b>, in and out past the pilot station, 15.1 crossings a day</span></li>
+          <li><i class="d" style="border-color:#ffb36b"></i><span><b>Sausalito ferry</b>, Golden Gate Ferry's 2026 card</span></li>
+          <li><i class="d" style="border-color:#9fb6c4"></i><span><b>Bay cruises</b>, Blue &amp; Gold and Red &amp; White</span></li>
+          <li><i style="border-color:rgba(240,232,219,0.35)"></i><span><b>Sailing</b>, the Cityfront course, the Slot, the Gate</span></li>
+          <li><i class="dot" style="background:#ffb36b"></i><span><b>Foghorns</b>, four, with USCG patterns</span></li>
+          <li><i class="dot" style="background:#f0e8db"></i><span><b>The desk</b>, and the slice the window sees</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chart" id="chart">
+      <div class="inst-head" style="padding:0"><h3 id="chart-title">One weekday at the window: Monday 19 October 2026</h3><p>What the view and the sound did that day, from the tables in the site's code. Ships are drawn per 20-minute slot: about one slot in five carries one.</p></div>
+      <svg id="chart-svg" aria-label="A 24-hour chart of one weekday's schedules"></svg>
+    </div>
+
+    <div class="yr" id="yr">
+      <div class="inst-head" style="padding:0"><h3>89 cruise calls in 2026</h3><p id="yr-next">The Port of San Francisco's calendar, every call; one square per day.</p></div>
+      <svg id="yr-svg" aria-label="The year's cruise calls"></svg>
+    </div>
+  </div>
+  <div style="height: clamp(72px, 12vh, 140px)"></div>
+</section>
+
+<section class="sec" id="room" aria-label="The room">
+  <div class="sec-head">
+    <p class="kicker">The room</p>
+    <h2 class="title">The real things <em>on the desk.</em></h2>
+    <p class="lede">The objects are the site's pages: the shelf is the books, the print the quotes, the notebook the essays.</p>
+  </div>
+  <div class="wrap">
+    <div class="room-fig" id="room-fig"><img src="page/moments/golden-l.webp" alt="The room at golden hour" loading="lazy" srcset="page/moments/golden-l-480.webp 480w, page/moments/golden-l-720.webp 720w, page/moments/golden-l-960.webp 960w, page/moments/golden-l-1280.webp 1280w, page/moments/golden-l-1600.webp 1600w, page/moments/golden-l-1920.webp 1920w, page/moments/golden-l-2400.webp 2400w, page/moments/golden-l-2880.webp 2880w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" /></div>
+    <ol class="room-list" id="room-list"></ol>
+    <div class="nums">
+      <div><p class="big"><span class="num" data-n="54">54</span></p><p>books on the shelf</p></div>
+      <div><p class="big"><span class="num" data-n="19">19</span></p><p>quotes</p></div>
+      <div><p class="big"><span class="num" data-n="11">11</span></p><p>essays, on two leaves</p></div>
+      <div><p class="big"><span class="num" data-n="66798">66,798</span></p><p>triangles in the live 3D room</p></div>
+    </div>
+    <div class="inst ho" id="ho" style="padding:0; margin-top: clamp(64px, 10vh, 112px)">
+      <div class="inst-head"><h3>From photograph to live 3D</h3><p>The page opens on a photograph rendered in Blender. When the browser has built the room in 3D, it takes over at the photograph's own camera. The aim: no visible jump. Drag across a picture: the photograph is on the left, the live 3D on the right.</p></div>
+      <div class="frame ab" style="--x: 46%; aspect-ratio: 16 / 10"><img data-ho="view-photo" src="page/handover/golden-view-photo.webp" alt="The homepage: the photograph" loading="lazy" srcset="page/handover/golden-view-photo-480.webp 480w, page/handover/golden-view-photo-720.webp 720w, page/handover/golden-view-photo-960.webp 960w, page/handover/golden-view-photo-1280.webp 1280w, page/handover/golden-view-photo-1600.webp 1600w, page/handover/golden-view-photo-1920.webp 1920w, page/handover/golden-view-photo-2400.webp 2400w, page/handover/golden-view-photo-2880.webp 2880w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" /><img class="after" data-ho="view-3d" src="page/handover/golden-view-3d.webp" alt="The homepage: the live 3D" loading="lazy" srcset="page/handover/golden-view-3d-480.webp 480w, page/handover/golden-view-3d-720.webp 720w, page/handover/golden-view-3d-960.webp 960w, page/handover/golden-view-3d-1280.webp 1280w, page/handover/golden-view-3d-1600.webp 1600w, page/handover/golden-view-3d-1920.webp 1920w, page/handover/golden-view-3d-2400.webp 2400w, page/handover/golden-view-3d-2880.webp 2880w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" /><span class="badge">Photograph</span><span class="badge r">Live 3D</span><div class="knob" aria-hidden="true"></div><input type="range" min="0" max="100" step="0.1" value="46" aria-label="Divider between the photograph and the live 3D, the homepage" /></div>
+      <div class="ctl"><div class="seg" role="group" aria-label="Moment" id="ho-seg" style="margin-top: 0"><button type="button" data-m="golden" aria-pressed="true">Golden hour</button><button type="button" data-m="midday" aria-pressed="false">Midday</button><button type="button" data-m="night" aria-pressed="false">Night</button></div></div>
+      <div class="ho-row">
+        <figure><div class="frame ab" style="--x: 46%; aspect-ratio: 8 / 5"><img data-ho="laptop-photo" src="page/handover/golden-laptop-photo.webp" alt="The MacBook: the photograph" loading="lazy" srcset="page/handover/golden-laptop-photo-480.webp 480w, page/handover/golden-laptop-photo-720.webp 720w, page/handover/golden-laptop-photo-800.webp 800w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" /><img class="after" data-ho="laptop-3d" src="page/handover/golden-laptop-3d.webp" alt="The MacBook: the live 3D" loading="lazy" srcset="page/handover/golden-laptop-3d-480.webp 480w, page/handover/golden-laptop-3d-720.webp 720w, page/handover/golden-laptop-3d-800.webp 800w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" /><span class="badge">Photograph</span><span class="badge r">Live 3D</span><div class="knob" aria-hidden="true"></div><input type="range" min="0" max="100" step="0.1" value="46" aria-label="Divider between the photograph and the live 3D, the MacBook" /></div><figcaption>The MacBook and its screen</figcaption></figure>
+        <figure><div class="frame ab" style="--x: 46%; aspect-ratio: 8 / 5"><img data-ho="phone-photo" src="page/handover/golden-phone-photo.webp" alt="The iPhone: the photograph" loading="lazy" srcset="page/handover/golden-phone-photo-480.webp 480w, page/handover/golden-phone-photo-640.webp 640w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" /><img class="after" data-ho="phone-3d" src="page/handover/golden-phone-3d.webp" alt="The iPhone: the live 3D" loading="lazy" srcset="page/handover/golden-phone-3d-480.webp 480w, page/handover/golden-phone-3d-640.webp 640w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" /><span class="badge">Photograph</span><span class="badge r">Live 3D</span><div class="knob" aria-hidden="true"></div><input type="range" min="0" max="100" step="0.1" value="46" aria-label="Divider between the photograph and the live 3D, the iPhone" /></div><figcaption>The iPhone on the desk</figcaption></figure>
+        <figure><div class="frame ab" style="--x: 46%; aspect-ratio: 8 / 5"><img data-ho="window-photo" src="page/handover/golden-window-photo.webp" alt="The view through the window: the photograph" loading="lazy" srcset="page/handover/golden-window-photo-480.webp 480w, page/handover/golden-window-photo-720.webp 720w, page/handover/golden-window-photo-960.webp 960w, page/handover/golden-window-photo-1280.webp 1280w, page/handover/golden-window-photo-1600.webp 1600w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" /><img class="after" data-ho="window-3d" src="page/handover/golden-window-3d.webp" alt="The view through the window: the live 3D" loading="lazy" srcset="page/handover/golden-window-3d-480.webp 480w, page/handover/golden-window-3d-720.webp 720w, page/handover/golden-window-3d-960.webp 960w, page/handover/golden-window-3d-1280.webp 1280w, page/handover/golden-window-3d-1600.webp 1600w" sizes="(max-width: 1320px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 1320px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 821.3px, 1232px" decoding="async" /><span class="badge">Photograph</span><span class="badge r">Live 3D</span><div class="knob" aria-hidden="true"></div><input type="range" min="0" max="100" step="0.1" value="46" aria-label="Divider between the photograph and the live 3D, the view through the window" /></div><figcaption>The city through the window</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec dark" id="sound" aria-label="Sound" style="background: var(--paper)">
+  <div class="sec-head">
+    <p class="kicker">Sound</p>
+    <h2 class="title">Nothing recorded, <em>everything made.</em></h2>
+    <p class="lede">Off until you turn it on. Then the browser synthesizes the room and the city from the same clock as the view: two visitors hear the same foghorn at the same second.</p>
+  </div>
+  <div class="wrap">
+    <div class="mix">
+      <div><h4>Music</h4><ul><li>A felt piano <span>with real piano inharmonicity</span></li><li>A warm pad</li><li>A bowed glass, rarely</li><li>Five moods <span>by the sun: night, dawn, day, golden, dusk; everything on D</span></li></ul></div>
+      <div><h4>The city, through the glass</h4><ul><li>Traffic <span>following the bridge's hourly counts</span></li><li>Wind <span>Fort Point's hourly means</span></li><li>The cable's hum</li><li>Far airliners</li></ul></div>
+      <div><h4>Events</h4><ul><li>Four foghorns</li><li>Ships' fog signals</li><li>The ferry's departure blast</li><li>Tour boats, through the walls</li><li>Gulls, a dawn chorus</li><li>The cable car's rumble and bell</li><li>Light planes</li></ul></div>
+      <div><h4>The room</h4><ul><li>Room tone, the lamp</li><li>A book taken out and put back</li><li>The notebook's elastic, cover, page turn</li><li>A laptop tap, the phone unlocking</li><li>The breadboard's chirp</li></ul></div>
+    </div>
+    <div class="horns" id="horns">
+      <div class="inst-head" style="padding:0"><h3>The four foghorns, right now</h3><p>Their real patterns from the Coast Guard's Light List, phased to UTC. On the site they sound when there is fog.</p></div>
+      <svg id="horns-svg" aria-label="The four foghorn patterns"></svg>
+    </div>
+  </div>
+  <div style="height: clamp(72px, 12vh, 140px)"></div>
+</section>
+
+<section class="sec" id="build" aria-label="The build">
+  <div class="sec-head">
+    <p class="kicker">The build</p>
+    <h2 class="title">Six days, <em>two accounts.</em></h2>
+    <p class="lede">The first commit was on 13 October at 22:06: "a desk on Russian Hill looking at the Golden Gate". Two Claude accounts have worked on it since, a coordinator and a worker with its helpers, under one rulebook.</p>
+  </div>
+  <div class="wrap">
+    <div class="nums" style="margin-top:0">
+      <div><p class="big"><span class="num" data-n="662">662</span></p><p>commits, all branches</p></div>
+      <div><p class="big"><span class="num" data-n="64">64</span></p><p>work branches</p></div>
+      <div><p class="big"><span class="num" data-n="41">41</span></p><p>written briefs for helpers</p></div>
+      <div><p class="big"><span class="num" data-n="8">8</span></p><p>deploys, since 17 Oct</p></div>
+    </div>
+    <div class="cols">
+      <div>
+        <h3>Commits per day</h3>
+        <ul class="bars" id="commits"></ul>
+        <h3 style="margin-top: 48px">Rented GPUs: minutes of rendering</h3>
+        <ul class="bars" id="gpus"></ul>
+        <div class="gpu-story">
+          <p>When a job was too big for the Mac, Claude rented graphics cards in the cloud: it started a machine, sent it the scene, rendered, brought the pictures home and shut the machine down again.</p>
+          <p>Eight machines over four days, 15 to 18 October, here and there: an hour or two at a time, mornings, afternoons and evenings, once past midnight.</p>
+          <p>In all, 9 hours 15 minutes of rendering, about 22 GPU-hours, for 661 renders, on up to four RTX 4090s at once.</p>
+          <p>The longest run: 220 renders in two hours on two RTX 5090s. The last: the city at night, 49 renders in 48 minutes on four RTX 4090s.</p>
+          <p>Everything else ran on the Mac on the desk, one Blender or one test browser at a time, taking turns: since the morning of 18 October, 1,338 turns, about 165 hours.</p>
+        </div>
+      </div>
+      <div>
+        <h3>What it produces</h3>
+        <ul class="outs">
+          <li>Moments of the day, each rendered <b>14</b></li>
+          <li>Photograph files for the homepage <b>1,182</b></li>
+          <li>City panorama files (64 px per degree) <b>535</b></li>
+          <li>Near-layer files, the park and closest blocks <b>366</b></li>
+          <li>4x zoom tiles (+3,220 for night windows) <b>9,016</b></li>
+          <li>Files in the deployed site <b>2,565</b></li>
+          <li>Deployed size <b>286.6 MB</b></li>
+          <li>Checks in the site's own test (128 pass, 1 skip) <b>129</b></li>
+        </ul>
+        <p class="src">The 4x zoom has been on the site since 19 October.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="along" aria-label="Along the way">
+  <div class="sec-head">
+    <p class="kicker">Along the way</p>
+    <h2 class="title">The working <em>sheets.</em></h2>
+    <p class="lede">The comparisons the work was judged on. Tap one to see it full size.</p>
+  </div>
+  <div class="wrap" id="gallery"></div>
+</section>
+</main>
+
+<noscript>
+<section class="nojs-pics" aria-label="The pictures">
+<h3>The layers</h3>
+<ul class="grid"><li><figure><img src="peel/a_clay-960.webp" srcset="peel/a_clay-480.webp 480w, peel/a_clay-720.webp 720w, peel/a_clay-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The city as plain grey clay</figcaption></figure></li><li><figure><img src="peel/b_detail-960.webp" srcset="peel/b_detail-480.webp 480w, peel/b_detail-720.webp 720w, peel/b_detail-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The new detail, still in clay</figcaption></figure></li><li><figure><img src="peel/g_xray-960.webp" srcset="peel/g_xray-480.webp 480w, peel/g_xray-720.webp 720w, peel/g_xray-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>X-ray: every surface coloured by what it is, with its triangles&#x27; edges</figcaption></figure></li><li><figure><img src="peel/g_xray_near-960.webp" srcset="peel/g_xray_near-480.webp 480w, peel/g_xray_near-720.webp 720w, peel/g_xray_near-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>X-ray of the near blocks at 2x</figcaption></figure></li><li><figure><img src="peel/c_trees-960.webp" srcset="peel/c_trees-480.webp 480w, peel/c_trees-720.webp 720w, peel/c_trees-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>Clay city with the trees</figcaption></figure></li><li><figure><img src="peel/d_materials-960.webp" srcset="peel/d_materials-480.webp 480w, peel/d_materials-720.webp 720w, peel/d_materials-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>With materials, before the air</figcaption></figure></li><li><figure><img src="peel/e_golden-960.webp" srcset="peel/e_golden-480.webp 480w, peel/e_golden-720.webp 720w, peel/e_golden-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>Fully lit at golden hour</figcaption></figure></li><li><figure><img src="peel/f_night-960.webp" srcset="peel/f_night-480.webp 480w, peel/f_night-720.webp 720w, peel/f_night-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>Night at 22:30, the base look</figcaption></figure></li><li><figure><img src="peel/f_night_extra-960.webp" srcset="peel/f_night_extra-480.webp 480w, peel/f_night_extra-720.webp 720w, peel/f_night_extra-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>Night with the extra window layer at dial 1</figcaption></figure></li></ul>
+<h3>Fourteen moments</h3>
+<ul class="grid"><li><figure><img src="page/moments/predawn-l-960.webp" srcset="page/moments/predawn-l-480.webp 480w, page/moments/predawn-l-720.webp 720w, page/moments/predawn-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, predawn" loading="lazy" decoding="async" /><figcaption>Predawn, 05:49</figcaption></figure></li><li><figure><img src="page/moments/dawn-l-960.webp" srcset="page/moments/dawn-l-480.webp 480w, page/moments/dawn-l-720.webp 720w, page/moments/dawn-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, dawn" loading="lazy" decoding="async" /><figcaption>Dawn, 06:18</figcaption></figure></li><li><figure><img src="page/moments/sunrise-l-960.webp" srcset="page/moments/sunrise-l-480.webp 480w, page/moments/sunrise-l-720.webp 720w, page/moments/sunrise-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, sunrise" loading="lazy" decoding="async" /><figcaption>Sunrise, 06:47</figcaption></figure></li><li><figure><img src="page/moments/morning-l-960.webp" srcset="page/moments/morning-l-480.webp 480w, page/moments/morning-l-720.webp 720w, page/moments/morning-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, morning" loading="lazy" decoding="async" /><figcaption>Morning, 07:54</figcaption></figure></li><li><figure><img src="page/moments/latemorning-l-960.webp" srcset="page/moments/latemorning-l-480.webp 480w, page/moments/latemorning-l-720.webp 720w, page/moments/latemorning-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, late morning" loading="lazy" decoding="async" /><figcaption>Late morning, 10:02</figcaption></figure></li><li><figure><img src="page/moments/midday-l-960.webp" srcset="page/moments/midday-l-480.webp 480w, page/moments/midday-l-720.webp 720w, page/moments/midday-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, midday" loading="lazy" decoding="async" /><figcaption>Midday, 13:12</figcaption></figure></li><li><figure><img src="page/moments/afternoon-l-960.webp" srcset="page/moments/afternoon-l-480.webp 480w, page/moments/afternoon-l-720.webp 720w, page/moments/afternoon-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, afternoon" loading="lazy" decoding="async" /><figcaption>Afternoon, 15:55</figcaption></figure></li><li><figure><img src="page/moments/lateafternoon-l-960.webp" srcset="page/moments/lateafternoon-l-480.webp 480w, page/moments/lateafternoon-l-720.webp 720w, page/moments/lateafternoon-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, late afternoon" loading="lazy" decoding="async" /><figcaption>Late afternoon, 17:45</figcaption></figure></li><li><figure><img src="page/moments/golden-l-960.webp" srcset="page/moments/golden-l-480.webp 480w, page/moments/golden-l-720.webp 720w, page/moments/golden-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, golden" loading="lazy" decoding="async" /><figcaption>Golden, 18:56</figcaption></figure></li><li><figure><img src="page/moments/lowsun-l-960.webp" srcset="page/moments/lowsun-l-480.webp 480w, page/moments/lowsun-l-720.webp 720w, page/moments/lowsun-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, low sun" loading="lazy" decoding="async" /><figcaption>Low sun, 19:20</figcaption></figure></li><li><figure><img src="page/moments/sunset-l-960.webp" srcset="page/moments/sunset-l-480.webp 480w, page/moments/sunset-l-720.webp 720w, page/moments/sunset-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, sunset" loading="lazy" decoding="async" /><figcaption>Sunset, 19:46</figcaption></figure></li><li><figure><img src="page/moments/dusk-l-960.webp" srcset="page/moments/dusk-l-480.webp 480w, page/moments/dusk-l-720.webp 720w, page/moments/dusk-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, dusk" loading="lazy" decoding="async" /><figcaption>Dusk, 20:06</figcaption></figure></li><li><figure><img src="page/moments/blue-l-960.webp" srcset="page/moments/blue-l-480.webp 480w, page/moments/blue-l-720.webp 720w, page/moments/blue-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, blue hour" loading="lazy" decoding="async" /><figcaption>Blue hour, 20:32</figcaption></figure></li><li><figure><img src="page/moments/night-l-960.webp" srcset="page/moments/night-l-480.webp 480w, page/moments/night-l-720.webp 720w, page/moments/night-l-960.webp 960w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="The room and the view, night" loading="lazy" decoding="async" /><figcaption>Night, 22:30</figcaption></figure></li></ul>
+<h3>On the desk</h3>
+<ol class="room-list"><li><b>1</b><span><strong>The shelf</strong>, 54 books; each spine opens its page</span></li><li><b>2</b><span><strong>MacBook Pro 14-inch</strong>, M3 Pro, Space Black, 78 modelled keys; the projects</span></li><li><b>3</b><span><strong>Bose QuietComfort</strong>, headphones, Blue Dusk; they play a video</span></li><li><b>4</b><span><strong>A breadboard</strong>, it chirps</span></li><li><b>5</b><span><strong>The notebook</strong>, 11 essays on two leaves, with a real page turn</span></li><li><b>6</b><span><strong>iPhone 17 Pro</strong>, Deep Blue; it unlocks</span></li><li><b>7</b><span><strong>The print</strong>, 19 quotes</span></li><li><b>8</b><span><strong>Poor Charlie&#x27;s Almanack</strong>, the desk book</span></li><li><b>9</b><span><strong>A tumbler</strong>, insulated</span></li></ol>
+<h3>The detail</h3>
+<ul class="grid"><li><figure><img src="page/thumbs/zoom_1x_2x_4x-900.webp" srcset="page/thumbs/zoom_1x_2x_4x-480.webp 480w, page/thumbs/zoom_1x_2x_4x-720.webp 720w, page/thumbs/zoom_1x_2x_4x-900.webp 900w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>Three zoom levels at golden hour, all with the detail: the whole view, 1.6x, and 4x on the nearest apartment block.</figcaption></figure></li><li><figure><img src="page/thumbs/zoom4x_block-720.webp" srcset="page/thumbs/zoom4x_block-480.webp 480w, page/thumbs/zoom4x_block-720.webp 720w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The 4x test that started the detail work: a 160 mm lens on the nearest apartment block.</figcaption></figure></li><li><figure><img src="page/thumbs/zoom4x_bridge-720.webp" srcset="page/thumbs/zoom4x_bridge-480.webp 480w, page/thumbs/zoom4x_bridge-720.webp 720w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The same 4x test toward the bridge. It exposed flat cut-out leaves and plain tower columns, both remodelled after.</figcaption></figure></li><li><figure><img src="page/thumbs/trees_4x_before_after-720.webp" srcset="page/thumbs/trees_4x_before_after-480.webp 480w, page/thumbs/trees_4x_before_after-720.webp 720w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>Trees near the window at 4x, before and after: flat cut-outs became needle and leaf clusters on real branches.</figcaption></figure></li><li><figure><img src="page/thumbs/nearby_normal_old_vs_new-720.webp" srcset="page/thumbs/nearby_normal_old_vs_new-480.webp 480w, page/thumbs/nearby_normal_old_vs_new-720.webp 720w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The two nearest blocks. Before: painted windows on flat walls. After: openings, balconies, a fire escape, roof edges.</figcaption></figure></li><li><figure><img src="page/thumbs/today_vs_detail_golden_full-720.webp" srcset="page/thumbs/today_vs_detail_golden_full-480.webp 480w, page/thumbs/today_vs_detail_golden_full-720.webp 720w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The whole view before (left) and with the detail (right). Subtle at this size; it shows when you zoom.</figcaption></figure></li><li><figure><img src="page/thumbs/today_vs_detail_live_ab_desktop-900.webp" srcset="page/thumbs/today_vs_detail_live_ab_desktop-480.webp 480w, page/thumbs/today_vs_detail_live_ab_desktop-720.webp 720w, page/thumbs/today_vs_detail_live_ab_desktop-900.webp 900w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The live site looking down from the window, before the detail and with it, at golden hour, dusk and night.</figcaption></figure></li></ul>
+<h3>The night</h3>
+<ul class="grid"><li><figure><img src="page/thumbs/night_explained-720.webp" srcset="page/thumbs/night_explained-480.webp 480w, page/thumbs/night_explained-720.webp 720w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>Why the night needed a fix: painted squares, then real windows but too few lit, then more flats lit.</figcaption></figure></li></ul>
+<h3>Ships</h3>
+<ul class="grid"><li><figure><img src="page/thumbs/ships_cruise-720.webp" srcset="page/thumbs/ships_cruise-480.webp 480w, page/thumbs/ships_cruise-720.webp 720w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The cruise ship at golden, midday, dusk and night: old and new, the new one at 2x below.</figcaption></figure></li><li><figure><img src="page/thumbs/ships_container-720.webp" srcset="page/thumbs/ships_container-480.webp 480w, page/thumbs/ships_container-720.webp 720w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The same comparison for the 350 m container ship.</figcaption></figure></li><li><figure><img src="page/thumbs/ships_night_pass-720.webp" srcset="page/thumbs/ships_night_pass-480.webp 480w, page/thumbs/ships_night_pass-720.webp 720w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>A ship passing at night in 16 frames, old above and new below: the new ones carry their own lights.</figcaption></figure></li></ul>
+<h3>The notebook</h3>
+<ul class="grid"><li><figure><img src="page/thumbs/page_turn_golden_frames-900.webp" srcset="page/thumbs/page_turn_golden_frames-480.webp 480w, page/thumbs/page_turn_golden_frames-720.webp 720w, page/thumbs/page_turn_golden_frames-900.webp 900w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The page turn at golden hour: at rest, turning, over the spine, landed. The paper curls, shows its writing through the back and casts a soft shadow.</figcaption></figure></li><li><figure><img src="page/thumbs/page_turn_night_frames-900.webp" srcset="page/thumbs/page_turn_night_frames-480.webp 480w, page/thumbs/page_turn_night_frames-720.webp 720w, page/thumbs/page_turn_night_frames-900.webp 900w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The same page turn at night, lit by the desk lamp.</figcaption></figure></li><li><figure><img src="page/thumbs/page_turn_rest_vs_landed-720.webp" srcset="page/thumbs/page_turn_rest_vs_landed-480.webp 480w, page/thumbs/page_turn_rest_vs_landed-720.webp 720w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>At rest, and after one turn: the leaf lies on the cover&#x27;s inside and the next essays&#x27; titles show.</figcaption></figure></li><li><figure><img src="page/thumbs/page_turn_mid_turn-720.webp" srcset="page/thumbs/page_turn_mid_turn-480.webp 480w, page/thumbs/page_turn_mid_turn-720.webp 720w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>Half-way through a turn.</figcaption></figure></li></ul>
+<h3>The desk and the park</h3>
+<ul class="grid"><li><figure><img src="page/thumbs/macbook_iphone_photo_vs_3d-900.webp" srcset="page/thumbs/macbook_iphone_photo_vs_3d-480.webp 480w, page/thumbs/macbook_iphone_photo_vs_3d-720.webp 720w, page/thumbs/macbook_iphone_photo_vs_3d-900.webp 900w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The homepage&#x27;s photograph and the live 3D at the same camera, at golden hour, midday and night; last, the projects page, whose 3D then leans in to the laptop.</figcaption></figure></li><li><figure><img src="page/thumbs/macbook_model_golden-720.webp" srcset="page/thumbs/macbook_model_golden-480.webp 480w, page/thumbs/macbook_model_golden-720.webp 720w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The 14-inch Space Black MacBook Pro at golden hour, close up and from the homepage camera.</figcaption></figure></li><li><figure><img src="page/thumbs/park_before_after-900.webp" srcset="page/thumbs/park_before_after-480.webp 480w, page/thumbs/park_before_after-720.webp 720w, page/thumbs/park_before_after-900.webp 900w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>The park below the window at midday, from the desk: before, the old clay mound; now, gravel paths, planted beds and benches, with the city&#x27;s new detail behind.</figcaption></figure></li><li><figure><img src="page/thumbs/park_layer_off_on_golden-900.webp" srcset="page/thumbs/park_layer_off_on_golden-480.webp 480w, page/thumbs/park_layer_off_on_golden-720.webp 720w, page/thumbs/park_layer_off_on_golden-900.webp 900w" sizes="(max-width: 760px) and (-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21.33px), (max-width: 760px) calc(100vw - 32px), (-webkit-min-device-pixel-ratio: 2.5) 280px, 420px" alt="" loading="lazy" decoding="async" /><figcaption>George Sterling Park from the desk at golden hour: the clay mound before, the garden now.</figcaption></figure></li></ul>
+</section>
+</noscript>
+<section class="sec credits-sec" id="credits" aria-label="Credits and data">
+  <div class="wrap">
+    <h3>Credits and data</h3>
+    <ul class="credits">
+      <li><b>Buildings and streets</b> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, under the Open Database License (ODbL).</li>
+      <li><b>The laser scan</b> 2023 USGS Lidar, San Francisco, from the U.S. Geological Survey's 3D Elevation Program, flown 20 April 2023 (public domain).</li>
+      <li><b>Terrain and the bay floor</b> Terrain Tiles on AWS Open Data: 3DEP (formerly NED), GMTED2010 and SRTM terrain data courtesy of the U.S. Geological Survey; ETOPO1 terrain data, U.S. National Oceanic and Atmospheric Administration.</li>
+      <li><b>From above</b> NOAA Office for Coastal Management, 2022 San Francisco orthoimagery (CC0); USDA NAIP imagery from the USGS National Map (public domain).</li>
+      <li><b>Trees</b> DataSF, City and County of San Francisco: the Street Tree List (public domain), merged with the trees the lidar found.</li>
+      <li><b>Lights and foghorns</b> U.S. Coast Guard Light List, Volume VI (2025).</li>
+      <li><b>Ships</b> San Francisco Bar Pilots (5,529 bar crossings in 2024); the Port of San Francisco's 2026 cruise calendar.</li>
+      <li><b>Ferry, boats and the cable car</b> Golden Gate Ferry's 2026 timetable (Golden Gate Bridge, Highway and Transportation District); the Blue &amp; Gold Fleet and Red and White Fleet timetables; SFMTA's Powell-Hyde schedule.</li>
+      <li><b>Bridge traffic</b> Caltrans PeMS hourly counts, scaled to the bridge district's 2025 counts.</li>
+      <li><b>Planes</b> Flight-tracking data from adsb.lol, under the Open Database License (ODbL).</li>
+      <li><b>Wind and sun</b> NOAA's Fort Point station (2024); the sun's position from NOAA's solar formula.</li>
+      <li><b>Lit windows</b> Residential lighting-use data from RESNET and NREL.</li>
+      <li><b>Materials and some models</b> Poly Haven (CC0).</li>
+      <li><b>Type</b> Geist and Cormorant Garamond, under the SIL Open Font License.</li>
+    </ul>
+  </div>
+</section>
+<footer>
+  <p>This page was put together on 18 and 19 October 2026 from the project's own renders, logs and data. Where a plan
+  and the logs differ, it follows the logs.</p>
+  <nav aria-label="Site">
+    <a href="/">Akshay Chintalapati</a>
+    <a href="/#about">About</a>
+    <a href="/writing/">Writing</a>
+    <a href="/#social">Social</a>
+    <a href="/how-its-made/" aria-current="page">How it's made</a>
+  </nav>
+</footer>
+
+<dialog class="lb" id="lb" aria-label="Image"><button class="x" type="button" aria-label="Close">✕</button><div class="in"><img alt="" /><p></p></div></dialog>
+
+<script src="page/geo.js"></script>
+<script>
+(function () {
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+const RM = matchMedia("(prefers-reduced-motion: reduce)");
+const reduced = () => RM.matches;
+const fmt = (n, d = 0) => n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+const SVGNS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+const vh = () => window.innerHeight;
+const isPortrait = () => window.innerWidth / window.innerHeight < 0.8;
+const isNarrow = () => window.innerWidth <= 760 || isPortrait();
+const G = window.GEO || null;
+
+/* cover-fit an element inside its parent box, keeping a focus point in view */
+function cover(node, W, H, ar, fx = 0.5, fy = 0.5) {
+  let w = W, h = W / ar;
+  if (h < H) { h = H; w = H * ar; }
+  const left = clamp(W / 2 - fx * w, W - w, 0), top = clamp(H / 2 - fy * h, H - h, 0);
+  node.style.width = w + "px"; node.style.height = h + "px"; node.style.left = left + "px"; node.style.top = top + "px";
+}
+function contain(node, W, H, ar, pad = 0) {
+  let w = W - 2 * pad, h = w / ar;
+  if (h > H - 2 * pad) { h = H - 2 * pad; w = h * ar; }
+  node.style.width = w + "px"; node.style.height = h + "px"; node.style.left = (W - w) / 2 + "px"; node.style.top = (H - h) / 2 + "px";
+  return { w, h };
+}
+
+/* one scroll/resize loop */
+const onFrame = [], onResize = [];
+let ticking = false;
+function tick() { ticking = false; for (const f of onFrame) f(); }
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(tick); } }, { passive: true });
+let rz = 0;
+addEventListener("resize", () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { for (const f of onResize) f(); tick(); }); });
+
+/* count-up numbers */
+function countUp(span) {
+  const to = parseFloat(span.dataset.n), d = +(span.dataset.d || 0);
+  if (reduced() || span.dataset.done) { span.textContent = fmt(to, d); return; }
+  span.dataset.done = "1";
+  const t0 = performance.now(), dur = to > 1000 ? 1100 : 700;
+  const step = (t) => { const k = clamp((t - t0) / dur, 0, 1); span.textContent = fmt(to * easeOut(k), d); if (k < 1) requestAnimationFrame(step); else span.textContent = fmt(to, d); };
+  requestAnimationFrame(step);
+}
+const numIO = new IntersectionObserver((es) => { for (const e of es) if (e.isIntersecting) { countUp(e.target); numIO.unobserve(e.target); } }, { threshold: 0, rootMargin: "0px 0px -8% 0px" });
+$$(".num").forEach((s) => { if (!reduced() && +s.dataset.n > 0) s.textContent = fmt(0, +(s.dataset.d || 0)); numIO.observe(s); });
+
+/* scrollytelling: the step crossing the middle of the screen is active */
+function steps(container, onActive) {
+  const list = $$(".step", container);
+  let cur = -1;
+  const io = new IntersectionObserver((es) => {
+    for (const e of es) if (e.isIntersecting) {
+      const i = list.indexOf(e.target);
+      if (i !== cur) { cur = i; onActive(i, list[i]); }
+    }
+  }, { rootMargin: "-48% 0px -48% 0px" });
+  list.forEach((s) => io.observe(s));
+  return list;
+}
+
+/* ================================================================ top bar */
+(function bar() {
+  const b = $("#bar"), here = $("#here");
+  const links = $$(".bar nav a");
+  const secs = links.map((a) => $(a.getAttribute("href")));
+  onFrame.push(() => {
+    b.classList.toggle("on", scrollY > vh() * 0.55);
+    const mid = vh() * 0.35;
+    let act = -1;
+    secs.forEach((s, i) => { const r = s.getBoundingClientRect(); if (r.top <= mid && r.bottom > mid) act = i; });
+    links.forEach((a, i) => a.setAttribute("aria-current", i === act ? "true" : "false"));
+    here.textContent = act >= 0 ? links[act].textContent : "";
+    const s = act >= 0 ? secs[act] : null;
+    b.classList.toggle("dark", !!s && (s.classList.contains("dark") || s.dataset.bar === "dark" || s.style.colorScheme === "dark"));
+  });
+})();
+
+/* ================================================================ 0. the window: the room lifts away, the view stays */
+(function hero() {
+  const lift = $("#peel-steps .step.lift"), ext = $("#hero-ext"), room = $("#hero-room"), mast = $("#hero-mast"), veil = $("#hero-veil");
+  const origin = () => { room.style.transformOrigin = isPortrait() ? "50% 30%" : "63% 34%"; };
+  onResize.push(origin); origin();
+  onFrame.push(() => {
+    const r = lift.getBoundingClientRect();
+    if (r.top > vh() || r.bottom < -vh()) return;
+    const p = clamp(-r.top / (vh() * 0.95), 0, 1);
+    const k = reduced() ? (p > 0.35 ? 1 : 0) : easeIO(smooth(0.02, 0.8, p));
+    room.style.transform = `scale(${1 + 1.1 * k})`;
+    room.style.opacity = String(1 - (reduced() ? k : smooth(0.2, 0.7, p)));
+    ext.style.transform = `scale(${1 + 0.05 * k})`;
+    mast.style.opacity = String(1 - smooth(0.0, 0.16, p));
+    mast.style.visibility = p > 0.2 ? "hidden" : "visible";
+    veil.style.opacity = String(1 - smooth(0.0, 0.3, p));
+  });
+})();
+
+/* ================================================================ 1. the layers */
+(function peel() {
+  const sec = $("#layers"), stage = $(".stage", sec), figsBox = $("#peel-figs"), rail = $("#peel-rail");
+  const figs = {}; $$(".pf", figsBox).forEach((f) => (figs[f.dataset.k] = f));
+  // images by name, with a placeholder until each exists
+  Object.values(figs).forEach((f) => {
+    if (!f.dataset.src) return;
+    const img = $("img", f), ph = $(".ph", f);
+    img.addEventListener("load", () => f.classList.remove("missing"));
+    img.addEventListener("error", () => f.classList.add("missing"));
+    img.decoding = "async";
+    f._load = () => { if (img.dataset.on) return; img.dataset.on = "1"; if (f.dataset.sizes) img.sizes = f.dataset.sizes; if (f.dataset.srcset) img.srcset = f.dataset.srcset; img.src = f.dataset.src; };
+  });
+  function layout() {
+    const W = figsBox.clientWidth, H = figsBox.clientHeight, narrow = isNarrow(), port = isPortrait();
+    Object.values(figs).forEach((f) => {
+      const full = !!f.dataset.full, h = full || !narrow ? H : Math.round(H * 0.6);
+      const ar = full && port ? +f.dataset.arp : +f.dataset.ar;
+      const fx = +((full && port ? f.dataset.fxp : f.dataset.fx) || 0.52), fy = +((full && port ? f.dataset.fyp : f.dataset.fy) || 0.5);
+      cover(f, W, h, ar, fx, fy);
+      // on phones the layers sit in the top 60 %, above the cards: clip anything that would hang below
+      if (h < H) { const L = parseFloat(f.style.left), T = parseFloat(f.style.top), w = parseFloat(f.style.width), hh = parseFloat(f.style.height); f.style.clipPath = `inset(${-T}px ${Math.max(0, w + L - W)}px ${Math.max(0, hh + T - h)}px ${-L}px)`; }
+      else f.style.clipPath = "";
+      // overlay labels: never smaller than 12 px
+      const w = parseFloat(f.style.width);
+      $$("text.lab", f).forEach((t) => t.setAttribute("font-size", Math.max(+t.dataset.fs, (narrow ? 11 : 12.5) / w).toFixed(5)));
+    });
+  }
+  onResize.push(layout); requestAnimationFrame(layout);
+
+  const pick = { g: "g", f: "f" };     // which variant of a two-view step is shown
+  let active = "view";
+  function show(k) {
+    const want = pick[k] || k;
+    Object.entries(figs).forEach(([key, f]) => f.classList.toggle("on", key === want));
+    sec.dataset.k = k;
+    living.run(k === "living"); horns.run(k === "sound");
+  }
+  const VARIANTS = { g: ["g", "gn"], f: ["f", "fx"] };   // a step's two views both load
+  const opening = $$("#hero-ext img, #hero-room img"), openingDone = () => opening.every((x) => x.complete);
+  let waitI = -1; const resume = () => { if (waitI >= 0 && openingDone()) { const k = waitI; waitI = -1; ahead(k); } };
+  opening.forEach((x) => { x.addEventListener("load", resume); x.addEventListener("error", resume); });
+  const ahead = (i) => { if (i < 2 && !openingDone()) { waitI = i; return; } for (let j = Math.max(0, i - 1); j <= i + 2 && j < list.length; j++) for (const k of VARIANTS[list[j].dataset.k] || [list[j].dataset.k]) if (figs[k] && figs[k]._load) figs[k]._load(); };
+  const list = steps($("#peel-steps"), (i, s) => {
+    active = s.dataset.k; show(active); ahead(i);
+    $$("button", rail).forEach((b, j) => b.setAttribute("aria-current", j === i ? "true" : "false"));
+    rail.style.opacity = i === 0 ? "0" : "1";     // nothing over the opening photograph but its own masthead
+  });
+  list.forEach((s, i) => {
+    const li = document.createElement("li"), b = document.createElement("button");
+    b.type = "button"; b.innerHTML = `<span>${s.dataset.label}</span><i></i>`;
+    b.addEventListener("click", () => s.scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "center" }));
+    li.appendChild(b); rail.appendChild(li);
+  });
+  // two-view toggles inside cards
+  $$(".seg button[data-fig]", sec).forEach((b) => b.addEventListener("click", () => {
+    const step = b.closest(".step").dataset.k;
+    pick[step] = b.dataset.fig;
+    $$("button", b.parentElement).forEach((x) => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+    if (active === step) show(step);
+  }));
+})();
+
+/* the window overlay: what moves, drawn on the golden view in its own exterior coordinates */
+const living = (function () {
+  const svg = $("#win-ovl"); const A = 0.5622;
+  let on = false, raf = 0, movers = [];
+  if (!G) return { run() {} };
+  const C = { bridge: "rgba(255,230,190,0.85)", ferry: "#ffb36b", ship: "#ffe2bf", sail: "rgba(255,255,255,0.9)" };
+  const P = (p) => p.map(([x, y]) => `${x},${(y * A).toFixed(4)}`).join(" ");
+  const g = el("g", {}, svg);
+  const runs = G.window;
+  for (const k of ["ship", "ferry", "sail"]) for (const r of runs[k]) el("polyline", { points: P(r), fill: "none", stroke: C[k], "stroke-width": 0.0012, "stroke-dasharray": k === "ship" ? "none" : "0.004 0.003", opacity: 0.8, "vector-effect": "none" }, g);
+  // labels
+  const lab = (x, y, t, anchor = "start") => { const e = el("text", { x, y: y * A, "font-size": 0.0095, "data-fs": 0.0095, class: "lab", "text-anchor": anchor }, g); e.textContent = t; return e; };
+  lab(0.45, 0.471, "bridge traffic, by the hour");
+  lab(0.64, 0.548, "ship channel");
+  lab(0.97, 0.596, "Sausalito ferry", "end");
+  lab(0.705, 0.514, "sailing");
+  // moving things: cars on the deck, the ship, the ferry, two sails
+  const longest = (rs) => rs.reduce((a, r) => (r.length > a.length ? r : a), []);
+  function poly(pts) { let L = 0; const seg = []; for (let i = 1; i < pts.length; i++) { const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); seg.push(d); L += d; } return { pts, seg, L }; }
+  function at(pl, u) { let d = u * pl.L; for (let i = 0; i < pl.seg.length; i++) { if (d <= pl.seg[i]) { const t = d / pl.seg[i]; return [lerp(pl.pts[i][0], pl.pts[i + 1][0], t), lerp(pl.pts[i][1], pl.pts[i + 1][1], t)]; } d -= pl.seg[i]; } return pl.pts[pl.pts.length - 1]; }
+  for (let i = 0; i < 26; i++) {
+    const lane = i % 6, dir = lane < 3 ? -1 : 1, y = 0.4862 + lane * 0.0004;
+    movers.push({ kind: "car", y, dir, u: Math.random(), v: 0.018 + Math.random() * 0.01, e: el("circle", { r: 0.0011, fill: i % 3 ? "#fff3dc" : "#ffcf9a" }, g) });
+  }
+  const ship = poly(longest(runs.ship)), ferry = poly(longest(runs.ferry));
+  movers.push({ kind: "path", pl: ship, u: 0.2, v: 0.012, e: el("circle", { r: 0.0026, fill: C.ship }, g) });
+  movers.push({ kind: "path", pl: ferry, u: 0.5, v: 0.02, bounce: true, e: el("circle", { r: 0.0022, fill: C.ferry }, g) });
+  runs.sail.slice(0, 3).forEach((r, i) => { if (r.length > 1) movers.push({ kind: "path", pl: poly(r), u: i * 0.3, v: 0.006, bounce: true, e: el("path", { d: "M0,-0.004 L0.0022,0.0012 L-0.0022,0.0012 Z", fill: "#fff" }, g) }); });
+  let last = 0;
+  function frame(t) {
+    const dt = last ? Math.min(0.05, (t - last) / 1000) : 0; last = t;
+    for (const m of movers) {
+      m.u += m.v * dt * (reduced() ? 0 : 1) * (m.dir || 1) * (m.back ? -1 : 1);
+      if (m.kind === "car") { m.u = (m.u + 1) % 1; const x = lerp(0.409, 0.741, m.u); m.e.setAttribute("cx", x); m.e.setAttribute("cy", m.y * A); }
+      else {
+        if (m.bounce) { if (m.u > 1) { m.u = 1; m.back = true; } if (m.u < 0) { m.u = 0; m.back = false; } } else m.u = (m.u + 1) % 1;
+        const [x, y] = at(m.pl, m.u);
+        if (m.e.tagName === "circle") { m.e.setAttribute("cx", x); m.e.setAttribute("cy", y * A); } else m.e.setAttribute("transform", `translate(${x},${y * A})`);
+      }
+    }
+    if (on) raf = requestAnimationFrame(frame);
+  }
+  frame(0);
+  return { run(v) { if (v === on) return; on = v; last = 0; cancelAnimationFrame(raf); if (on) raf = requestAnimationFrame(frame); } };
+})();
+
+/* the foghorns: rings where they stand, on their real rhythms */
+const horns = (function () {
+  const svg = $("#horn-ovl"); const A = 0.5622;
+  if (!G) return { run() {} };
+  const H = [
+    { id: "ggb_south", phase: 0 }, { id: "ggb_mid", phase: 9 }, { id: "diablo", phase: 4 }, { id: "bonita", phase: 7 },
+  ];
+  const cam = G.cam;
+  const items = G.foghorns.map((f, i) => {
+    const d = ((f.brg - cam.heading + 540) % 360) - 180;
+    const x = 0.5 + cam.focal_w * Math.tan(d * Math.PI / 180);
+    // where each horn stands in the picture: bearing -> x (the photographs' camera), height of the water or the deck -> y
+    const y = { ggb_south: 0.502, ggb_mid: 0.487, diablo: 0.499, bonita: 0.497 }[f.id] || 0.497;
+    const g = el("g", { transform: `translate(${x},${y * A})` }, svg);
+    el("circle", { r: 0.0022, fill: "#ffb36b" }, g);
+    const rings = [0, 1, 2].map(() => el("circle", { r: 0, fill: "none", stroke: "#ffb36b", "stroke-width": 0.0012, opacity: 0 }, g));
+    const [dx, dy, an] = { ggb_south: [-0.004, -0.03, "end"], diablo: [0.004, -0.052, "start"], ggb_mid: [0.006, 0.034, "start"], bonita: [-0.006, 0.034, "end"] }[f.id] || [0, 0.03, "middle"];
+    const t = el("text", { x: dx, y: dy, "text-anchor": an, "font-size": 0.0092, "data-fs": 0.0092, class: "lab" }, g);
+    t.textContent = `${f.n} · ${f.pat.join("-")} s`;
+    const cyc = f.pat.reduce((a, b) => a + b, 0);
+    return { f, rings, cyc, phase: H[i].phase, next: 0 };
+  });
+  let on = false, raf = 0;
+  function blastAt(it, T) { // seconds since the last blast start, and whether sounding
+    const u = ((T - it.phase) % it.cyc + it.cyc) % it.cyc; let s = 0;
+    for (let j = 0; j < it.f.pat.length; j += 2) { if (u >= s && u < s + it.f.pat[j]) return { on: true, since: u - s, len: it.f.pat[j] }; s += it.f.pat[j] + (it.f.pat[j + 1] || 0); }
+    return { on: false };
+  }
+  const starts = new Map();
+  function frame() {
+    const T = Date.now() / 1000;
+    for (const it of items) {
+      const b = blastAt(it, T);
+      if (b.on) starts.set(it, T - b.since);
+      it.rings.forEach((r, j) => {
+        const st = starts.get(it); if (st == null) { r.setAttribute("opacity", 0); return; }
+        const age = T - st - j * 0.55;
+        if (age < 0 || age > 4.2) { r.setAttribute("opacity", 0); return; }
+        const k = age / 4.2;
+        r.setAttribute("r", (reduced() ? 0.02 : 0.004 + 0.045 * easeOut(k)).toFixed(4));
+        r.setAttribute("opacity", ((1 - k) * 0.9).toFixed(3));
+      });
+    }
+    if (on) raf = requestAnimationFrame(frame);
+  }
+  return { run(v) { if (v === on) return; on = v; cancelAnimationFrame(raf); if (on) raf = requestAnimationFrame(frame); } };
+})();
+
+/* ================================================================ 2. scale: one dot, one thing */
+(function dots() {
+  const cv = $("#dots"), stage = $("#dots-stage"), ctx = cv.getContext("2d");
+  const N = 107737;
+  let W = 0, H = 0, dpr = 1, img = null, buf = null, grid = null, map = null, kinds = null, jit = null;
+  let count = 0, from = 0, target = 0, t0 = 0, morph = 0, morphTo = 0, m0 = 0, mt0 = 0, raf = 0, loaded = false, cell = 4, frame = null;
+  const INK = [31, 27, 22], ACC = [128, 83, 47];
+  const KC = [[86, 108, 66], [98, 117, 72], [120, 134, 84], [110, 120, 96], [64, 86, 60], [72, 96, 62], [150, 140, 70]];
+  const labels = { desk: [$("#lbl-desk"), 0, 0], presidio: [$("#lbl-presidio"), -4108, -244], marina: [$("#lbl-marina"), -1847, 600], pac: [$("#lbl-pac"), -1645, -955] };
+  function load() {
+    if (loaded) return; loaded = true;
+    const s = document.createElement("script"); s.src = "page/trees.js";
+    s.onload = () => { decode(); layout(); draw(); };
+    document.head.appendChild(s);
+  }
+  function decode() {
+    const b = atob(window.TREES_B64), n = b.length / 4, u8 = new Uint8Array(b.length);
+    for (let i = 0; i < b.length; i++) u8[i] = b.charCodeAt(i);
+    const u32 = new Uint32Array(u8.buffer);
+    kinds = new Uint8Array(n); frame = new Float32Array(2 * n);
+    for (let i = 0; i < n; i++) { const v = u32[i]; frame[2 * i] = (v >>> 18) / 16383; frame[2 * i + 1] = ((v >>> 4) & 16383) / 16383; kinds[i] = v & 15; }
+  }
+  function layout() {
+    dpr = Math.min(2, devicePixelRatio || 1);
+    W = Math.round(stage.clientWidth * dpr); H = Math.round(stage.clientHeight * dpr);
+    cv.width = W; cv.height = H;
+    img = ctx.createImageData(W, H); buf = new Uint32Array(img.data.buffer);
+    const narrow = isNarrow();
+    const top = (narrow ? 64 : 76) * dpr, bot = (narrow ? Math.round(vh() * 0.34) : 28) * dpr, side = (narrow ? 12 : 28) * dpr;
+    const right = narrow ? side : Math.round(Math.min(460, innerWidth * 0.36) * dpr);
+    const aw = W - side - right, ah = H - top - bot;
+    cell = Math.sqrt((aw * ah) / N);
+    let cols = Math.floor(aw / cell); let rows = Math.ceil(N / cols);
+    while (rows * cell > ah) { cell *= 0.995; cols = Math.floor(aw / cell); rows = Math.ceil(N / cols); }
+    grid = new Float32Array(2 * N);
+    for (let i = 0; i < N; i++) { grid[2 * i] = side + (i % cols + 0.5) * cell; grid[2 * i + 1] = top + (Math.floor(i / cols) + 0.5) * cell; }
+    // the map: the trees' frame (8.0 x 4.75 km) fitted to the same area
+    const TF = window.TREES_FRAME || { x0: -6250, x1: 1750, y0: -3500, y1: 1250 };
+    const fw = TF.x1 - TF.x0, fh = TF.y1 - TF.y0, s = Math.min(aw / fw, ah / fh) * 0.98;
+    const ox = side + (aw - fw * s) / 2, oy = top + (ah - fh * s) / 2;
+    if (frame) { map = new Float32Array(2 * N); for (let i = 0; i < N; i++) { map[2 * i] = ox + frame[2 * i] * fw * s; map[2 * i + 1] = oy + frame[2 * i + 1] * fh * s; } }
+    jit = jit || Float32Array.from({ length: N }, () => Math.random());
+    for (const k in labels) { const [n, x, y] = labels[k]; n.style.left = (ox + (x - TF.x0) * s) / dpr + "px"; n.style.top = (oy + (TF.y1 - y) * s) / dpr + "px"; }
+  }
+  function put(x, y, sz, r, g, b, a) {
+    x = x | 0; y = y | 0; const c = (a << 24) | (b << 16) | (g << 8) | r;
+    for (let j = 0; j < sz; j++) { const row = (y + j) * W; if (y + j < 0 || y + j >= H) continue; for (let i = 0; i < sz; i++) { const xx = x + i; if (xx >= 0 && xx < W) buf[row + xx] = c; } }
+  }
+  function draw() {
+    if (!buf || !grid) return;
+    buf.fill(0);
+    const n = Math.round(count), gs = Math.max(1, Math.round(cell * 0.58)), ms = Math.max(1, Math.round(dpr * 1.15));
+    const hi = from < target;
+    for (let i = 0; i < n; i++) {
+      let t = 0;
+      if (morph > 0 && map) { t = clamp((morph * 1.5 - jit[i] * 0.5), 0, 1); t = easeIO(t); }
+      const c = hi && i >= from ? ACC : INK;
+      if (!t) { put(grid[2 * i] - gs / 2, grid[2 * i + 1] - gs / 2, gs, c[0], c[1], c[2], 210); continue; }
+      const x = lerp(grid[2 * i], map[2 * i], t), y = lerp(grid[2 * i + 1], map[2 * i + 1], t), sz = Math.round(lerp(gs, ms, t));
+      const kc = KC[kinds[i]] || INK;
+      put(x - sz / 2, y - sz / 2, sz, lerp(c[0], kc[0], t) | 0, lerp(c[1], kc[1], t) | 0, lerp(c[2], kc[2], t) | 0, 235);
+    }
+    ctx.putImageData(img, 0, 0);
+    for (const k in labels) labels[k][0].classList.toggle("on", morph > 0.98);
+  }
+  function animate(t) {
+    const k = reduced() ? 1 : clamp((t - t0) / 1300, 0, 1);
+    count = lerp(count0, target, easeOut(k));
+    const mk = reduced() ? 1 : clamp((t - mt0) / 2400, 0, 1);
+    morph = lerp(m0, morphTo, mk);
+    if (k >= 1 && from < target && t - t0 > 1700) from = target;   // the new dots keep their colour a moment, then join the rest
+    draw();
+    if (k < 1 || mk < 1 || from < target) raf = requestAnimationFrame(animate);
+  }
+  let count0 = 0;
+  function go(n, toMap) {
+    load(); cancelAnimationFrame(raf);
+    count0 = count; from = Math.min(Math.round(count), n); target = n; t0 = performance.now();
+    m0 = morph; morphTo = toMap ? 1 : 0; mt0 = performance.now();
+    raf = requestAnimationFrame(animate);
+  }
+  steps($("#dots-steps"), (i, s) => go(+s.dataset.n, !!s.dataset.map));
+  new IntersectionObserver((es) => { if (es[0].isIntersecting) load(); }, { rootMargin: "200% 0px" }).observe(stage);
+  onResize.push(() => { if (loaded && frame) { layout(); draw(); } });
+})();
+
+/* ================================================================ 3. up close */
+(function zoomer() {
+  const box = $("#zoomer"), r = $("#zoom-r"), o = $("#zoom-o"), badge = $("#zoom-badge");
+  const z1 = $(".z1", box), z16 = $(".z16", box), z4 = $(".z4", box);
+  // footprints in the 1x frame (0..1), from feature matching (SIFT + RANSAC, page helper, 18 Oct)
+  const F1 = { cx: 0.5, cy: 0.5, w: 1, h: 1 }, F16 = { cx: 0.5, cy: 0.5, w: 0.625, h: 0.6944 }, F4 = { cx: 0.36120, cy: 0.60657, w: 0.25427, h: 0.28250, rot: -0.48 };
+  const ZMAX = 1 / F4.w, ZM = 1.6;
+  $("#zoom-ticks").innerHTML = [[1, "1x"], [2, "2x"], [ZMAX, "4x"]].map(([z, t]) => `<span style="left:${(Math.log(z) / Math.log(ZMAX)) * 100}%">${t}</span>`).join("");
+  function place(img, F, cx, cy, z, W, H) {
+    const vw = 1 / z, vhh = 1 / z;
+    const w = (F.w / vw) * W, h = (F.h / vhh) * H;
+    const x = ((F.cx - cx) / vw + 0.5) * W, y = ((F.cy - cy) / vhh + 0.5) * H;
+    img.style.width = w + "px"; img.style.height = h + "px"; img.style.left = x - w / 2 + "px"; img.style.top = y - h / 2 + "px";
+    if (F.rot) img.style.transform = `rotate(${F.rot}deg)`;
+  }
+  function render() {
+    const W = box.clientWidth, H = box.clientHeight, z = Math.exp((r.value / 1000) * Math.log(ZMAX));
+    let t = z <= ZM ? 0 : Math.log(z / ZM) / Math.log(ZMAX / ZM); t = t * t * (3 - 2 * t);
+    const cx = lerp(0.5, F4.cx, t), cy = lerp(0.5, F4.cy, t);
+    place(z1, F1, cx, cy, z, W, H); place(z16, F16, cx, cy, z, W, H); place(z4, F4, cx, cy, z, W, H);
+    z16.style.opacity = smooth(1.1, 1.45, z); z4.style.opacity = smooth(2.5, 3.4, z);
+    const s = z.toFixed(1) + "x"; o.value = s; badge.textContent = s;
+  }
+  r.addEventListener("input", render); onResize.push(render); render();
+  // drag on the picture to zoom too (horizontal drag)
+  let px0 = null, v0 = 0;
+  let py0 = 0, side = false;
+  box.addEventListener("pointerdown", (e) => { px0 = e.clientX; py0 = e.clientY; v0 = +r.value; side = e.pointerType !== "touch"; if (side) box.setPointerCapture(e.pointerId); });
+  box.addEventListener("pointermove", (e) => { if (px0 == null) return; if (!side) { const dx = Math.abs(e.clientX - px0), dy = Math.abs(e.clientY - py0); if (dx < 6 || dx < dy) return; side = true; try { box.setPointerCapture(e.pointerId); } catch (_) { /* gone */ } } r.value = clamp(v0 + ((e.clientX - px0) / box.clientWidth) * 1400, 0, 1000); render(); });
+  const up = () => (px0 = null); box.addEventListener("pointerup", up); box.addEventListener("pointercancel", up);
+})();
+
+$$(".frame.ab").forEach(function divider(box) {
+  const inp = $("input", box);
+  const set = (v) => box.style.setProperty("--x", v + "%");
+  inp.addEventListener("input", () => set(inp.value));
+  // the picture itself is the handle (the range input stays for the keyboard); vertical swipes still scroll on phones
+  let drag = false;
+  const move = (e) => { const r = box.getBoundingClientRect(); const v = clamp(((e.clientX - r.left) / r.width) * 100, 0, 100); inp.value = v; set(v); };
+  let t0 = null;
+  box.addEventListener("pointerdown", (e) => { if (e.pointerType === "touch") { t0 = { x: e.clientX, y: e.clientY }; return; } drag = true; box.setPointerCapture(e.pointerId); move(e); });
+  box.addEventListener("pointermove", (e) => { if (t0 && !drag) { const dx = Math.abs(e.clientX - t0.x), dy = Math.abs(e.clientY - t0.y); if (dx < 6 || dx < dy) return; drag = true; try { box.setPointerCapture(e.pointerId); } catch (_) { /* gone */ } } if (drag) move(e); });
+  box.addEventListener("pointerup", (e) => { if (t0 && !drag) move(e); drag = false; t0 = null; });
+  box.addEventListener("pointercancel", () => { drag = false; t0 = null; });
+  // a gentle hint the first time it comes into view
+  const io = new IntersectionObserver((es) => {
+    if (!es[0].isIntersecting || reduced()) return; io.disconnect();
+    const t0 = performance.now();
+    const f = (t) => { const k = clamp((t - t0) / 1600, 0, 1); const v = 46 + Math.sin(k * Math.PI * 2) * 12 * (1 - k); inp.value = v; set(v); if (k < 1) requestAnimationFrame(f); };
+    requestAnimationFrame(f);
+  }, { threshold: 0.7 });
+  io.observe(box);
+});
+
+(function dial() {
+  const box = $("#dial"), r = $("#dial-r"), o = $("#dial-o"), badge = $("#dial-badge"), ex = $(".extra", box), bf = $(".before", box), btn = $("#dial-before");
+  let before = false;
+  function render() {
+    const v = +r.value;
+    ex.style.opacity = before ? 0 : v; bf.style.opacity = before ? 1 : 0;
+    o.value = v.toFixed(2); badge.textContent = before ? "Live before the detail" : `Dial ${v.toFixed(2)}`;
+    r.disabled = before;
+  }
+  r.addEventListener("input", render);
+  btn.addEventListener("click", () => { before = !before; btn.setAttribute("aria-pressed", String(before)); render(); });
+  render();
+})();
+
+/* ================================================================ 4. the day */
+(function day() {
+  const M = [
+    ["predawn", "Predawn", "05:49", -8.92, { paper: "#251910", ink: "#f0e8db", muted: "#958b80", accent: "#ffb36b" }, 1],
+    ["dawn", "Dawn", "06:18", -3.53, { paper: "#1f160f", ink: "#f0e8db", muted: "#92897f", accent: "#ffb36b" }, 1],
+    ["sunrise", "Sunrise", "06:47", 2, { paper: "#cec7bf", ink: "#1f1b16", muted: "#6e6862", accent: "#603a21" }, 0],
+    ["morning", "Morning", "07:54", 15.09, { paper: "#d3cec7", ink: "#1f1b16", muted: "#706c66", accent: "#6b4932" }, 0],
+    ["latemorning", "Late morning", "10:02", 39.99, { paper: "#d5d0c9", ink: "#1f1b16", muted: "#716c66", accent: "#6e4c35" }, 0],
+    ["midday", "Midday", "13:12", 63.42, { paper: "#d4cfc8", ink: "#1f1b16", muted: "#716c66", accent: "#6d4c35" }, 0],
+    ["afternoon", "Afternoon", "15:55", 44.95, { paper: "#d9d2ca", ink: "#1f1b16", muted: "#736d67", accent: "#775137" }, 0],
+    ["lateafternoon", "Late afternoon", "17:45", 23.98, { paper: "#dbd1c7", ink: "#1f1b16", muted: "#736d66", accent: "#7a4f33" }, 0],
+    ["golden", "Golden", "18:56", 9.96, { paper: "#ded3c6", ink: "#1f1b16", muted: "#756e65", accent: "#80532f" }, 0],
+    ["lowsun", "Low sun", "19:20", 5.27, { paper: "#ddd0c1", ink: "#1f1b16", muted: "#756c63", accent: "#7f4d25" }, 0],
+    ["sunset", "Sunset", "19:46", 0.24, { paper: "#cac3bb", ink: "#1f1b16", muted: "#6c6760", accent: "#58331a" }, 0],
+    ["dusk", "Dusk", "20:06", -3.57, { paper: "#1a120c", ink: "#f0e8db", muted: "#90887e", accent: "#ffb36b" }, 1],
+    ["blue", "Blue hour", "20:32", -8.43, { paper: "#1f150d", ink: "#f0e8db", muted: "#92897e", accent: "#ffb36b" }, 1],
+    ["night", "Night", "22:30", -28.13, { paper: "#22180d", ink: "#f0e8db", muted: "#938a7e", accent: "#ffb36b" }, 1],
+  ];
+  const sec = $("#day"), fig = $("#day-fig"), ol = $("#strip-ol"), r = $("#strip-r"), nm = $("#day-name"), tm = $("#day-time");
+  let imgs = [], started = false, orient = null;
+  function build() {
+    const o = isNarrow() ? "p" : "l";
+    if (o === orient) return; orient = o;
+    fig.innerHTML = ""; imgs = M.map(([id, name]) => { const i = new Image(); i.alt = `The room and the view, ${name.toLowerCase()}`; i.decoding = "async";
+      if (o === "p") { i.sizes = "(-webkit-min-device-pixel-ratio: 2.5) calc(66.67vw - 21px), calc(100vw - 32px)"; i.srcset = `page/moments/${id}-p-720.webp 720w, page/moments/${id}-p.webp 1080w`; }
+      else if (innerHeight <= 500) { i.sizes = "(-webkit-min-device-pixel-ratio: 2.5) 83vh, 124vh"; i.srcset = `page/moments/${id}-l-960.webp 960w, page/moments/${id}-l-1280.webp 1280w, page/moments/${id}-l.webp 2240w`; }
+      i.src = `page/moments/${id}-${o}.webp`; fig.appendChild(i); return i; });
+    render();
+  }
+  ol.innerHTML = M.map(([id, name, t]) => `<li><img src="page/moments/${id}-t.webp" alt="" loading="lazy" /><span>${t}</span></li>`).join("");
+  const lis = $$("li", ol);
+  let lastI = -1;
+  function render() {
+    const v = +r.value, i = Math.floor(v), f = v - i, j = Math.min(13, i + 1);
+    imgs.forEach((im, k) => { im.style.opacity = k === i ? 1 : k === j ? f : 0; im.style.zIndex = k === j ? 2 : k === i ? 1 : 0; });
+    const n = Math.round(v);
+    if (n !== lastI) {
+      lastI = n;
+      const m = M[n];
+      nm.textContent = m[1];
+      tm.textContent = `${m[2]} · sun ${m[3] >= 0 ? m[3].toFixed(1) + "° up" : Math.abs(m[3]).toFixed(1) + "° below the horizon"}`;
+      lis.forEach((li, k) => li.classList.toggle("on", k === n));
+      const p = m[4];
+      sec.style.setProperty("--paper", p.paper); sec.style.setProperty("--ink", p.ink); sec.style.setProperty("--muted", p.muted); sec.style.setProperty("--accent", p.accent);
+      sec.style.setProperty("--text", p.ink); sec.style.setProperty("--hair", m[5] ? "rgba(240,232,219,0.14)" : "rgba(31,27,22,0.13)");
+      sec.style.colorScheme = m[5] ? "dark" : "light";
+    }
+  }
+  r.addEventListener("input", render);
+  // snap to the nearest moment when let go
+  const snap = () => { if (reduced()) { r.value = Math.round(+r.value); render(); return; } const a = +r.value, b = Math.round(a), t0 = performance.now(); const f = (t) => { const k = clamp((t - t0) / 260, 0, 1); r.value = lerp(a, b, easeOut(k)); render(); if (k < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); };
+  r.addEventListener("change", snap); r.addEventListener("pointerup", snap);
+  new IntersectionObserver((es) => { if (es[0].isIntersecting && !started) { started = true; build(); } }, { rootMargin: "100% 0px" }).observe(sec);
+  onResize.push(() => { if (started) build(); });
+})();
+
+/* ================================================================ 5. the data */
+(function data() {
+  const sec = $("#data"), stage = $(".stage", sec), box = $("#mapA"), ovl = $("#mapA-ovl");
+  const lay = {}; $$(".lay", box).forEach((i) => (lay[i.dataset.l] = i));
+  ["elev", "foot", "trees"].forEach((k) => { lay[k].style.width = "100%"; lay[k].style.height = "100%"; });
+  const A = { x0: -6300, x1: 1500, y0: -3500, y1: 3000 }, AR = 7800 / 6500;
+  const ax = (x) => (x - A.x0) / (A.x1 - A.x0), ay = (y) => ((A.y1 - y) / (A.y1 - A.y0)) * (1 / AR);
+  // the window's slice and the desk
+  const wb = G ? G.wedge_bearings : [269.2, 314.9];
+  const pts = [[0, 0]]; for (let a = wb[0]; a <= wb[1] + 0.01; a += (wb[1] - wb[0]) / 16) pts.push([Math.sin(a * Math.PI / 180) * 7000, Math.cos(a * Math.PI / 180) * 7000]);
+  el("polygon", { points: pts.map(([x, y]) => `${ax(x)},${ay(y)}`).join(" "), fill: "rgba(255,247,232,0.2)", stroke: "rgba(128,83,47,0.5)", "stroke-width": 0.0015 }, ovl);
+  if (G) { // the bridge, from frame B
+    const B = { x0: -11000, x1: 4500, y0: -5500, y1: 7500 };
+    const toM = ([u, v]) => [B.x0 + u * (B.x1 - B.x0), B.y1 - v * (B.y1 - B.y0)];
+    const [s, n] = G.bridge.map(toM);
+    el("line", { x1: ax(s[0]), y1: ay(s[1]), x2: ax(n[0]), y2: ay(n[1]), stroke: "#a3452d", "stroke-width": 0.004, "stroke-linecap": "round" }, ovl);
+    const t = el("text", { x: ax(s[0]) + 0.012, y: ay(s[1]) - 0.02, "font-size": 0.017, "data-fs": 0.017, fill: "#6b3a22" }, ovl); t.textContent = "Golden Gate Bridge";
+  }
+  el("circle", { cx: ax(0), cy: ay(0), r: 0.0075, fill: "#80532f", stroke: "#f4efe6", "stroke-width": 0.003 }, ovl);
+  const dt = el("text", { x: ax(0) - 0.014, y: ay(0) + 0.036, "font-size": 0.018, "data-fs": 0.018, fill: "#4a3423", "text-anchor": "end" }, ovl); dt.textContent = "the desk";
+  function layout() {
+    const W = stage.clientWidth, H = stage.clientHeight;
+    if (isNarrow()) { const top = 64, h = H * 0.58; contain(box, W, h - top, AR, 8); box.style.top = top + 8 + "px"; }
+    else { const left = Math.min(500, W * 0.38); contain(box, W - left, H - 80, AR, 24); box.style.left = left + parseFloat(box.style.left) + "px"; box.style.top = 64 + parseFloat(box.style.top) + "px"; }
+    const bw = parseFloat(box.style.width);
+    $$("text", ovl).forEach((t) => { t.setAttribute("font-size", Math.max(+t.dataset.fs, 12 / bw).toFixed(5)); t.setAttribute("stroke-width", (3 / bw).toFixed(5)); });
+  }
+  onResize.push(layout); layout();
+  const show = { elev: ["elev"], lidar: ["elev", "lidar"], aerial: ["elev", "aerial"], foot: ["elev", "foot"], trees: ["elev", "trees"], all: ["elev", "lidar", "foot", "trees"] };
+  steps($("#map-steps"), (i, s) => {
+    const on = show[s.dataset.l] || ["elev"];
+    for (const k in lay) lay[k].style.opacity = on.includes(k) ? (s.dataset.l === "all" && k !== "elev" ? 0.8 : 1) : 0;
+  });
+})();
+
+/* ================================================================ 6. the bay */
+(function bay() {
+  const svg = $("#bay-ovl"); const AR = 1 / 0.8387, K = 0.8387;
+  if (!G) return;
+  const P = (p) => p.map(([x, y]) => `${x},${(y * K).toFixed(4)}`).join(" ");
+  const g = el("g", {}, svg);
+  // the window's slice
+  el("polygon", { points: P(G.wedge), fill: "rgba(240,232,219,0.06)", stroke: "rgba(240,232,219,0.22)", "stroke-width": 0.0012 }, g);
+  for (const k in G.sail) el("polygon", { points: P(G.sail[k]), fill: "rgba(240,232,219,0.05)", stroke: "rgba(240,232,219,0.3)", "stroke-width": 0.0012, "stroke-dasharray": "0.006 0.004" }, g);
+  for (const k of ["cruise_in", "cruise_out"]) el("polyline", { points: P(G.ships[k]), fill: "none", stroke: "rgba(216,180,138,0.35)", "stroke-width": 0.0014 }, g);
+  for (const k of ["in", "out"]) el("polyline", { points: P(G.ships[k]), fill: "none", stroke: "#d8b48a", "stroke-width": 0.0022, opacity: 0.85 }, g);
+  for (const k in G.tours) el("polyline", { points: P(G.tours[k]), fill: "none", stroke: "#9fb6c4", "stroke-width": 0.0016, "stroke-dasharray": "0.004 0.004", opacity: 0.75 }, g);
+  el("polyline", { points: P(G.ferry), fill: "none", stroke: "#ffb36b", "stroke-width": 0.0024, "stroke-dasharray": "0.008 0.005" }, g);
+  el("line", { x1: G.bridge[0][0], y1: G.bridge[0][1] * K, x2: G.bridge[1][0], y2: G.bridge[1][1] * K, stroke: "#e0634a", "stroke-width": 0.0045, "stroke-linecap": "round" }, g);
+  const lab = (x, y, t, a = "start", c = "rgba(240,232,219,0.82)") => { const e = el("text", { x, y: y * K, "font-size": 0.0175, fill: c, "text-anchor": a }, g); e.textContent = t; };
+  lab(G.bridge[1][0] + 0.012, G.bridge[1][1] + 0.01, "Golden Gate Bridge");
+  lab(0.06, 0.62, "to the pilot station, 24 km out", "start", "rgba(216,180,138,0.8)");
+  lab(0.5, 0.215, "Sausalito", "start", "rgba(255,179,107,0.9)");
+  lab(G.desk[0] + 0.012, G.desk[1] + 0.022, "the desk", "start", "#f0e8db");
+  // lights, blinking with their characters
+  const LC = { white: "#fff6e6", red: "#ff5a45", green: "#5fe08a", yellow: "#ffd25a" };
+  const lights = G.lights.map((l) => ({ l, c: el("circle", { cx: l.xy[0], cy: l.xy[1] * K, r: l.major ? 0.0065 : 0.0042, fill: LC[l.c] || "#fff" }, g), h: el("circle", { cx: l.xy[0], cy: l.xy[1] * K, r: l.major ? 0.018 : 0.011, fill: LC[l.c] || "#fff", opacity: 0 }, g) }));
+  lights.filter((x) => x.l.major).forEach((x) => lab(x.l.xy[0] + 0.012, x.l.xy[1] - 0.012, x.l.n.replace(/ Light$/, "") + " · " + x.l.ch, "start", "rgba(240,232,219,0.6)"));
+  // foghorns
+  const fh = G.foghorns.map((f) => ({ f, r: el("circle", { cx: f.xy[0], cy: f.xy[1] * K, r: 0, fill: "none", stroke: "#ffb36b", "stroke-width": 0.0018, opacity: 0 }, g) }));
+  G.foghorns.forEach((f) => el("circle", { cx: f.xy[0], cy: f.xy[1] * K, r: 0.0045, fill: "#ffb36b" }, g));
+  el("circle", { cx: G.desk[0], cy: G.desk[1] * K, r: 0.007, fill: "#f0e8db" }, g);
+  // a ship and the ferry, moving
+  function poly(pts) { let L = 0; const seg = []; for (let i = 1; i < pts.length; i++) { const d = Math.hypot(pts[i][0] - pts[i - 1][0], (pts[i][1] - pts[i - 1][1]) * K); seg.push(d); L += d; } return { pts, seg, L }; }
+  function at(pl, u) { let d = u * pl.L; for (let i = 0; i < pl.seg.length; i++) { if (d <= pl.seg[i]) { const t = d / pl.seg[i]; return [lerp(pl.pts[i][0], pl.pts[i + 1][0], t), lerp(pl.pts[i][1], pl.pts[i + 1][1], t)]; } d -= pl.seg[i]; } return pl.pts[pl.pts.length - 1]; }
+  const movers = [
+    { pl: poly(G.ships.in), u: 0.3, v: 1 / 70, e: el("circle", { r: 0.006, fill: "#f3d2a6" }, g) },
+    { pl: poly(G.ships.out), u: 0.75, v: 1 / 80, e: el("circle", { r: 0.006, fill: "#f3d2a6" }, g) },
+    { pl: poly(G.ferry), u: 0.1, v: 1 / 36, e: el("circle", { r: 0.0055, fill: "#ffb36b" }, g), bounce: true },
+    { pl: poly(G.tours.bg_bay), u: 0.0, v: 1 / 50, e: el("circle", { r: 0.0045, fill: "#9fb6c4" }, g) },
+  ];
+  let on = false, raf = 0, last = 0;
+  function lit(l, T) { const u = ((T % l.p) + l.p) % l.p; for (const [a, b] of l.on) if (u >= a && u < b) return true; return false; }
+  function frame(t) {
+    const T = Date.now() / 1000, dt = last ? Math.min(0.05, (t - last) / 1000) : 0; last = t;
+    for (const x of lights) { const v = lit(x.l, T) ? 1 : 0.12; x.c.setAttribute("opacity", v); x.h.setAttribute("opacity", v * 0.18); }
+    for (const x of fh) {
+      const cyc = x.f.pat.reduce((a, b) => a + b, 0), u = ((T % cyc) + cyc) % cyc, k = u / Math.min(6, cyc);
+      if (reduced()) { x.r.setAttribute("r", 0.02); x.r.setAttribute("opacity", 0.35); continue; }
+      x.r.setAttribute("r", (0.004 + 0.05 * easeOut(clamp(k, 0, 1))).toFixed(4)); x.r.setAttribute("opacity", (k < 1 ? (1 - k) * 0.8 : 0).toFixed(3));
+    }
+    for (const m of movers) {
+      if (!reduced()) m.u += m.v * dt * (m.back ? -1 : 1);
+      if (m.bounce) { if (m.u > 1) { m.u = 1; m.back = true; } if (m.u < 0) { m.u = 0; m.back = false; } } else m.u = (m.u + 1) % 1;
+      const [x, y] = at(m.pl, m.u); m.e.setAttribute("cx", x); m.e.setAttribute("cy", y * K);
+    }
+    if (on) raf = requestAnimationFrame(frame);
+  }
+  new IntersectionObserver((es) => { on = es[0].isIntersecting; cancelAnimationFrame(raf); last = 0; if (on) raf = requestAnimationFrame(frame); else frame(0); }).observe($("#bay-map"));
+  frame(0);
+})();
+
+/* today's schedules, from the site's tables (shared/city/tables.js) */
+(function chart() {
+  const svg = $("#chart-svg");
+  const BRIDGE_WD = [[250, 500], [200, 280], [180, 170], [200, 130], [550, 150], [1500, 350], [3000, 750], [4700, 2000], [5200, 3200], [4400, 2600], [3300, 2000], [3250, 2450], [2800, 2400], [2950, 2800], [3200, 4000], [3050, 4100], [3500, 4300], [4400, 5200], [3500, 5200], [2400, 3300], [1900, 2600], [1000, 2100], [520, 1100], [350, 950]];
+  const WINDOW_HOURLY = [0.11, 0.09, 0.09, 0.09, 0.1, 0.16, 0.27, 0.35, 0.37, 0.37, 0.35, 0.34, 0.33, 0.32, 0.34, 0.37, 0.45, 0.59, 0.78, 0.96, 1.0, 0.72, 0.36, 0.16];
+  const AIRCRAFT_HOUR = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1, 0.6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.7, 0.5];
+  const CABLE_OUT = [407, 432, 438, 458, 478, 498, 518, 533, 548, 563, 578, 593, 599, 608, 625, 637, 649, 661, 673, 678, 685, 695, 705, 710, 717, 722, 727, 737, 747, 750, 756, 765, 772, 779, 786, 793, 800, 807, 814, 821, 828, 835, 842, 849, 856, 863, 870, 877, 884, 891, 898, 905, 912, 919, 926, 933, 940, 947, 954, 961, 968, 975, 983, 990, 997, 1004, 1011, 1018, 1025, 1032, 1039, 1046, 1053, 1060, 1067, 1074, 1081, 1088, 1095, 1101, 1108, 1115, 1122, 1129, 1136, 1143, 1150, 1157, 1171, 1178, 1185, 1192, 1199, 1206, 1213, 1222, 1232, 1242, 1254, 1261, 1273, 1286, 1301, 1318, 1338, 1358, 1378, 1398];
+  const CABLE_IN = [430, 445, 460, 475, 490, 510, 530, 545, 560, 575, 590, 605, 617, 629, 641, 653, 665, 675, 685, 695, 705, 715, 722, 729, 736, 743, 750, 757, 764, 771, 778, 785, 792, 799, 806, 813, 820, 827, 834, 841, 848, 855, 862, 869, 876, 883, 890, 897, 904, 911, 918, 925, 932, 939, 946, 953, 960, 967, 974, 981, 988, 995, 1002, 1009, 1016, 1023, 1030, 1037, 1044, 1051, 1058, 1065, 1072, 1079, 1086, 1093, 1100, 1107, 1114, 1121, 1128, 1135, 1142, 1149, 1156, 1163, 1170, 1177, 1184, 1191, 1200, 1210, 1225, 1226, 1232, 1245, 1265, 1267, 1270, 1285, 1300, 1302, 1320, 1340, 1360, 1385, 1396, 1416];
+  const FERRY_WD = { fromSausalito: [["07:05", "07:35"], ["08:15", "08:45"], ["10:55", "11:25"], ["13:35", "14:05"], ["15:35", "16:05"], ["17:05", "17:35"], ["18:30", "19:00"]], fromSF: [["07:40", "08:10"], ["10:15", "10:45"], ["12:10", "12:40"], ["14:45", "15:15"], ["16:20", "16:50"], ["17:45", "18:15"], ["19:15", "19:45"]] };
+  const BG_MONTHU = ["11:00", "12:15", "13:00", "14:15", "15:45", "17:00", "18:00"];   // Blue & Gold, 14 Sep - 1 Nov, Mon-Thu
+  const RW_MONWED = ["11:00", "13:00", "14:15", "15:30", "16:45"];                    // Red & White, Mon-Wed
+  const hm = (s) => { const [h, m] = s.split(":"); return +h * 60 + +m; };
+  // the sun over San Francisco on 19 Oct 2026 (sky-head.js's formula); PDT = UTC-7
+  function sunAlt(date) {
+    const RAD = Math.PI / 180, LAT = 37.8011, LON = -122.4195;
+    const n = date / 86400000 + 2440587.5 - 2451545.0;
+    const L = (280.46 + 0.9856474 * n) % 360, g = ((357.528 + 0.9856003 * n) % 360) * RAD;
+    const lam = (L + 1.915 * Math.sin(g) + 0.02 * Math.sin(2 * g)) * RAD, eps = (23.439 - 0.0000004 * n) * RAD;
+    const ra = Math.atan2(Math.cos(eps) * Math.sin(lam), Math.cos(lam)), dec = Math.asin(Math.sin(eps) * Math.sin(lam));
+    const gmst = (18.697374558 + 24.06570982441908 * n) % 24, ha = (gmst * 15 + LON) * RAD - ra, la = LAT * RAD;
+    return Math.asin(Math.sin(la) * Math.sin(dec) + Math.cos(la) * Math.cos(dec) * Math.cos(ha)) / RAD;
+  }
+  const day0 = Date.UTC(2026, 9, 19, 7, 0, 0);     // 19 Oct 00:00 PDT
+  const alt = (min) => sunAlt(day0 + min * 60000);
+  let sunrise = 0, sunset = 0;
+  for (let m = 1; m < 1440; m++) { if (alt(m - 1) < -0.83 && alt(m) >= -0.83) sunrise = m; if (alt(m - 1) >= -0.83 && alt(m) < -0.83) sunset = m; }
+  const clock = (m) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(Math.round(m % 60)).padStart(2, "0")}`;
+  function draw() {
+    svg.innerHTML = "";
+    const W = Math.max(320, svg.parentElement.clientWidth), narrow = W < 640;
+    const L = narrow ? 92 : 168, R = 8, rowH = narrow ? 30 : 34;
+    const rows = ["Sun", "Bridge traffic", "Lit windows", "Planes", "Ships (slots)", "Sausalito ferry", "Bay cruises", "Cable car (heard)"];
+    const top = 26, H = top + rows.length * rowH + 30;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("height", H);
+    const X = (min) => L + ((W - L - R) * min) / 1440;
+    const ink = getComputedStyle(svg).getPropertyValue("--ink") || "#f0e8db";
+    // night shading
+    const shade = el("g", {}, svg);
+    for (let m = 0; m < 1440; m += 10) { const a = alt(m + 5); const o = a > 6 ? 0 : a < -12 ? 0.32 : 0.32 * (6 - a) / 18; if (o > 0) el("rect", { x: X(m), y: top - 6, width: X(m + 10) - X(m) + 0.5, height: rows.length * rowH + 6, fill: "#000", opacity: o.toFixed(3) }, shade); }
+    // hour grid
+    for (let h = 0; h <= 24; h += narrow ? 6 : 3) {
+      el("line", { x1: X(h * 60), x2: X(h * 60), y1: top - 6, y2: top + rows.length * rowH, stroke: "currentColor", opacity: 0.12 }, svg);
+      const t = el("text", { x: X(h * 60), y: top + rows.length * rowH + 18, "font-size": 11, fill: "currentColor", opacity: 0.6, "text-anchor": h === 0 ? "start" : h === 24 ? "end" : "middle" }, svg); t.textContent = `${String(h % 24).padStart(2, "0")}:00`;
+    }
+    rows.forEach((name, i) => {
+      const t = el("text", { x: 0, y: top + i * rowH + rowH / 2 + 4, "font-size": narrow ? 11 : 12.5, fill: "currentColor", opacity: 0.8 }, svg); t.textContent = name;
+      el("line", { x1: L, x2: W - R, y1: top + (i + 1) * rowH, y2: top + (i + 1) * rowH, stroke: "currentColor", opacity: 0.08 }, svg);
+    });
+    const y0 = (i) => top + i * rowH, ac = "#ffb36b";
+    // 0 sun altitude
+    let d = ""; for (let m = 0; m <= 1440; m += 10) { const a = alt(m), y = y0(0) + rowH / 2 - (a / 60) * (rowH * 0.9); d += (m ? "L" : "M") + X(m).toFixed(1) + "," + y.toFixed(1); }
+    el("line", { x1: L, x2: W - R, y1: y0(0) + rowH / 2, y2: y0(0) + rowH / 2, stroke: "currentColor", opacity: 0.2, "stroke-dasharray": "2 3" }, svg);
+    el("path", { d, fill: "none", stroke: ac, "stroke-width": 1.6 }, svg);
+    const area = (vals, i, max) => { let p = `M${X(0)},${y0(i) + rowH - 4}`; vals.forEach((v, h) => { const y = y0(i) + rowH - 4 - (v / max) * (rowH - 9); p += `L${X(h * 60)},${y.toFixed(1)}L${X(h * 60 + 60)},${y.toFixed(1)}`; }); p += `L${X(1440)},${y0(i) + rowH - 4}Z`; el("path", { d: p, fill: "currentColor", opacity: 0.45 }, svg); };
+    // 1 bridge: both directions, with the 2025 scale (x0.87)
+    area(BRIDGE_WD.map(([s, n]) => (s + n) * 0.87), 1, 9000);
+    area(WINDOW_HOURLY, 2, 1);
+    area(AIRCRAFT_HOUR, 3, 1);
+    // 4 ship slots: 72 twenty-minute cycles; one in five carries a ship (p 0.21)
+    for (let c = 0; c < 72; c++) el("rect", { x: X(c * 20) + 1, y: y0(4) + 9, width: Math.max(1, X(c * 20 + 14) - X(c * 20) - 1), height: rowH - 18, fill: "currentColor", opacity: 0.16, rx: 1 }, svg);
+    // 5 ferry crossings
+    for (const k of ["fromSausalito", "fromSF"]) FERRY_WD[k].forEach(([a, b]) => el("rect", { x: X(hm(a)), y: y0(5) + (k === "fromSF" ? rowH / 2 + 1 : 7), width: X(hm(b)) - X(hm(a)), height: rowH / 2 - 8, fill: ac, rx: 2 }, svg));
+    // 6 tour boats: Blue & Gold (60 min), Red & White (60 min), the sunset cruise (2 h to sunset)
+    BG_MONTHU.forEach((a) => el("rect", { x: X(hm(a)), y: y0(6) + 7, width: X(hm(a) + 60) - X(hm(a)), height: rowH / 2 - 8, fill: "#9fb6c4", rx: 2, opacity: 0.9 }, svg));
+    RW_MONWED.forEach((a) => el("rect", { x: X(hm(a)), y: y0(6) + rowH / 2 + 1, width: X(hm(a) + 60) - X(hm(a)), height: rowH / 2 - 8, fill: "#9fb6c4", rx: 2, opacity: 0.6 }, svg));
+    el("rect", { x: X(sunset - 90), y: y0(6) + rowH / 2 + 1, width: X(sunset + 30) - X(sunset - 90), height: rowH / 2 - 8, fill: "#c79a8a", rx: 2, opacity: 0.8 }, svg);
+    // 7 cable cars: ticks at Hyde & Beach
+    CABLE_OUT.forEach((m) => el("line", { x1: X(m), x2: X(m), y1: y0(7) + 7, y2: y0(7) + rowH / 2, stroke: "currentColor", opacity: 0.7, "stroke-width": 1 }, svg));
+    CABLE_IN.forEach((m) => el("line", { x1: X(m), x2: X(m), y1: y0(7) + rowH / 2 + 1, y2: y0(7) + rowH - 7, stroke: "currentColor", opacity: 0.45, "stroke-width": 1 }, svg));
+    // sunrise / sunset marks
+    [[sunrise, "sunrise " + clock(sunrise)], [sunset, "sunset " + clock(sunset)]].forEach(([m, s]) => { const t = el("text", { x: X(m), y: top - 10, "font-size": 11, fill: ac, "text-anchor": "middle" }, svg); t.textContent = s; });
+    // now, if today is the 19th in San Francisco
+    const now = Date.now(), min = (now - day0) / 60000;
+    if (min >= 0 && min < 1440) { el("line", { x1: X(min), x2: X(min), y1: top - 4, y2: top + rows.length * rowH, stroke: "#fff", "stroke-width": 1.4, opacity: 0.85 }, svg); const t = el("text", { x: X(min) + 4, y: top + rows.length * rowH - 4, "font-size": 11, fill: "#fff" }, svg); t.textContent = "now"; }
+  }
+  const io = new IntersectionObserver((es) => { if (es[0].isIntersecting) { draw(); io.disconnect(); } }, { rootMargin: "50% 0px" });
+  io.observe(svg); onResize.push(() => { if (svg.childNodes.length) draw(); });
+})();
+
+(function year() {
+  const svg = $("#yr-svg");
+  const CALLS = ["0102","0112","0118","0121","0129","0205","0205","0214","0219","0307","0318","0320","0403","0406","0406","0413","0419","0423","0426","0427","0428","0429","0503","0503","0505","0506","0507","0509","0511","0513","0517","0521","0523","0525","0602","0604","0605","0608","0612","0618","0622","0702","0702","0706","0712","0716","0720","0722","0730","0801","0803","0811","0813","0817","0821","0822","0827","0831","0831","0910","0910","0912","0914","0915","0917","0919","0920","0920","0922","0926","0927","0928","0929","0930","0930","1001","1003","1005","1013","1015","1016","1023","1106","1108","1117","1124","1129","1215","1226"];
+  const cnt = {}; CALLS.forEach((d) => (cnt[d] = (cnt[d] || 0) + 1));
+  // a calendar: one column per week, Monday at the top; months along the top
+  function draw() {
+    svg.innerHTML = "";
+    const W = Math.max(320, svg.parentElement.clientWidth), narrow = W < 640, L = narrow ? 0 : 28, top = 18;
+    const start = Date.UTC(2026, 0, 1), lead = (new Date(start).getUTCDay() + 6) % 7;     // 1 Jan 2026 is a Thursday
+    const weeks = Math.ceil((365 + lead) / 7), gap = narrow ? 1.5 : 3, c = (W - L - (weeks - 1) * gap) / weeks;
+    const H = top + 7 * (c + gap) + 24;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("height", H);
+    const now = new Date(), tIdx = Math.floor((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - start) / 86400000);
+    const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    if (!narrow) ["Mon", "", "Wed", "", "Fri", "", "Sun"].forEach((d, r) => { if (d) { const t = el("text", { x: 0, y: top + r * (c + gap) + c * 0.75, "font-size": 10, fill: "currentColor", opacity: 0.5 }, svg); t.textContent = d; } });
+    for (let i = 0; i < 365; i++) {
+      const d = new Date(start + i * 86400000), k = String(d.getUTCMonth() + 1).padStart(2, "0") + String(d.getUTCDate()).padStart(2, "0");
+      const col = Math.floor((i + lead) / 7), row = (i + lead) % 7, x = L + col * (c + gap), y = top + row * (c + gap), n = cnt[k] || 0;
+      if (d.getUTCDate() === 1) { const t = el("text", { x, y: 11, "font-size": narrow ? 9.5 : 11, fill: "currentColor", opacity: 0.6 }, svg); t.textContent = narrow ? MON[d.getUTCMonth()][0] : MON[d.getUTCMonth()]; }
+      el("rect", { x, y, width: c, height: c, rx: Math.min(2, c / 4), fill: n ? "#ffb36b" : "currentColor", opacity: n ? (n > 1 ? 1 : 0.82) : 0.09 }, svg);
+      if (i === tIdx) el("rect", { x: x - 1.5, y: y - 1.5, width: c + 3, height: c + 3, rx: 2.5, fill: "none", stroke: "#fff", "stroke-width": 1.4 }, svg);
+    }
+    const t2 = el("text", { x: W, y: H - 4, "font-size": 11, fill: "currentColor", opacity: 0.6, "text-anchor": "end" }, svg); t2.textContent = "brighter: two ships the same day · white outline: today";
+  }
+  const io = new IntersectionObserver((es) => { if (es[0].isIntersecting) { draw(); io.disconnect(); } }, { rootMargin: "50% 0px" });
+  io.observe(svg); onResize.push(() => { if (svg.childNodes.length) draw(); });
+  if (Date.now() < Date.UTC(2026, 9, 23, 22)) $("#yr-next").textContent = "The Port of San Francisco's 2026 calendar, every call. Next: Ruby Princess, Friday 23 October, 07:00 to 15:00.";
+})();
+
+/* ================================================================ 7. the room */
+(function room() {
+  const fig = $("#room-fig"), list = $("#room-list");
+  const P = [
+    [0.1, 0.32, "The shelf", "54 books; each spine opens its page"],
+    [0.47, 0.69, "MacBook Pro 14-inch", "M3 Pro, Space Black, 78 modelled keys; the projects"],
+    [0.31, 0.82, "Bose QuietComfort", "headphones, Blue Dusk; they play a video"],
+    [0.27, 0.755, "A breadboard", "it chirps"],
+    [0.665, 0.81, "The notebook", "11 essays on two leaves, with a real page turn"],
+    [0.795, 0.865, "iPhone 17 Pro", "Deep Blue; it unlocks"],
+    [0.885, 0.655, "The print", "19 quotes"],
+    [0.905, 0.85, "Poor Charlie's Almanack", "the desk book"],
+    [0.762, 0.66, "A tumbler", "insulated"],
+  ];
+  P.forEach(([x, y, t, d], i) => {
+    const b = document.createElement("span"); b.className = "pin"; b.style.left = x * 100 + "%"; b.style.top = y * 100 + "%"; b.textContent = i + 1; b.setAttribute("aria-hidden", "true"); fig.appendChild(b);
+    const li = document.createElement("li"); li.innerHTML = `<b>${i + 1}</b><span><strong>${t}</strong>, ${d}</span>`; list.appendChild(li);
+  });
+})();
+
+/* ================================================================ 8. sound: the foghorns' rhythms */
+(function hornsChart() {
+  const svg = $("#horns-svg");
+  const H4 = [["The bridge's south pier", [2, 18], 0, "2 on, 18 off"], ["The bridge's mid-channel horn", [1, 2, 1, 36], 9, "1-2-1-36"], ["Point Diablo", [2, 13], 4, "2 on, 13 off"], ["Point Bonita", [2, 2, 2, 24], 7, "2-2-2-24"]];
+  let on = false, raf = 0, W = 0, L = 0, rowH = 40, SPAN = 60, heads = [];
+  function draw() {
+    svg.innerHTML = ""; heads = [];
+    W = Math.max(320, svg.parentElement.clientWidth); const narrow = W < 640; L = narrow ? 0 : 230;
+    rowH = narrow ? 50 : 40; const H = H4.length * rowH + 24;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("height", H);
+    H4.forEach(([name, pat, ph, txt], i) => {
+      const y = i * rowH, g = el("g", {}, svg);
+      const t = el("text", { x: 0, y: y + (narrow ? 14 : rowH / 2 + 4), "font-size": 13, fill: "currentColor" }, g); t.textContent = name;
+      const t2 = el("tspan", { fill: "currentColor", opacity: 0.55, dx: 8, "font-size": 12 }, t); t2.textContent = txt + " s";
+      const by = y + (narrow ? 22 : rowH / 2 - 7), bh = 14;
+      el("rect", { x: L, y: by, width: W - L, height: bh, fill: "currentColor", opacity: 0.07, rx: 2 }, g);
+      const clip = el("g", {}, g);
+      heads.push({ pat, ph, clip, by, bh, cyc: pat.reduce((a, b) => a + b, 0) });
+    });
+    const t = el("text", { x: W, y: H - 4, "font-size": 11, fill: "currentColor", opacity: 0.55, "text-anchor": "end" }, svg); t.textContent = "the last 60 seconds, ending now";
+    frame();
+  }
+  function frame() {
+    const T = Date.now() / 1000, w = W - L;
+    for (const h of heads) {
+      h.clip.innerHTML = "";
+      // blasts in [T-SPAN, T]
+      const k0 = Math.floor((T - SPAN - h.ph) / h.cyc) - 1;
+      for (let k = k0; k * h.cyc + h.ph < T + h.cyc; k++) {
+        let s = k * h.cyc + h.ph;
+        for (let j = 0; j < h.pat.length; j += 2) {
+          const a = s, b = s + h.pat[j]; s = b + (h.pat[j + 1] || 0);
+          const xa = Math.max(a, T - SPAN), xb = Math.min(b, T);
+          if (xb > xa) {
+            const sounding = T >= a && T < b;
+            el("rect", { x: L + ((xa - (T - SPAN)) / SPAN) * w, y: h.by, width: Math.max(1.5, ((xb - xa) / SPAN) * w), height: h.bh, rx: 2, fill: "#ffb36b", opacity: sounding ? 1 : 0.75 }, h.clip);
+          }
+        }
+      }
+    }
+    if (on && !reduced()) raf = setTimeout(() => requestAnimationFrame(frame), 100);
+  }
+  const io = new IntersectionObserver((es) => { on = es[0].isIntersecting; clearTimeout(raf); if (on) { if (!svg.childNodes.length) draw(); else frame(); } }, { rootMargin: "20% 0px" });
+  io.observe(svg); onResize.push(() => { if (svg.childNodes.length) draw(); });
+})();
+
+/* ================================================================ 9. the build */
+(function build() {
+  const C = [["13 Oct", 3], ["14 Oct", 67], ["15 Oct", 220], ["16 Oct", 132], ["17 Oct", 140], ["18 Oct", 100]];
+  $("#commits").innerHTML = C.map(([d, n]) => `<li><span>${d}</span><i style="width:${(n / 220) * 100}%"></i><b>${n}</b></li>`).join("");
+  const R = [
+    ["15 Oct", "2x RTX 5090, 220 renders: the first full set", 126.8],
+    ["15-16 Oct", "2x RTX 5090, 80 renders: the homepage and the room's light, past midnight", 57.5],
+    ["16 Oct", "4x RTX 4090, 143 renders: the new desk, the courts below the window", 79.0],
+    ["17 Oct", "2x L40S, 3 renders: a check of the park", 3.3],
+    ["17 Oct", "1x L40, 31 renders: the garden, the room's light", 94.2],
+    ["17 Oct", "1x RTX 5090, 81 renders: the photographs, with the iPhone and the MacBook", 80.0],
+    ["18 Oct", "4x RTX 4090, 54 renders: the new detail, the 4x zoom", 66.8],
+    ["18 Oct", "4x RTX 4090, 49 renders: the city at night", 47.5],
+  ];
+  $("#gpus").innerHTML = R.map(([d, w, m]) => `<li><span>${d}<small>${w}</small></span><i style="width:${(m / 126.8) * 100}%"></i><b>${Math.round(m)} min</b></li>`).join("");
+})();
+
+/* ================================================================ 7b. photograph to live 3D: the moment switch */
+(function handover() {
+  const root = $("#ho"), seg = $("#ho-seg");
+  if (!root || !seg) return;
+  seg.addEventListener("click", (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    $$("button", seg).forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    $$("img[data-ho]", root).forEach((i) => { if (i.srcset) i.srcset = i.srcset.replace(/page\/handover\/[a-z]+-/g, `page/handover/${b.dataset.m}-`); i.src = `page/handover/${b.dataset.m}-${i.dataset.ho}.webp`; });
+  });
+})();
+
+/* ================================================================ 10. along the way + the lightbox */
+(function gallery() {
+  const GAL = [
+    ["The detail", [
+      ["zoom_1x_2x_4x.webp", "Three zoom levels at golden hour, all with the detail: the whole view, 1.6x, and 4x on the nearest apartment block."],
+      ["zoom4x_block.webp", "The 4x test that started the detail work: a 160 mm lens on the nearest apartment block."],
+      ["zoom4x_bridge.webp", "The same 4x test toward the bridge. It exposed flat cut-out leaves and plain tower columns, both remodelled after."],
+      ["trees_4x_before_after.webp", "Trees near the window at 4x, before and after: flat cut-outs became needle and leaf clusters on real branches."],
+      ["nearby_normal_old_vs_new.webp", "The two nearest blocks. Before: painted windows on flat walls. After: openings, balconies, a fire escape, roof edges."],
+      ["today_vs_detail_golden_full.webp", "The whole view before (left) and with the detail (right). Subtle at this size; it shows when you zoom."],
+      ["today_vs_detail_live_ab_desktop.webp", "The live site looking down from the window, before the detail and with it, at golden hour, dusk and night."],
+    ]],
+    ["The night", [
+      ["night_explained.webp", "Why the night needed a fix: painted squares, then real windows but too few lit, then more flats lit."],
+    ]],
+    ["Ships", [
+      ["ships_cruise.webp", "The cruise ship at golden, midday, dusk and night: old and new, the new one at 2x below."],
+      ["ships_container.webp", "The same comparison for the 350 m container ship."],
+      ["ships_night_pass.webp", "A ship passing at night in 16 frames, old above and new below: the new ones carry their own lights."],
+    ]],
+    ["The notebook", [
+      ["page_turn_golden_frames.webp", "The page turn at golden hour: at rest, turning, over the spine, landed. The paper curls, shows its writing through the back and casts a soft shadow."],
+      ["page_turn_night_frames.webp", "The same page turn at night, lit by the desk lamp."],
+      ["page_turn_rest_vs_landed.webp", "At rest, and after one turn: the leaf lies on the cover's inside and the next essays' titles show."],
+      ["page_turn_mid_turn.webp", "Half-way through a turn."],
+    ]],
+    ["The desk and the park", [
+      ["macbook_iphone_photo_vs_3d.webp", "The homepage's photograph and the live 3D at the same camera, at golden hour, midday and night; last, the projects page, whose 3D then leans in to the laptop."],
+      ["macbook_model_golden.webp", "The 14-inch Space Black MacBook Pro at golden hour, close up and from the homepage camera."],
+      ["park_before_after.webp", "The park below the window at midday, from the desk: before, the old clay mound; now, gravel paths, planted beds and benches, with the city's new detail behind."],
+      ["park_layer_off_on_golden.webp", "George Sterling Park from the desk at golden hour: the clay mound before, the garden now."],
+    ]],
+  ];
+  const root = $("#gallery");
+  root.innerHTML = GAL.map(([h, items]) => `<div class="gal-group"><h3>${h}</h3><ul class="gal">${items.map(([f, c]) => `<li><figure><button type="button" data-lb="img/${f}" data-cap="${c.replace(/"/g, "&quot;")}"><img src="page/thumbs/${f}" alt="${c.replace(/"/g, "&quot;")}" loading="lazy" /></button><figcaption>${c}</figcaption></figure></li>`).join("")}</ul></div>`).join("");
+  const lb = $("#lb"), li = $("img", lb), lp = $("p", lb);
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-lb]"); if (!b) return;
+    li.src = b.dataset.lb; li.alt = b.dataset.cap || ""; lp.textContent = b.dataset.cap || "";
+    lb.showModal();
+  });
+  $(".x", lb).addEventListener("click", () => lb.close());
+  lb.addEventListener("close", () => li.removeAttribute("src"));
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target.classList.contains("in")) lb.close(); });
+})();
+
+tick();
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
+  function follow(inp, valueAt) {
+    var id = null;
+    var set = function (e) {
+      var v = valueAt(e.clientX, inp.getBoundingClientRect(), +inp.min || 0, inp.max === "" ? 100 : +inp.max);
+      if (String(v) !== inp.value) { inp.value = v; inp.dispatchEvent(new Event("input", { bubbles: true })); }
+    };
+    inp.addEventListener("pointerdown", function (e) { if (e.pointerType !== "touch" || inp.disabled) return; id = e.pointerId; set(e); });
+    inp.addEventListener("pointermove", function (e) { if (e.pointerId === id) set(e); });
+    var end = function (e) { if (e.pointerId === id) id = null; };
+    inp.addEventListener("pointerup", end); inp.addEventListener("pointercancel", end);
+  }
+  // a slider: the thumb's centre travels the track less one thumb (30 px for a finger)
+  var track = function (x, r, min, max) { var T = 30; return +clamp(min + ((x - r.left - T / 2) / Math.max(1, r.width - T)) * (max - min), min, max).toFixed(3); };
+  document.querySelectorAll("input[type=range].rng").forEach(function (inp) { follow(inp, track); });
+  // the day strip (its range input takes no finger, see the styles): fourteen columns, a moment's value at the
+  // centre of its thumbnail; a tap picks, a sideways drag scrubs, a vertical swipe scrolls; letting go snaps
+  var box = document.querySelector("#strip"), inp = document.querySelector("#strip-r");
+  if (box && inp) {
+    var t0 = null, drag = false;
+    var at = function (x) { var r = box.getBoundingClientRect(), min = +inp.min || 0, max = +inp.max; return +clamp(min + ((x - r.left) / r.width) * (max - min + 1) - 0.5, min, max).toFixed(2); };
+    var set = function (x) { var v = at(x); if (String(v) !== inp.value) { inp.value = v; inp.dispatchEvent(new Event("input", { bubbles: true })); } };
+    box.addEventListener("pointerdown", function (e) { if (e.pointerType !== "touch") return; t0 = { x: e.clientX, y: e.clientY, id: e.pointerId }; drag = false; });
+    box.addEventListener("pointermove", function (e) {
+      if (!t0 || e.pointerId !== t0.id) return;
+      if (!drag) { var dx = Math.abs(e.clientX - t0.x), dy = Math.abs(e.clientY - t0.y); if (dx < 6 || dx < dy) return; drag = true; try { box.setPointerCapture(e.pointerId); } catch (_) { /* gone */ } }
+      set(e.clientX);
+    });
+    box.addEventListener("pointerup", function (e) { if (!t0 || e.pointerId !== t0.id) return; set(e.clientX); t0 = null; drag = false; inp.dispatchEvent(new Event("change", { bubbles: true })); });
+    box.addEventListener("pointercancel", function () { t0 = null; drag = false; });
+  }
+  // the gallery's viewer: its close button stays in sight when a finger pinches the picture larger (a fixed element
+  // belongs to the unzoomed page, so it was left off the screen until the visitor pinched back out); it follows the
+  // visible part of the page, at its own size. At normal zoom nothing changes.
+  var lb = document.querySelector("#lb"), close = lb && lb.querySelector(".x"), vv = window.visualViewport;
+  if (lb && close && vv) {
+    var place = function () {
+      var s = vv.scale;
+      if (!lb.open || s < 1.01) { close.style.transform = ""; return; }
+      close.style.transformOrigin = "100% 0";
+      close.style.transform = "translate(" + (vv.offsetLeft + vv.width - document.documentElement.clientWidth) + "px, " + vv.offsetTop + "px) scale(" + (1 / s) + ")";
+    };
+    vv.addEventListener("resize", place); vv.addEventListener("scroll", place); lb.addEventListener("close", place);
+  }
+  // the opening photograph's blurred preview (phones held upright, the styles above) gives way once the view and the
+  // room are both in (a picture that fails lets it go too)
+  var opening = document.querySelector('#peel-figs .pf[data-k="view"]');
+  if (opening) {
+    var parts = opening.querySelectorAll("img"), shown = function () { opening.classList.add("shown"); };
+    var check = function () { for (var k = 0; k < parts.length; k++) if (!(parts[k].complete && parts[k].naturalWidth)) return; shown(); };
+    for (var k = 0; k < parts.length; k++) { parts[k].addEventListener("load", check); parts[k].addEventListener("error", shown); }
+    check();
+  }
+})();
+</script>
+</body>
+</html>

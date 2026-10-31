@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>@view-transition{navigation:auto}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}</style>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<title>ChatGPT × Stable Diffusion - Akshay Chintalapati</title>
+<meta name="description" content="Generate images directly from ChatGPT. Back when GPT-4 just launched and image generation was not available in ChatGPT.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-61SVW4TL71"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+        
+          gtag('config', 'G-61SVW4TL71');
+        </script>
+<link rel="stylesheet" href="/simple/simple.css?v=8ca6ac58da">
+</head>
+<body>
+<div id="root">
+<div class="page-shell page-shell--wide">
+<header class="site-header">
+<a class="brand" href="/simple/" aria-label="Akshay Chintalapati, home">Akshay Chintalapati</a>
+<nav aria-label="Primary navigation"><a href="/simple/writing/">Writing</a><a href="/simple/books/">Books</a><a href="/simple/quotes/">Quotes</a><a href="/simple/hi/">Say hi</a></nav>
+</header>
+<main class="project-page">
+<a class="back-link" href="/simple/"><span aria-hidden="true">←</span> Projects</a>
+<header class="project-header"><div><h1>ChatGPT × Stable Diffusion</h1></div><p class="project-dek">Generate images directly from ChatGPT. Back when GPT-4 just launched and image generation was not available in ChatGPT.</p></header>
+<dl class="project-facts"><div><dt>Built</dt><dd>April 2023, at an OpenAI hackathon</dd></div><div><dt>Link</dt><dd><a href="https://github.com/akshayvkt/chatGPT-StableDiffusion-Plugin" target="_blank" rel="noreferrer">View source ↗</a></dd></div></dl>
+<article class="project-story"><section><h2>Why I made it</h2><p>Image generators could produce remarkable results, but using them still meant translating an idea into model-specific prompts and repeatedly starting the interaction over. I wanted ChatGPT to carry the intent and context across the creative process.</p></section><section><h2>What it became</h2><p>I built a ChatGPT plugin with a FastAPI service, an OpenAPI specification and Replicate's Stable Diffusion model. ChatGPT turned the conversation into an image prompt, called the generator and used subsequent requests to revise the prompt and generate another image without making the person operate the underlying model directly.</p></section><section><h2>What happened</h2><p>I built the plugin at an OpenAI hackathon before ChatGPT plugins were generally available, then released it publicly in April 2023. It did not anticipate DALL·E 3's model quality or perform local pixel editing; it anticipated the product experience: ChatGPT expanding an ordinary request into an image prompt, generating the result and carrying the context through conversational revisions.</p></section></article>
+<nav class="project-pagination" aria-label="Project navigation"><a href="/simple/projects/llaman-prompting/"><span>Next project</span><strong>Llaman Prompting →</strong></a></nav>
+</main>
+<footer><a href="/projects/#/project/chatgpt-stable-diffusion-plugin">See it as a room</a></footer>
+</div>
+</div>
+</body>
+</html>

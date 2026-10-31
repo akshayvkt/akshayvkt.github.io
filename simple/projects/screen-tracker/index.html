@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>@view-transition{navigation:auto}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}</style>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<title>ScreenTracker - Akshay Chintalapati</title>
+<meta name="description" content="Always-on AI that observes how you use your computer, and nudges when required">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-61SVW4TL71"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+        
+          gtag('config', 'G-61SVW4TL71');
+        </script>
+<link rel="stylesheet" href="/simple/simple.css?v=8ca6ac58da">
+</head>
+<body>
+<div id="root">
+<div class="page-shell page-shell--wide">
+<header class="site-header">
+<a class="brand" href="/simple/" aria-label="Akshay Chintalapati, home">Akshay Chintalapati</a>
+<nav aria-label="Primary navigation"><a href="/simple/writing/">Writing</a><a href="/simple/books/">Books</a><a href="/simple/quotes/">Quotes</a><a href="/simple/hi/">Say hi</a></nav>
+</header>
+<main class="project-page">
+<a class="back-link" href="/simple/"><span aria-hidden="true">←</span> Projects</a>
+<header class="project-header"><div><h1>ScreenTracker</h1></div><p class="project-dek">Always-on AI that observes how you use your computer, and nudges when required</p></header>
+<dl class="project-facts"><div><dt>Built</dt><dd>October–December 2025; used through April 2026</dd></div></dl>
+<article class="project-story project-story--note"><section><p>I sometimes open social media for something, then forget why I opened it, spend the next 10 minutes scrolling, close it and wonder wtf I opened it for.</p><p>So I built an AI that regularly takes a screenshot of my laptop, then decides what I'm doing. Just silently works in the background.</p><p>After every screenshot, it takes a note of what I was doing. At the end of the day, all the notes are run through an LLM which summarizes how the day went - what I did, what I should be called out on.</p><p>If I didn't touch the keyboard or mouse for 2 minutes, it took a photo through my webcam to check if I was still there - reading or watching something, or on my phone and gone.</p></section></article>
+<div class="project-gallery project-gallery--landscape" aria-label="ScreenTracker product outputs"><figure class="project-gallery-item"><img src="/projects/screen-tracker-present.jpg" alt="Webcam photo of Akshay at an office desk, looking at the screen" loading="lazy" decoding="async"><figcaption>Oct 25, 6:17 PM. “The user is actively reading a digital book titled ‘Persuasion through Connected Technology’” → present</figcaption></figure><figure class="project-gallery-item"><img src="/projects/screen-tracker-away.jpg" alt="Webcam photo of Akshay at a desk, turned away from the screen" loading="lazy" decoding="async"><figcaption>Oct 15, 5:12 PM. “The user is not visible in the webcam photo.” → idle</figcaption></figure></div>
+<article class="project-story project-story--note"><section><p>It ran on my laptop for six months - a screenshot every 20 seconds, 88,167 notes, about $15 a month.</p><p>Every night it wrote me a recap. One from November 4th:</p><blockquote><p>You shipped something and immediately started looking for the next thing.</p><p>Then you found it: BJ Fogg's “Persuasive Technology” from 2002. You spent the next 3-4 hours in a state I can only call intellectual flow - reading the book, taking notes, consulting Claude about messaging, researching how Fogg's predictions played out in YouTube Shorts and ChatGPT and Duolingo.</p></blockquote><p>I'm thinking about AI that is continually watching what you do - it'd be pretty cool if it can learn more about you as a person through that. Perhaps it notices the kind of music I listen to, or the kind of articles I read and suggests similar ones.</p><p>And this level of monitoring cost just $15 a month then. In 2027, it'd probably cost 50 cents a month. Which worries me. Because mass surveillance requires not merely capturing data but also understanding it. For the longest time, that was not practically feasible because of the manpower and costs involved. But it's now cheap and will only get cheaper. Which means society will need to take concrete steps to avoid this outcome.</p><p>One idea from back then stuck: before opening a site, ask me what I'm opening for. Nine months later, that became <a href="/simple/projects/gatekeeper/">Gatekeeper</a>.</p></section></article>
+<nav class="project-pagination" aria-label="Project navigation"><a href="/simple/projects/maia/"><span>Next project</span><strong>Maia →</strong></a></nav>
+</main>
+<footer><a href="/projects/#/project/screen-tracker">See it as a room</a></footer>
+</div>
+</div>
+</body>
+</html>
