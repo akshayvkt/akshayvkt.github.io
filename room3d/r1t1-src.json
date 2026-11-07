@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "model_hash": "a38ca2f07fbd5d79",
+ "made_by": "scripts/live/assemble.py (phone_tex_src: the served maps)",
+ "files": {
+  "bake/afternoon/sun_desk.avif": "8ffb227ce3ee8d8eaf76c426edddb77dac0fa601f3767be79b26f21134a1252a",
+  "bake/afternoon/sun_furniture.avif": "642a72d597d1f30a90a99beb8b43e5bdb3e19dc226a0bea5dc5e9f88f96e4104",
+  "bake/detail.avif": "e15a4d4af2b114e23549a2be6acf53b23d34cff116e55c238ec6310054c45add",
+  "bake/golden/sun_furniture.avif": "521d2c4cd6ffe2593b3b1da354ea7107d432aed06bdbd7d1f06d083d7c17b5ab",
+  "bake/lateafternoon/sun_desk.avif": "09953d8af28e4c0b520416b3d5b0f7857b3609270e786ebb904386ccabccff3b",
+  "bake/lateafternoon/sun_furniture.avif": "6a05d0981d7c765c32f9edc90a11a6fa5ed2610ffbb32ba07c2bf7bb17ac21cf",
+  "bake/lowsun/sun_desk.avif": "5a8793a59b632194b67a4f0e8eb0f3fc3885acd8b40c0d747037492bbb5f5456",
+  "bake/lowsun/sun_furniture.avif": "7a88f989bb15ed90dd0a681920875fa2d7eb4977e16de304d619c6b3c743548b",
+  "bake/screen/screen_desk.avif": "9b1164cdca1a1c4e09af3dcf2aea6e865792a4d42d20f10c70a948ae0b7cc5f3",
+  "bake/sunset/sun_desk.avif": "fbc145bd9536aa6356aef94b4b5fa289e1bab5bd3bdd85e57947731b9c2b53fe",
+  "bake/sunset/sun_furniture.avif": "dbdcc4d73f41d64f4c5920779f8ce7c7f85303bbd3c2bf0d9e226339b137a9d7",
+  "tex/books_base.jpg": "0e1dc40f53be24c507b1296fceb365c6889142336166951ec7a3f69f02870e68",
+  "tex/books_normal.png": "e3e151f0145b6a7d0bfa3f6da4d53563a950eea2e5244c6ef504c3864922feeb",
+  "tex/books_orm.png": "ac48231fed0c36a38c3bb694eacc7886d6187d5ebadb8f07791d57d145db1751",
+  "tex/props_base.jpg": "92cc992ad6831b394a3b62c90581acaacc90848bd3dac4f6ebeef2226cac2709",
+  "tex/props_normal.png": "1f01887d2215cfacc891cedaee13a18f65f6fba06bc5fd920dfa43816db44b62",
+  "tex/props_orm.png": "235eb08116a35c2eca17675cfd64df2f67999aa3394cb5c771dad33a8e61f0df",
+  "tex/screen_base.jpg": "3fc0dc51be3ffd461370501ae7ac0d87a1f5731d70d7fd0e12c0d7eac4249284"
+ }
+}

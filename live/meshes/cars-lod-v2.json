@@ -1,0 +1,875 @@
+{
+ "version": 2,
+ "views": 0,
+ "preset": "b",
+ "elevation_deg": 4.0,
+ "vertex_bytes": 16,
+ "classes": {
+  "plain": 0,
+  "paint": 1,
+  "glass": 2,
+  "head": 3,
+  "tail": 4,
+  "metal": 5,
+  "cloth": 6,
+  "rubber": 7,
+  "gloss": 8,
+  "plate": 9
+ },
+ "materials": {
+  "paint": {
+   "base": "per car (uPaint)",
+   "roughness": 0.42,
+   "metallic": "per finish (0 solid, 0.6 metallic)",
+   "clearcoat": 1.0,
+   "clearcoat_roughness": 0.05,
+   "note": "Schlick F0 0.04 on the coat, as today"
+  },
+  "glass": {
+   "base": "#1a1d1f (the dark cabin behind it)",
+   "roughness": 0.03,
+   "f0": 0.04,
+   "note": "mirror-sharp sky"
+  },
+  "gloss": {
+   "base": "#050506",
+   "roughness": 0.12,
+   "f0": 0.045,
+   "note": "gloss-black plastic, piano trim, the roof"
+  },
+  "plain": {
+   "roughness": 0.65,
+   "f0": 0.04,
+   "note": "satin plastic, the textured black trim, grilles"
+  },
+  "rubber": {
+   "base": "#0e0e0e (tyres)",
+   "roughness": 0.92,
+   "f0": 0.03,
+   "note": "matte; the sidewall a touch greyer"
+  },
+  "metal": {
+   "roughness": 0.25,
+   "metallic": 1.0,
+   "note": "chrome, alloy rims, mirrors' caps where chrome"
+  },
+  "head": {
+   "base": "clear lens over a reflector",
+   "roughness": 0.05,
+   "emission": "uCar.w x (1, 0.93, 0.8) at night"
+  },
+  "tail": {
+   "base": "red lens",
+   "roughness": 0.08,
+   "emission": "night + brake, as today"
+  },
+  "plate": {
+   "base": "#e8e8e4 with the band and bars",
+   "roughness": 0.55,
+   "note": "retroreflective sheet: a little brighter toward the light"
+  },
+  "cloth": {
+   "roughness": 0.9,
+   "note": "a rider's clothes and skin"
+  }
+ },
+ "livery_base": 0.702,
+ "vertex": "position int16 mm x 3 + 0; normal int8 x 3 + AO uint8 (0 dark .. 255 open); sRGB x 3 + class",
+ "models": {
+  "prius": {
+   "vertices": [
+    0,
+    1470
+   ],
+   "triangles_at": 23520,
+   "views": [],
+   "triangles": 1291,
+   "lods": [
+    {
+     "vertices": [
+      0,
+      1470
+     ],
+     "triangles_at": 23520,
+     "views": [],
+     "triangles": 1291,
+     "max_m": 160,
+     "ao": [
+      0.0,
+      0.984
+     ]
+    },
+    {
+     "vertices": [
+      31268,
+      432
+     ],
+     "triangles_at": 38180,
+     "views": [],
+     "triangles": 410,
+     "max_m": 450,
+     "ao": [
+      0.023,
+      0.992
+     ]
+    },
+    {
+     "vertices": [
+      40640,
+      218
+     ],
+     "triangles_at": 44128,
+     "views": [],
+     "triangles": 140,
+     "max_m": null,
+     "ao": [
+      0.5,
+      0.914
+     ]
+    }
+   ],
+   "legacy_lod": 0,
+   "kind": "car",
+   "fixed": false,
+   "colors": [
+    [
+     "Wind Chill Pearl",
+     "#e9eae6",
+     0.15
+    ],
+    [
+     "Cutting Edge (silver)",
+     "#a7abae",
+     0.75
+    ],
+    [
+     "Guardian Grey",
+     "#55595d",
+     0.7
+    ],
+    [
+     "Midnight Black",
+     "#111214",
+     0.5
+    ],
+    [
+     "Reservoir Blue",
+     "#2a4a66",
+     0.7
+    ],
+    [
+     "Supersonic Red",
+     "#9f141b",
+     0.3
+    ],
+    [
+     "Karashi",
+     "#c39a2a",
+     0.4
+    ]
+   ],
+   "length": 4.611,
+   "beam": 2.061,
+   "height": 1.457
+  },
+  "modely": {
+   "vertices": [
+    44968,
+    1492
+   ],
+   "triangles_at": 68840,
+   "views": [],
+   "triangles": 1290,
+   "lods": [
+    {
+     "vertices": [
+      44968,
+      1492
+     ],
+     "triangles_at": 68840,
+     "views": [],
+     "triangles": 1290,
+     "max_m": 160,
+     "ao": [
+      0.0,
+      0.992
+     ]
+    },
+    {
+     "vertices": [
+      76580,
+      406
+     ],
+     "triangles_at": 83076,
+     "views": [],
+     "triangles": 410,
+     "max_m": 450,
+     "ao": [
+      0.0,
+      0.984
+     ]
+    },
+    {
+     "vertices": [
+      85536,
+      199
+     ],
+     "triangles_at": 88720,
+     "views": [],
+     "triangles": 140,
+     "max_m": null,
+     "ao": [
+      0.5,
+      0.902
+     ]
+    }
+   ],
+   "legacy_lod": 0,
+   "kind": "car",
+   "fixed": false,
+   "colors": [
+    [
+     "Pearl White",
+     "#e8e9e6",
+     0.15
+    ],
+    [
+     "Solid Black",
+     "#0c0d0f",
+     0.0
+    ],
+    [
+     "Midnight Silver",
+     "#5a5e64",
+     0.75
+    ],
+    [
+     "Deep Blue",
+     "#1d3a6c",
+     0.75
+    ],
+    [
+     "Quicksilver",
+     "#b3b6b9",
+     0.8
+    ],
+    [
+     "Red Multi-Coat",
+     "#a0131b",
+     0.4
+    ]
+   ],
+   "length": 4.762,
+   "beam": 2.131,
+   "height": 1.628
+  },
+  "transit": {
+   "vertices": [
+    89560,
+    1546
+   ],
+   "triangles_at": 114296,
+   "views": [],
+   "triangles": 1392,
+   "lods": [
+    {
+     "vertices": [
+      89560,
+      1546
+     ],
+     "triangles_at": 114296,
+     "views": [],
+     "triangles": 1392,
+     "max_m": 160,
+     "ao": [
+      0.008,
+      0.984
+     ]
+    },
+    {
+     "vertices": [
+      122648,
+      488
+     ],
+     "triangles_at": 130456,
+     "views": [],
+     "triangles": 455,
+     "max_m": 450,
+     "ao": [
+      0.0,
+      0.992
+     ]
+    },
+    {
+     "vertices": [
+      133188,
+      213
+     ],
+     "triangles_at": 136596,
+     "views": [],
+     "triangles": 149,
+     "max_m": null,
+     "ao": [
+      0.5,
+      0.957
+     ]
+    }
+   ],
+   "legacy_lod": 0,
+   "kind": "van",
+   "fixed": false,
+   "colors": [
+    [
+     "Oxford White",
+     "#f0f0ed",
+     0.0
+    ],
+    [
+     "Oxford White",
+     "#f0f0ed",
+     0.0
+    ],
+    [
+     "Iconic Silver",
+     "#a9acaf",
+     0.7
+    ],
+    [
+     "Agate Black",
+     "#121315",
+     0.4
+    ],
+    [
+     "Race Red",
+     "#a3121b",
+     0.0
+    ],
+    [
+     "Blue Jeans",
+     "#2e4a70",
+     0.6
+    ]
+   ],
+   "length": 6.002,
+   "beam": 2.475,
+   "height": 2.58
+  },
+  "camry": {
+   "vertices": [
+    137492,
+    1441
+   ],
+   "triangles_at": 160548,
+   "views": [],
+   "triangles": 1286,
+   "lods": [
+    {
+     "vertices": [
+      137492,
+      1441
+     ],
+     "triangles_at": 160548,
+     "views": [],
+     "triangles": 1286,
+     "max_m": 160,
+     "ao": [
+      0.008,
+      0.984
+     ]
+    },
+    {
+     "vertices": [
+      168264,
+      412
+     ],
+     "triangles_at": 174856,
+     "views": [],
+     "triangles": 409,
+     "max_m": 450,
+     "ao": [
+      0.008,
+      0.992
+     ]
+    },
+    {
+     "vertices": [
+      177312,
+      203
+     ],
+     "triangles_at": 180560,
+     "views": [],
+     "triangles": 140,
+     "max_m": null,
+     "ao": [
+      0.5,
+      0.914
+     ]
+    }
+   ],
+   "legacy_lod": 0,
+   "kind": "car",
+   "fixed": false,
+   "colors": [
+    [
+     "Wind Chill Pearl",
+     "#ebebe6",
+     0.15
+    ],
+    [
+     "Celestial Silver",
+     "#a7aaad",
+     0.75
+    ],
+    [
+     "Underground",
+     "#4d5155",
+     0.7
+    ],
+    [
+     "Midnight Black",
+     "#121315",
+     0.6
+    ],
+    [
+     "Ocean Gem",
+     "#1e3f5a",
+     0.6
+    ],
+    [
+     "Supersonic Red",
+     "#9c1018",
+     0.4
+    ]
+   ],
+   "length": 4.917,
+   "beam": 2.121,
+   "height": 1.453
+  },
+  "crv": {
+   "vertices": [
+    181400,
+    1524
+   ],
+   "triangles_at": 205784,
+   "views": [],
+   "triangles": 1304,
+   "lods": [
+    {
+     "vertices": [
+      181400,
+      1524
+     ],
+     "triangles_at": 205784,
+     "views": [],
+     "triangles": 1304,
+     "max_m": 160,
+     "ao": [
+      0.0,
+      0.977
+     ]
+    },
+    {
+     "vertices": [
+      213608,
+      429
+     ],
+     "triangles_at": 220472,
+     "views": [],
+     "triangles": 409,
+     "max_m": 450,
+     "ao": [
+      0.0,
+      0.977
+     ]
+    },
+    {
+     "vertices": [
+      222928,
+      221
+     ],
+     "triangles_at": 226464,
+     "views": [],
+     "triangles": 139,
+     "max_m": null,
+     "ao": [
+      0.5,
+      0.914
+     ]
+    }
+   ],
+   "legacy_lod": 0,
+   "kind": "car",
+   "fixed": false,
+   "colors": [
+    [
+     "Platinum White Pearl",
+     "#ebebe8",
+     0.15
+    ],
+    [
+     "Crystal Black Pearl",
+     "#131417",
+     0.4
+    ],
+    [
+     "Meteoroid Gray",
+     "#54585d",
+     0.7
+    ],
+    [
+     "Lunar Silver",
+     "#a3a7ab",
+     0.75
+    ],
+    [
+     "Canyon River Blue",
+     "#2b4964",
+     0.7
+    ],
+    [
+     "Radiant Red",
+     "#8b1a20",
+     0.4
+    ],
+    [
+     "Urban Gray",
+     "#7a7e7c",
+     0.3
+    ]
+   ],
+   "length": 4.723,
+   "beam": 2.181,
+   "height": 1.721
+  },
+  "tacoma": {
+   "vertices": [
+    227300,
+    1406
+   ],
+   "triangles_at": 249796,
+   "views": [],
+   "triangles": 1288,
+   "lods": [
+    {
+     "vertices": [
+      227300,
+      1406
+     ],
+     "triangles_at": 249796,
+     "views": [],
+     "triangles": 1288,
+     "max_m": 160,
+     "ao": [
+      0.0,
+      0.922
+     ]
+    },
+    {
+     "vertices": [
+      257524,
+      500
+     ],
+     "triangles_at": 265524,
+     "views": [],
+     "triangles": 410,
+     "max_m": 450,
+     "ao": [
+      0.0,
+      0.922
+     ]
+    },
+    {
+     "vertices": [
+      267984,
+      227
+     ],
+     "triangles_at": 271616,
+     "views": [],
+     "triangles": 139,
+     "max_m": null,
+     "ao": [
+      0.504,
+      0.902
+     ]
+    }
+   ],
+   "legacy_lod": 0,
+   "kind": "car",
+   "fixed": false,
+   "colors": [
+    [
+     "Ice Cap",
+     "#efefec",
+     0.0
+    ],
+    [
+     "Celestial Silver",
+     "#a7aaad",
+     0.75
+    ],
+    [
+     "Underground",
+     "#4d5155",
+     0.7
+    ],
+    [
+     "Midnight Black",
+     "#111214",
+     0.5
+    ],
+    [
+     "Blue Crush",
+     "#1d58a4",
+     0.6
+    ],
+    [
+     "Supersonic Red",
+     "#9f141b",
+     0.3
+    ],
+    [
+     "Bronze Oxide",
+     "#86704f",
+     0.6
+    ]
+   ],
+   "length": 5.48,
+   "beam": 2.35,
+   "height": 1.875
+  },
+  "boxtruck": {
+   "vertices": [
+    272452,
+    1709
+   ],
+   "triangles_at": 299796,
+   "views": [],
+   "triangles": 1400,
+   "lods": [
+    {
+     "vertices": [
+      272452,
+      1709
+     ],
+     "triangles_at": 299796,
+     "views": [],
+     "triangles": 1400,
+     "max_m": 160,
+     "ao": [
+      0.0,
+      0.789
+     ]
+    },
+    {
+     "vertices": [
+      308196,
+      662
+     ],
+     "triangles_at": 318788,
+     "views": [],
+     "triangles": 506,
+     "max_m": 450,
+     "ao": [
+      0.0,
+      0.75
+     ]
+    },
+    {
+     "vertices": [
+      321824,
+      251
+     ],
+     "triangles_at": 325840,
+     "views": [],
+     "triangles": 150,
+     "max_m": null,
+     "ao": [
+      0.5,
+      0.766
+     ]
+    }
+   ],
+   "legacy_lod": 0,
+   "kind": "truck",
+   "fixed": false,
+   "colors": [
+    [
+     "White",
+     "#f1f1ee",
+     0.0
+    ],
+    [
+     "White",
+     "#f1f1ee",
+     0.0
+    ],
+    [
+     "White",
+     "#eeeeea",
+     0.0
+    ],
+    [
+     "Silver",
+     "#b5b8bb",
+     0.6
+    ],
+    [
+     "Red",
+     "#9e1b1f",
+     0.1
+    ],
+    [
+     "Blue",
+     "#1f3a66",
+     0.2
+    ]
+   ],
+   "length": 6.878,
+   "beam": 2.57,
+   "height": 3.599
+  },
+  "muni": {
+   "vertices": [
+    326740,
+    2135
+   ],
+   "triangles_at": 360900,
+   "views": [],
+   "triangles": 1784,
+   "lods": [
+    {
+     "vertices": [
+      326740,
+      2135
+     ],
+     "triangles_at": 360900,
+     "views": [],
+     "triangles": 1784,
+     "max_m": 160,
+     "ao": [
+      0.0,
+      1.0
+     ]
+    },
+    {
+     "vertices": [
+      371604,
+      722
+     ],
+     "triangles_at": 383156,
+     "views": [],
+     "triangles": 593,
+     "max_m": 450,
+     "ao": [
+      0.0,
+      1.0
+     ]
+    },
+    {
+     "vertices": [
+      386716,
+      280
+     ],
+     "triangles_at": 391196,
+     "views": [],
+     "triangles": 199,
+     "max_m": null,
+     "ao": [
+      0.5,
+      0.996
+     ]
+    }
+   ],
+   "legacy_lod": 0,
+   "kind": "bus",
+   "fixed": true,
+   "colors": [
+    [
+     "Muni silver",
+     "#b9bcbf",
+     0.6
+    ]
+   ],
+   "length": 12.757,
+   "beam": 3.152,
+   "height": 3.391
+  },
+  "moto_mt07": {
+   "vertices": [
+    392392,
+    1108
+   ],
+   "triangles_at": 410120,
+   "views": [],
+   "triangles": 709,
+   "lods": [
+    {
+     "vertices": [
+      392392,
+      1108
+     ],
+     "triangles_at": 410120,
+     "views": [],
+     "triangles": 709,
+     "max_m": 160,
+     "ao": [
+      0.6,
+      0.6
+     ]
+    },
+    {
+     "vertices": [
+      414376,
+      336
+     ],
+     "triangles_at": 419752,
+     "views": [],
+     "triangles": 229,
+     "max_m": 450,
+     "ao": [
+      0.8,
+      0.8
+     ]
+    },
+    {
+     "vertices": [
+      421128,
+      237
+     ],
+     "triangles_at": 424920,
+     "views": [],
+     "triangles": 129,
+     "max_m": null,
+     "ao": [
+      0.8,
+      0.8
+     ]
+    }
+   ],
+   "legacy_lod": 0,
+   "kind": "bike",
+   "fixed": true,
+   "colors": [
+    [
+     "Tech Black",
+     "#1a1b1e",
+     0.3
+    ],
+    [
+     "Team Yamaha Blue",
+     "#1d3f91",
+     0.45
+    ],
+    [
+     "Cyan Storm",
+     "#6b7f8c",
+     0.5
+    ]
+   ],
+   "length": 2.064,
+   "beam": 0.787,
+   "height": 1.688
+  }
+ },
+ "bytes": 425694
+}
