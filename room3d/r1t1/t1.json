@@ -1,0 +1,1151 @@
+{
+ "version": 2,
+ "model_hash": "a38ca2f07fbd5d79",
+ "max": 1024,
+ "filter": "per map (TABLE: a blend of Chrome's and WebKit's halving)",
+ "qualities": [
+  50,
+  60,
+  70,
+  75,
+  80,
+  85,
+  88,
+  90,
+  92,
+  94,
+  96,
+  98,
+  100
+ ],
+ "speed": 4,
+ "margin": {
+  "chrome": 0.01,
+  "webkit_readback": 0.04,
+  "webkit_model": 0.12
+ },
+ "readback": "/Volumes/Claude SSD/sf-window/renders/dys203/phonetex/take-1031-205544",
+ "search": false,
+ "files": {
+  "tex/props_base.jpg": {
+   "file": "tex/props_base.avif",
+   "kind": "material",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "92cc992ad6831b394a3b62c90581acaacc90848bd3dac4f6ebeef2226cac2709",
+   "today": {
+    "file": "r1tex/props_base.avif",
+    "bytes": 234823
+   },
+   "bytes": 90390,
+   "q": 80,
+   "made_from": "set",
+   "target": "mid",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 1.2587,
+     "p99": 12.0,
+     "max": 41
+    },
+    "webkit": {
+     "mean": 1.2779,
+     "p99": 12.0,
+     "max": 39
+    },
+    "limit": {
+     "mean": 1.347,
+     "p99": 14.0
+    },
+    "refs": "read-back take-1031-205544",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 1.347,
+      "p99": 14.0,
+      "max": 43,
+      "ssim": 0.99491,
+      "dE00": 0.466,
+      "dE00_p99": 4.58
+     },
+     "box~cr": {
+      "mean": 0.865,
+      "p99": 11.0,
+      "max": 33,
+      "ssim": 0.9976,
+      "dE00": 0.349,
+      "dE00_p99": 3.98
+     }
+    }
+   }
+  },
+  "tex/props_orm.png": {
+   "file": "tex/props_orm.avif",
+   "kind": "material",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "235eb08116a35c2eca17675cfd64df2f67999aa3394cb5c771dad33a8e61f0df",
+   "today": {
+    "file": "r1tex/props_orm.avif",
+    "bytes": 61762
+   },
+   "bytes": 33852,
+   "q": 90,
+   "made_from": "set",
+   "target": "mid",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.1151,
+     "p99": 3.0,
+     "max": 46
+    },
+    "webkit": {
+     "mean": 0.1266,
+     "p99": 3.0,
+     "max": 48
+    },
+    "limit": {
+     "mean": 0.35,
+     "p99": 3.0
+    },
+    "refs": "read-back take-1031-205544",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.092,
+      "p99": 3.0,
+      "max": 49,
+      "ssim": 0.99948
+     },
+     "box~cr": {
+      "mean": 0.066,
+      "p99": 2.0,
+      "max": 45,
+      "ssim": 0.99966
+     }
+    }
+   }
+  },
+  "tex/props_normal.png": {
+   "file": "tex/props_normal.avif",
+   "kind": "material",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "1f01887d2215cfacc891cedaee13a18f65f6fba06bc5fd920dfa43816db44b62",
+   "today": {
+    "file": "r1tex/props_normal.avif",
+    "bytes": 121309
+   },
+   "bytes": 81122,
+   "q": 94,
+   "made_from": "today",
+   "target": "mid",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.1874,
+     "p99": 3.0,
+     "max": 28
+    },
+    "webkit": {
+     "mean": 0.1962,
+     "p99": 3.0,
+     "max": 27
+    },
+    "limit": {
+     "mean": 0.35,
+     "p99": 3.0
+    },
+    "refs": "read-back take-1031-205544",
+    "webkit_decode": "round",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.148,
+      "p99": 3.0,
+      "max": 34,
+      "ssim": 0.99872
+     },
+     "box~cr": {
+      "mean": 0.107,
+      "p99": 2.0,
+      "max": 25,
+      "ssim": 0.99933
+     }
+    }
+   }
+  },
+  "tex/screen_base.jpg": {
+   "file": "tex/screen_base.avif",
+   "kind": "material",
+   "full": [
+    2048,
+    1280
+   ],
+   "size": [
+    1024,
+    640
+   ],
+   "src_sha256": "3fc0dc51be3ffd461370501ae7ac0d87a1f5731d70d7fd0e12c0d7eac4249284",
+   "today": {
+    "file": "r1/tex/screen_base.jpg",
+    "bytes": 153325
+   },
+   "bytes": 37067,
+   "q": 90,
+   "made_from": "today",
+   "target": "mid",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.3583,
+     "p99": 10.0,
+     "max": 34
+    },
+    "webkit": {
+     "mean": 0.3851,
+     "p99": 11.0,
+     "max": 34
+    },
+    "limit": {
+     "mean": 0.428,
+     "p99": 12.0
+    },
+    "refs": "read-back take-1031-205544",
+    "webkit_decode": "round",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.428,
+      "p99": 12.0,
+      "max": 44,
+      "ssim": 0.99867,
+      "dE00": 0.125,
+      "dE00_p99": 3.43
+     },
+     "box~cr": {
+      "mean": 0.423,
+      "p99": 12.0,
+      "max": 36,
+      "ssim": 0.99891,
+      "dE00": 0.126,
+      "dE00_p99": 4.07
+     }
+    }
+   }
+  },
+  "tex/books_base.jpg": {
+   "file": "tex/books_base.avif",
+   "kind": "material",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "0e1dc40f53be24c507b1296fceb365c6889142336166951ec7a3f69f02870e68",
+   "today": {
+    "file": "r1tex/books_base.avif",
+    "bytes": 346869
+   },
+   "bytes": 218846,
+   "q": 94,
+   "made_from": "today",
+   "target": "mid",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.9864,
+     "p99": 11.0,
+     "max": 59
+    },
+    "webkit": {
+     "mean": 0.9615,
+     "p99": 11.0,
+     "max": 58
+    },
+    "limit": {
+     "mean": 1.033,
+     "p99": 14.0
+    },
+    "refs": "read-back take-1031-205544",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 1.033,
+      "p99": 14.0,
+      "max": 76,
+      "ssim": 0.99285,
+      "dE00": 0.41,
+      "dE00_p99": 4.48
+     },
+     "box~cr": {
+      "mean": 0.781,
+      "p99": 12.0,
+      "max": 40,
+      "ssim": 0.99609,
+      "dE00": 0.319,
+      "dE00_p99": 3.64
+     }
+    }
+   }
+  },
+  "tex/books_orm.png": {
+   "file": "tex/books_orm.avif",
+   "kind": "material",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "ac48231fed0c36a38c3bb694eacc7886d6187d5ebadb8f07791d57d145db1751",
+   "today": {
+    "file": "r1tex/books_orm.avif",
+    "bytes": 5188
+   },
+   "bytes": 1624,
+   "q": 50,
+   "made_from": "set",
+   "target": "m3",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.1219,
+     "p99": 3.0,
+     "max": 22
+    },
+    "webkit": {
+     "mean": 0.1536,
+     "p99": 2.0,
+     "max": 23
+    },
+    "limit": {
+     "mean": 0.35,
+     "p99": 3.0
+    },
+    "refs": "read-back take-1031-205544",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.055,
+      "p99": 1.0,
+      "max": 15,
+      "ssim": 0.99966
+     },
+     "box~cr": {
+      "mean": 0.046,
+      "p99": 1.0,
+      "max": 18,
+      "ssim": 0.99966
+     }
+    }
+   }
+  },
+  "tex/books_normal.png": {
+   "file": "tex/books_normal.avif",
+   "kind": "material",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "e3e151f0145b6a7d0bfa3f6da4d53563a950eea2e5244c6ef504c3864922feeb",
+   "today": {
+    "file": "r1tex/books_normal.avif",
+    "bytes": 480
+   },
+   "bytes": 375,
+   "q": 50,
+   "made_from": "today",
+   "target": "cr",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.0,
+     "p99": 0.0,
+     "max": 0
+    },
+    "webkit": {
+     "mean": 0.0,
+     "p99": 0.0,
+     "max": 0
+    },
+    "limit": {
+     "mean": 0.35,
+     "p99": 3.0
+    },
+    "refs": "read-back take-1031-205544",
+    "webkit_decode": "round",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "ssim": 1.0
+     },
+     "box~cr": {
+      "mean": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "ssim": 1.0
+     }
+    }
+   }
+  },
+  "bake/afternoon/sun_desk.avif": {
+   "file": "bake/afternoon/sun_desk.avif",
+   "kind": "light",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "8ffb227ce3ee8d8eaf76c426edddb77dac0fa601f3767be79b26f21134a1252a",
+   "today": {
+    "file": "r1/bake/afternoon/sun_desk.avif",
+    "bytes": 60632
+   },
+   "bytes": 54563,
+   "q": 90,
+   "made_from": "today",
+   "target": "m4",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.3721,
+     "p99": 9.0,
+     "max": 47
+    },
+    "webkit": {
+     "mean": 0.2742,
+     "p99": 6.0,
+     "max": 25
+    },
+    "limit": {
+     "mean": 0.41,
+     "p99": 10.0
+    },
+    "refs": "model",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.41,
+      "p99": 10.0,
+      "max": 39,
+      "ssim": 0.99644
+     },
+     "box~cr": {
+      "mean": 0.214,
+      "p99": 8.0,
+      "max": 39,
+      "ssim": 0.99916
+     }
+    }
+   }
+  },
+  "bake/afternoon/sun_furniture.avif": {
+   "file": "bake/afternoon/sun_furniture.avif",
+   "kind": "light",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "642a72d597d1f30a90a99beb8b43e5bdb3e19dc226a0bea5dc5e9f88f96e4104",
+   "today": {
+    "file": "r1/bake/afternoon/sun_furniture.avif",
+    "bytes": 27105
+   },
+   "bytes": 15868,
+   "q": 75,
+   "made_from": "today",
+   "target": "m4",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.1415,
+     "p99": 4.0,
+     "max": 38
+    },
+    "webkit": {
+     "mean": 0.1208,
+     "p99": 4.0,
+     "max": 27
+    },
+    "limit": {
+     "mean": 0.35,
+     "p99": 4.0
+    },
+    "refs": "model",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.122,
+      "p99": 4.0,
+      "max": 38,
+      "ssim": 0.99915
+     },
+     "box~cr": {
+      "mean": 0.071,
+      "p99": 2.0,
+      "max": 30,
+      "ssim": 0.99981
+     }
+    }
+   }
+  },
+  "bake/detail.avif": {
+   "file": "bake/detail.avif",
+   "kind": "detail",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "e15a4d4af2b114e23549a2be6acf53b23d34cff116e55c238ec6310054c45add",
+   "today": {
+    "file": "r1/bake/detail.avif",
+    "bytes": 288887
+   },
+   "bytes": 127786,
+   "q": 60,
+   "made_from": "today",
+   "target": "mid",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 2.3803,
+     "p99": 28.0,
+     "max": 82
+    },
+    "webkit": {
+     "mean": 2.8893,
+     "p99": 32.0,
+     "max": 88
+    },
+    "limit": {
+     "mean": 3.044,
+     "p99": 39.0
+    },
+    "refs": "read-back take-1031-205544",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 3.044,
+      "p99": 39.0,
+      "max": 106,
+      "ssim": 0.9754
+     },
+     "box~cr": {
+      "mean": 1.502,
+      "p99": 22.0,
+      "max": 55,
+      "ssim": 0.99357
+     }
+    }
+   }
+  },
+  "bake/golden/sun_furniture.avif": {
+   "file": "bake/golden/sun_furniture.avif",
+   "kind": "light",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "521d2c4cd6ffe2593b3b1da354ea7107d432aed06bdbd7d1f06d083d7c17b5ab",
+   "today": {
+    "file": "r1/bake/golden/sun_furniture.avif",
+    "bytes": 3149
+   },
+   "bytes": 1390,
+   "q": 50,
+   "made_from": "today",
+   "target": "box",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.0333,
+     "p99": 0.0,
+     "max": 42
+    },
+    "webkit": {
+     "mean": 0.0389,
+     "p99": 1.0,
+     "max": 42
+    },
+    "limit": {
+     "mean": 0.35,
+     "p99": 3.0
+    },
+    "refs": "model",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.022,
+      "p99": 0.0,
+      "max": 28,
+      "ssim": 0.99977
+     },
+     "box~cr": {
+      "mean": 0.012,
+      "p99": 0.0,
+      "max": 30,
+      "ssim": 0.99995
+     }
+    }
+   }
+  },
+  "bake/lateafternoon/sun_desk.avif": {
+   "file": "bake/lateafternoon/sun_desk.avif",
+   "kind": "light",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "09953d8af28e4c0b520416b3d5b0f7857b3609270e786ebb904386ccabccff3b",
+   "today": {
+    "file": "r1/bake/lateafternoon/sun_desk.avif",
+    "bytes": 83296
+   },
+   "bytes": 60167,
+   "q": 85,
+   "made_from": "today",
+   "target": "m4",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.505,
+     "p99": 10.0,
+     "max": 39
+    },
+    "webkit": {
+     "mean": 0.3891,
+     "p99": 6.0,
+     "max": 22
+    },
+    "limit": {
+     "mean": 0.518,
+     "p99": 11.0
+    },
+    "refs": "model",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.518,
+      "p99": 11.0,
+      "max": 36,
+      "ssim": 0.99589
+     },
+     "box~cr": {
+      "mean": 0.268,
+      "p99": 8.0,
+      "max": 37,
+      "ssim": 0.99909
+     }
+    }
+   }
+  },
+  "bake/lateafternoon/sun_furniture.avif": {
+   "file": "bake/lateafternoon/sun_furniture.avif",
+   "kind": "light",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "6a05d0981d7c765c32f9edc90a11a6fa5ed2610ffbb32ba07c2bf7bb17ac21cf",
+   "today": {
+    "file": "r1/bake/lateafternoon/sun_furniture.avif",
+    "bytes": 12475
+   },
+   "bytes": 7162,
+   "q": 70,
+   "made_from": "today",
+   "target": "m4",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.1071,
+     "p99": 3.0,
+     "max": 41
+    },
+    "webkit": {
+     "mean": 0.0974,
+     "p99": 3.0,
+     "max": 24
+    },
+    "limit": {
+     "mean": 0.35,
+     "p99": 3.0
+    },
+    "refs": "model",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.091,
+      "p99": 3.0,
+      "max": 33,
+      "ssim": 0.99906
+     },
+     "box~cr": {
+      "mean": 0.045,
+      "p99": 1.0,
+      "max": 31,
+      "ssim": 0.99985
+     }
+    }
+   }
+  },
+  "bake/lowsun/sun_desk.avif": {
+   "file": "bake/lowsun/sun_desk.avif",
+   "kind": "light",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "5a8793a59b632194b67a4f0e8eb0f3fc3885acd8b40c0d747037492bbb5f5456",
+   "today": {
+    "file": "r1/bake/lowsun/sun_desk.avif",
+    "bytes": 42362
+   },
+   "bytes": 25637,
+   "q": 80,
+   "made_from": "today",
+   "target": "m4",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.253,
+     "p99": 6.0,
+     "max": 37
+    },
+    "webkit": {
+     "mean": 0.212,
+     "p99": 5.0,
+     "max": 21
+    },
+    "limit": {
+     "mean": 0.35,
+     "p99": 6.0
+    },
+    "refs": "model",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.213,
+      "p99": 6.0,
+      "max": 29,
+      "ssim": 0.99815
+     },
+     "box~cr": {
+      "mean": 0.114,
+      "p99": 3.0,
+      "max": 35,
+      "ssim": 0.99956
+     }
+    }
+   }
+  },
+  "bake/lowsun/sun_furniture.avif": {
+   "file": "bake/lowsun/sun_furniture.avif",
+   "kind": "light",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "7a88f989bb15ed90dd0a681920875fa2d7eb4977e16de304d619c6b3c743548b",
+   "today": {
+    "file": "r1/bake/lowsun/sun_furniture.avif",
+    "bytes": 1475
+   },
+   "bytes": 773,
+   "q": 50,
+   "made_from": "today",
+   "target": "m4",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.0094,
+     "p99": 0.0,
+     "max": 46
+    },
+    "webkit": {
+     "mean": 0.0091,
+     "p99": 0.0,
+     "max": 41
+    },
+    "limit": {
+     "mean": 0.35,
+     "p99": 3.0
+    },
+    "refs": "model",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.005,
+      "p99": 0.0,
+      "max": 21,
+      "ssim": 0.99996
+     },
+     "box~cr": {
+      "mean": 0.003,
+      "p99": 0.0,
+      "max": 29,
+      "ssim": 0.99999
+     }
+    }
+   }
+  },
+  "bake/screen/screen_desk.avif": {
+   "file": "bake/screen/screen_desk.avif",
+   "kind": "light",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "9b1164cdca1a1c4e09af3dcf2aea6e865792a4d42d20f10c70a948ae0b7cc5f3",
+   "today": {
+    "file": "r1/bake/screen/screen_desk.avif",
+    "bytes": 51697
+   },
+   "bytes": 44645,
+   "q": 85,
+   "made_from": "today",
+   "target": "m4",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.3355,
+     "p99": 4.0,
+     "max": 39
+    },
+    "webkit": {
+     "mean": 0.3058,
+     "p99": 3.0,
+     "max": 21
+    },
+    "limit": {
+     "mean": 0.35,
+     "p99": 4.0
+    },
+    "refs": "read-back take-1031-205544",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.226,
+      "p99": 4.0,
+      "max": 50,
+      "ssim": 0.99821
+     },
+     "box~cr": {
+      "mean": 0.128,
+      "p99": 2.0,
+      "max": 21,
+      "ssim": 0.99916
+     }
+    }
+   }
+  },
+  "bake/sunset/sun_desk.avif": {
+   "file": "bake/sunset/sun_desk.avif",
+   "kind": "light",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "fbc145bd9536aa6356aef94b4b5fa289e1bab5bd3bdd85e57947731b9c2b53fe",
+   "today": {
+    "file": "r1/bake/sunset/sun_desk.avif",
+    "bytes": 32312
+   },
+   "bytes": 16945,
+   "q": 70,
+   "made_from": "today",
+   "target": "m4",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.2295,
+     "p99": 5.0,
+     "max": 34
+    },
+    "webkit": {
+     "mean": 0.2085,
+     "p99": 5.0,
+     "max": 24
+    },
+    "limit": {
+     "mean": 0.35,
+     "p99": 5.0
+    },
+    "refs": "model",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.174,
+      "p99": 5.0,
+      "max": 34,
+      "ssim": 0.99841
+     },
+     "box~cr": {
+      "mean": 0.091,
+      "p99": 2.0,
+      "max": 34,
+      "ssim": 0.99963
+     }
+    }
+   }
+  },
+  "bake/sunset/sun_furniture.avif": {
+   "file": "bake/sunset/sun_furniture.avif",
+   "kind": "light",
+   "full": [
+    2048,
+    2048
+   ],
+   "size": [
+    1024,
+    1024
+   ],
+   "src_sha256": "dbdcc4d73f41d64f4c5920779f8ce7c7f85303bbd3c2bf0d9e226339b137a9d7",
+   "today": {
+    "file": "r1/bake/sunset/sun_furniture.avif",
+    "bytes": 2845
+   },
+   "bytes": 1249,
+   "q": 50,
+   "made_from": "today",
+   "target": "box",
+   "check": {
+    "passes": true,
+    "chrome": {
+     "mean": 0.0262,
+     "p99": 0.0,
+     "max": 43
+    },
+    "webkit": {
+     "mean": 0.0273,
+     "p99": 0.0,
+     "max": 36
+    },
+    "limit": {
+     "mean": 0.35,
+     "p99": 3.0
+    },
+    "refs": "model",
+    "webkit_decode": "floor",
+    "browsers_today": {
+     "box~lz": {
+      "mean": 0.011,
+      "p99": 0.0,
+      "max": 24,
+      "ssim": 0.99991
+     },
+     "box~cr": {
+      "mean": 0.006,
+      "p99": 0.0,
+      "max": 32,
+      "ssim": 0.99998
+     }
+    }
+   }
+  }
+ },
+ "flagged": [],
+ "left_out": {
+  "bake/afternoon/ambient_desk.avif": {
+   "today": 160910,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/afternoon/ambient_furniture.avif": {
+   "today": 223848,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/blue/ambient_desk.avif": {
+   "today": 157412,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/blue/ambient_furniture.avif": {
+   "today": 239744,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/dawn/ambient_desk.avif": {
+   "today": 207039,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/dawn/ambient_furniture.avif": {
+   "today": 198809,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/dusk/ambient_desk.avif": {
+   "today": 212781,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/dusk/ambient_furniture.avif": {
+   "today": 229407,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/golden/ambient_desk.avif": {
+   "today": 163464,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/golden/ambient_furniture.avif": {
+   "today": 250325,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/golden/sun_desk.avif": {
+   "today": 63839,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/lamp/lamp_desk.avif": {
+   "today": 68352,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/lamp/lamp_furniture.avif": {
+   "today": 220382,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/lateafternoon/ambient_desk.avif": {
+   "today": 156181,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/lateafternoon/ambient_furniture.avif": {
+   "today": 243066,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/latemorning/ambient_desk.avif": {
+   "today": 147848,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/latemorning/ambient_furniture.avif": {
+   "today": 221555,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/lowsun/ambient_desk.avif": {
+   "today": 161667,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/lowsun/ambient_furniture.avif": {
+   "today": 239453,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/midday/ambient_desk.avif": {
+   "today": 140017,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/midday/ambient_furniture.avif": {
+   "today": 214876,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/morning/ambient_desk.avif": {
+   "today": 148257,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/morning/ambient_furniture.avif": {
+   "today": 207506,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/night/ambient_desk.avif": {
+   "today": 141914,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/night/ambient_furniture.avif": {
+   "today": 224387,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/predawn/ambient_desk.avif": {
+   "today": 156895,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/predawn/ambient_furniture.avif": {
+   "today": 242163,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/screen/screen_furniture.avif": {
+   "today": 153407,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/sunrise/ambient_desk.avif": {
+   "today": 221514,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/sunrise/ambient_furniture.avif": {
+   "today": 219521,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/sunset/ambient_desk.avif": {
+   "today": 227062,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  },
+  "bake/sunset/ambient_furniture.avif": {
+   "today": 299512,
+   "why": "no TABLE entry (phone_tex.py --search finds one): the phone halves today's file"
+  }
+ },
+ "bytes": {
+  "today": 1529991,
+  "phone": 819461
+ },
+ "made_by": "scripts/live/phone_tex.py"
+}

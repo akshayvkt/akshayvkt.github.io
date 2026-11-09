@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-61SVW4TL71"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-61SVW4TL71');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<!-- The cross-document view transition's opt-in, inline and first, as shared/arrive.js gives the page documents: from
+     /style.css alone a hand-off back to the desk (a page's "Back to the desk", glideThenLoad) could reveal this page
+     before the rule was in, and Chrome aborted the transition ("ViewTransition opt-in disabled"): one blank frame
+     (books-handoff, 24 Oct). Reduced motion: none, as style.css. -->
+<style>@view-transition{navigation:auto}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}</style>
+<style>
+/* @sfw-upright (DYS-170, Akshay 1 Nov: no landscape on phones) A touch phone held on its side: the whole site under a calm
+   cover, a phone turning upright and one line. Turned back, the site is as it was: the cover is only drawn over it, nothing
+   reloads. Phones only (a coarse pointer and a short side): iPads, laptops and narrow desktop windows never. On the root's
+   own layers, so no script is needed and the first paint's still image is covered too; a tap or a swipe lands on the root
+   (no element of the page), and touch-action none keeps the page from scrolling or zooming. The same block is in
+   index.html's head, shared/world.css, shared/reader.css and simple/simple.css (scripts/live/upright_test.mjs keeps them
+   equal); shared/gl/loop.js draws no 3D frame while it is up. */
+@media (orientation: landscape) and (pointer: coarse) and (max-height: 500px) {
+  html { touch-action: none; }
+  html::after { content: "Turn your phone upright"; position: fixed; inset: 0; z-index: 2147483646; pointer-events: auto;
+    display: flex; align-items: center; justify-content: center; box-sizing: border-box; padding-top: 104px;
+    background: var(--paper, #f3eee6); color: var(--ink, #1f1b16); font: 500 17px/1.3 "Geist", -apple-system, system-ui, sans-serif;
+    letter-spacing: -0.01em; }
+  html::before { content: ""; position: fixed; left: 50%; top: 50%; z-index: 2147483647; pointer-events: auto;
+    width: 30px; height: 50px; margin: -60px 0 0 -15px; background: var(--muted, #736c64);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 50'%3E%3Crect x='1.75' y='1.75' width='26.5' height='46.5' rx='5.5' fill='none' stroke='black' stroke-width='3.5'/%3E%3Crect x='11' y='41' width='8' height='3' rx='1.5'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 50'%3E%3Crect x='1.75' y='1.75' width='26.5' height='46.5' rx='5.5' fill='none' stroke='black' stroke-width='3.5'/%3E%3Crect x='11' y='41' width='8' height='3' rx='1.5'/%3E%3C/svg%3E") center / contain no-repeat;
+    animation: sfw-upright 3.2s ease-in-out infinite; }
+}
+@media (orientation: landscape) and (pointer: coarse) and (max-height: 500px) and (prefers-reduced-motion: reduce) {
+  html::before { animation: none; }
+}
+/* the phone on its side fades in, turns upright, rests, fades out */
+@keyframes sfw-upright { 0% { transform: rotate(-90deg); opacity: 0; } 10%, 28% { transform: rotate(-90deg); opacity: 1; }
+  58%, 88% { transform: rotate(0deg); opacity: 1; } 100% { transform: rotate(0deg); opacity: 0; } }
+/* @sfw-upright end */
+</style>
+<title>Akshay Chintalapati</title>
+<meta name="description" content="Akshay Chintalapati. Always learning. A desk on Russian Hill, looking out at the Golden Gate as it looks right now." />
+<script type="importmap">{"imports":{"three":"/vendor/three-0.169.0/three.module.min.js","three/addons/":"/vendor/three-0.169.0/addons/","meshoptimizer/":"/vendor/meshoptimizer-0.25.0/","/app.js":"/app.js?v=619c0a2eeb","/books/page.js":"/books/page.js?v=1e25f01af5","/format.js":"/format.js?v=50384e37ad","/how-its-made/page/geo.js":"/how-its-made/page/geo.js?v=3700ea5178","/how-its-made/page/trees.js":"/how-its-made/page/trees.js?v=e072002468","/js/boats.js":"/js/boats.js?v=c6c89a06ca","/js/live-ana-worker.js":"/js/live-ana-worker.js?v=9345240a93","/js/live-ana.js":"/js/live-ana.js?v=681582c173","/js/live.js":"/js/live.js?v=4cbf57e54f","/js/roomfx.js":"/js/roomfx.js?v=e756ad296f","/js/shaders.js":"/js/shaders.js?v=765111be99","/js/traffic.js":"/js/traffic.js?v=5f430920a4","/projects/assets/index-BFGyv0K3.js":"/projects/assets/index-BFGyv0K3.js?v=7bad7ffa3f","/projects/page/assets/index-_ky-Bt0a.js":"/projects/page/assets/index-_ky-Bt0a.js?v=fe4cbe06dd","/projects/page/assets/index-nh9M2HM-.js":"/projects/page/assets/index-nh9M2HM-.js?v=9e1f4cd873","/projects/page/assets/index-v2cxaa72.js":"/projects/page/assets/index-v2cxaa72.js?v=bf673169ae","/projects/page/assets/index-zTQy55cf.js":"/projects/page/assets/index-zTQy55cf.js?v=cd3432e797","/projects/screen-data.js":"/projects/screen-data.js?v=10358d7219","/projects/screen.js":"/projects/screen.js?v=fc12008859","/quotes/page.js":"/quotes/page.js?v=897fbce978","/shared/arrive.js":"/shared/arrive.js?v=59c0ea16d3","/shared/beacon.js":"/shared/beacon.js?v=9e4fe0ccfd","/shared/city/city.js":"/shared/city/city.js?v=f2322c2b85","/shared/city/clock.js":"/shared/city/clock.js?v=36cb9faed7","/shared/city/events/aircraft.js":"/shared/city/events/aircraft.js?v=cbbb01a8c1","/shared/city/events/beacons.js":"/shared/city/events/beacons.js?v=bd383fbadb","/shared/city/events/bridge.js":"/shared/city/events/bridge.js?v=d293a33e75","/shared/city/events/ferries.js":"/shared/city/events/ferries.js?v=396e94efc9","/shared/city/events/gulls.js":"/shared/city/events/gulls.js?v=632e20cf30","/shared/city/events/phase2.js":"/shared/city/events/phase2.js?v=c9e11a649b","/shared/city/events/sails.js":"/shared/city/events/sails.js?v=db1f4b28b7","/shared/city/events/ships.js":"/shared/city/events/ships.js?v=28a0d5cc85","/shared/city/events/sound.js":"/shared/city/events/sound.js?v=9d934b89d4","/shared/city/events/streets-lib.js":"/shared/city/events/streets-lib.js?v=ec10d2296a","/shared/city/events/streets-worker.js":"/shared/city/events/streets-worker.js?v=ee7b65103d","/shared/city/events/streets.js":"/shared/city/events/streets.js?v=90e2711e61","/shared/city/events/tours.js":"/shared/city/events/tours.js?v=6215fe9284","/shared/city/events/windows.js":"/shared/city/events/windows.js?v=552cee03a8","/shared/city/geo.js":"/shared/city/geo.js?v=edb3f9b7a1","/shared/city/gull-model.js":"/shared/city/gull-model.js?v=cb5a47d9bf","/shared/city/hash.js":"/shared/city/hash.js?v=9daacf707d","/shared/city/lighting.js":"/shared/city/lighting.js?v=a6d7e2ee45","/shared/city/ship-detail.js":"/shared/city/ship-detail.js?v=41fc5fd95b","/shared/city/sprites.js":"/shared/city/sprites.js?v=c74070f5a4","/shared/city/tables.js":"/shared/city/tables.js?v=f3ac86e0df","/shared/device.js":"/shared/device.js?v=eb0b71f7da","/shared/edgefit.js":"/shared/edgefit.js?v=d059b2927d","/shared/essay-lift.js":"/shared/essay-lift.js?v=05ce47a075","/shared/faces.js":"/shared/faces.js?v=3732bb60e5","/shared/firstvisit-a2.js":"/shared/firstvisit-a2.js?v=002bced5d1","/shared/firstvisit.js":"/shared/firstvisit.js?v=cdcba71b7b","/shared/frames-lite.js":"/shared/frames-lite.js?v=9b7fccd469","/shared/framing.js":"/shared/framing.js?v=84ca958a84","/shared/fvshrink.js":"/shared/fvshrink.js?v=d2579e980a","/shared/gestures.js":"/shared/gestures.js?v=da10ed783b","/shared/gl/beams.js":"/shared/gl/beams.js?v=84277df69e","/shared/gl/colour.js":"/shared/gl/colour.js?v=a14cb989c2","/shared/gl/context.js":"/shared/gl/context.js?v=8ab05c7d32","/shared/gl/dfg32.js":"/shared/gl/dfg32.js?v=d219da6764","/shared/gl/early.js":"/shared/gl/early.js?v=5c7bcd75e3","/shared/gl/engine.js":"/shared/gl/engine.js?v=61a36cce90","/shared/gl/fit-worker.js":"/shared/gl/fit-worker.js?v=08118d2215","/shared/gl/glass.js":"/shared/gl/glass.js?v=367c050ed7","/shared/gl/gulls.js":"/shared/gl/gulls.js?v=b60ec2fc5e","/shared/gl/hitex-worker.js":"/shared/gl/hitex-worker.js?v=b8b1d6b593","/shared/gl/hitex.js":"/shared/gl/hitex.js?v=d28d4f1d6f","/shared/gl/interact.js":"/shared/gl/interact.js?v=ceedaa9cb7","/shared/gl/loader.js":"/shared/gl/loader.js?v=a1fb1a0265","/shared/gl/loop.js":"/shared/gl/loop.js?v=467fa310c4","/shared/gl/material.js":"/shared/gl/material.js?v=751cf33e10","/shared/gl/mirror.js":"/shared/gl/mirror.js?v=c53f23da48","/shared/gl/outside.glsl.js":"/shared/gl/outside.glsl.js?v=bbff9c841a","/shared/gl/probes.js":"/shared/gl/probes.js?v=a444992573","/shared/gl/room-early.js":"/shared/gl/room-early.js?v=cb95f39025","/shared/gl/room.js":"/shared/gl/room.js?v=3b649f0b33","/shared/gl/sheen.js":"/shared/gl/sheen.js?v=d132e4227f","/shared/gl/steam.js":"/shared/gl/steam.js?v=65e096982f","/shared/gl/wakes.glsl.js":"/shared/gl/wakes.glsl.js?v=a01dc0a78c","/shared/homeview.js":"/shared/homeview.js?v=d50737fe59","/shared/hud.js":"/shared/hud.js?v=b944f170bb","/shared/laptop.js":"/shared/laptop.js?v=25508bebb8","/shared/links.js":"/shared/links.js?v=e2a8810d78","/shared/loadsign.js":"/shared/loadsign.js?v=6d12396907","/shared/lockscreen.js":"/shared/lockscreen.js?v=2fa44dfc19","/shared/masthead.js":"/shared/masthead.js?v=7807f0ade6","/shared/notebook.js":"/shared/notebook.js?v=e6f117308b","/shared/occlude.js":"/shared/occlude.js?v=c669ba8e22","/shared/outside-events.js":"/shared/outside-events.js?v=756aba4bdc","/shared/outside-stats-worker.js":"/shared/outside-stats-worker.js?v=4bbac98be2","/shared/outside-stats.js":"/shared/outside-stats.js?v=5f7420da68","/shared/outside.js":"/shared/outside.js?v=951fc4ee36","/shared/overlays.js":"/shared/overlays.js?v=872a728ce8","/shared/pages.js":"/shared/pages.js?v=10dcbdd870","/shared/pageturn.js":"/shared/pageturn.js?v=582f8e7e0c","/shared/pano.js":"/shared/pano.js?v=9fdd9ebb6a","/shared/phone.js":"/shared/phone.js?v=58913f57c7","/shared/picking.js":"/shared/picking.js?v=23cd2e32d7","/shared/print.js":"/shared/print.js?v=6283eed6f4","/shared/reader.js":"/shared/reader.js?v=25c316d9c9","/shared/rig.js":"/shared/rig.js?v=d29a61848f","/shared/room.js":"/shared/room.js?v=152334d3f6","/shared/router.js":"/shared/router.js?v=b538334fe2","/shared/sky-head.js":"/shared/sky-head.js?v=0625d8b74b","/shared/sky.js":"/shared/sky.js?v=2d83bdcdac","/shared/sound.js":"/shared/sound.js?v=8c969a9d45","/shared/sound/city.js":"/shared/sound/city.js?v=85cd6924b9","/shared/sound/dsp.js":"/shared/sound/dsp.js?v=bae2418713","/shared/sound/engine.js":"/shared/sound/engine.js?v=1d4f6c3c54","/shared/sound/gesture.js":"/shared/sound/gesture.js?v=116b13a60d","/shared/sound/instruments.js":"/shared/sound/instruments.js?v=08abac6cc9","/shared/sound/music.js":"/shared/sound/music.js?v=24487aed2b","/shared/sound/room-notebook.js":"/shared/sound/room-notebook.js?v=b88e764491","/shared/sound/room-shelf.js":"/shared/sound/room-shelf.js?v=d816a72df5","/shared/sound/room-voices.js":"/shared/sound/room-voices.js?v=158148a9f2","/shared/sound/world.js":"/shared/sound/world.js?v=764eecf886","/shared/spots.js":"/shared/spots.js?v=446367f5fb","/shared/surface.js":"/shared/surface.js?v=5f616a3959","/shared/sw-client.js":"/shared/sw-client.js?v=6c24c6938c","/shared/toys.js":"/shared/toys.js?v=e10a028809","/shared/transition.js":"/shared/transition.js?v=53e5e53a3a","/shared/zoom.js":"/shared/zoom.js?v=32ba4cf69a","/sw.js":"/sw.js?v=8468563de1"}}</script>
+<script src="/shared/frames-lite.js?v=9b7fccd469"></script>
+<script src="/shared/sky-head.js?v=0625d8b74b"></script>
+<script>
+/* @sfw-chrome-head (DYS-212, Akshay 1 Nov, call 2: the menu and the Books / Quotes tabs not shown at all while the room
+   loads, on every visit; they fade in once the live room is in, a first visit's with the pull back after 'Enter') the
+   head blocks below hide them from the first paint (html.sfw-chrome-hide, with the first visit's or the later visit's
+   own class); sfwChromeIn(ms) fades them in (firstvisit-a2.js at 'Enter', router.js loadIn, the fallbacks), once. If no
+   router comes (sky-head.js's own 15 s, its simple menu): here, then */
+self.sfwChromeIn = function (ms) {
+  var r = document.documentElement;
+  if (!r.classList.contains("sfw-chrome-hide")) return;
+  ms = ms > 0 ? ms : 0;
+  /* (G's N1) the fade's length on the two that fade, not on the root: a custom property set on :root restyles the whole
+     page, in the same task as the pull back's first frame (or a later visit's fade-in) */
+  var els = document.querySelectorAll(".masthead, .sfw-edges");
+  for (var i = 0; i < els.length; i++) els[i].style.setProperty("--sfw-chrome-in", ms + "ms");
+  r.classList.add("sfw-chrome-in");
+  r.classList.remove("sfw-chrome-hide");
+  setTimeout(function () { r.classList.remove("sfw-chrome-in"); }, ms + 60);
+};
+setTimeout(function () { if (!window.__sfwRouterUp) self.sfwChromeIn(0); }, 15000);
+</script>
+<script>
+/* @sfw-fv-head (Akshay 1 Nov, his 11:22 phone recording: a plain blue sky with the masthead for ~0.4 s after Go, before the
+   laptop's loading still) a first visit, decided here before the first paint by app.js's own rule (FV2; scripts/live/
+   fv_head_test.mjs keeps the two equal): the masthead, the edge tabs and the quiet corner hidden from the first frame
+   (html.sfw-fv-close, as app.js sets it later), and the scene dark, no flat sky and no preview, until app.js has the
+   close photograph on screen (html.sfw-fv-boot: reveal(), or the pull back; 15 s at most). ?firstvisit=0/a/b, reduced
+   motion, a second visit: as before */
+(function () {
+  try {
+    var r = document.documentElement, q = new URLSearchParams(location.search), f = q.get("firstvisit");
+    if (f === "0" || f === "a" || f === "b" || matchMedia("(prefers-reduced-motion: reduce)").matches || !r.classList.contains("sfw-room-menu")) return;
+    if (location.pathname !== "/" || location.hash || q.has("page") || q.has("writing")) return;
+    var on = q.get("intro") === "again";
+    if (!on) { try { on = localStorage.getItem("sfw-intro") !== "1"; } catch (e) { on = false; } }
+    if (!on) return;
+    r.classList.add("sfw-fv-close", "sfw-fv-boot", "sfw-chrome-hide");
+    setTimeout(function () { r.classList.remove("sfw-fv-boot"); }, 15000);
+    /* (DYS-230 rounds 2 and 2b, Akshay 2 Nov: no black, the wallpaper from the first second, one wallpaper always)
+       the full lock (app.js LOCK_FULL; default since 3 Nov, ?lock=a: lock A): the golden view, inline at phone quality (scripts/live/lock_wall_inline.py), full
+       screen from the first paint (html.sfw-fv-full, until app.js's lock layer carries it); a laptop's screen (not the
+       lock's phone layout) asks for its larger copy first of all images, which the lock fades in over it unseen. AVIF:
+       a browser without it skips the hint, and app.js asks for the WebP */
+    /* (G, DYS-230 3 Nov 00:3x, the coordinator: FLIP, Akshay approved it: the full lock is a first visit's default;
+       ?lock=a today's lock A (testing), ?lock=0 C's screen) */
+    if (q.get("lock") !== "a" && q.get("lock") !== "0") {
+      /* @sfw-lock-wall (scripts/live/lock_wall_inline.py 2026-11-02: golden-home_l-ext-2560.webp sha256 4810de30fa5d, 1440 px AVIF q50) */
+      var G = "data:image/avif;base64,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", GW = 1440, P = "frames/golden-home_l-ext", Z = [1600, 2560, 3840];
+      /* @sfw-lock-wall end */
+      r.classList.add("sfw-fv-full");
+      r.style.setProperty("--lk-soft", 'url("' + G + '")');
+      self.__sfwLockSoft = G;
+      var px = Math.round(Math.max(innerWidth, innerHeight * 1.6) * Math.min(2, devicePixelRatio || 1)), w = Z[Z.length - 1];
+      for (var i = 0; i < Z.length; i++) if (Z[i] >= px) { w = Z[i]; break; }
+      if (innerWidth >= 700 && innerHeight <= innerWidth && innerHeight >= 500 && px > GW) {
+        var l = document.createElement("link");
+        l.rel = "preload"; l.as = "image"; l.type = "image/avif"; l.fetchPriority = "high";
+        l.href = self.__sfwLockWall = "/" + P + "-" + w + ".avif";
+        document.head.appendChild(l);
+      }
+    }
+  } catch (e) {}
+})();
+</script>
+<style>
+/* @sfw-fv-head: app.js's own rule for the masthead while close, in place from the first paint; the scene dark (the
+   loading screen's own colour, a touch lifted) and the whole view's preview hidden until the close photograph is up */
+html.sfw-fv-close .quiet-corner { opacity: 0; pointer-events: none; }
+/* (DYS-212, G's B1 / S1; app.js's same rule) while close, through the 'Enter' tap and the pull back until open(): the room's
+   link outlines (their own pointer-events: auto beat #scene's none: a tap below 'Enter', or a second tap, went into the
+   laptop), the photograph's hotspots and the Quiet link take no tap and no focus. All three are transparent or hidden */
+html.sfw-fv-close .sfw-links, html.sfw-fv-close #hotspots, html.sfw-fv-close .quiet-corner { visibility: hidden; }
+/* @sfw-chrome-head: the menu and the edge tabs not there at all while loading (no taps, not in the tab order), then faded in */
+html.sfw-chrome-hide .masthead, html.sfw-chrome-hide .sfw-edges { opacity: 0; visibility: hidden; pointer-events: none; }
+html.sfw-chrome-in .masthead, html.sfw-chrome-in .sfw-edges { transition: opacity var(--sfw-chrome-in, 600ms) ease; }
+html.sfw-fv-boot .scene { background: #141416; }
+html.sfw-fv-boot .lqip { visibility: hidden; }
+/* (DYS-212, Akshay's 16:51 iPhone recording: the laptop's loading screen showed tilted on the preview's grey blur for a
+   few frames before the close photograph) the loading screen comes with the photograph, not before it */
+html.sfw-fv-boot .fv-screen { visibility: hidden; }
+/* (DYS-230 round 2) ?lock=full: the golden wallpaper over everything from the first paint (the head above),
+   until app.js's lock layer (.fv-full: the same picture, the lock on it) is up. Cropped as the lock crops it */
+html.sfw-fv-full body::after { content: ""; position: fixed; inset: 0; z-index: 2147482999; pointer-events: none;
+  background: #1b1d22 var(--lk-soft, none) 50% 50% / cover no-repeat; }
+/* (no 58 % on portrait: the full lock is the middle of the laptop's screen, its wallpaper centred: app.js fvFullPlace) */
+/* (round 2b) the whole lock screen in the first paint: its own markup (body, @sfw-lock-first), only on ?lock=full's first
+   visit, the full layer as app.js lays it out until app.js takes it over (and drops .fv-first) */
+.fv-first { display: none; }
+html.sfw-fv-full .fv-full.fv-first { display: block; position: fixed; left: 0; top: 0; z-index: 2147483000; overflow: hidden;
+  background: #1b1d22 var(--lk-soft, none) 50% 50% / cover no-repeat; pointer-events: none; }
+</style>
+<script>
+/* This moment's blurred preview at first paint, when the head's frame list carries it (else app.js sets it
+   from scene.json). Cover-cropped toward the bridge until app.js lays the scene out exactly. */
+(function () {
+  try {
+    var r = document.documentElement;
+    /* (v3/qa-nav) /books/ or /quotes.html read inside this document (/?page=books): the desk's photograph stays hidden
+       until the router has brought that page in over its own photograph (at most 10 s if the router never comes),
+       so the desk never flashes */
+    /* (and the page's own files are asked for now, side by side, rather than one after another once the router runs:
+       hints only, the router fetches them the same way) */
+    var pm = /[?&]page=(books|quotes|projects)(&|$)/.exec(location.search);
+    /* (DYS-203 fewer steps: a module hinted from here at the address its import resolves to, the page's own import map
+       above: the published site's build stamps that map (/shared/x.js -> /shared/x.js?v=...) and the hrefs written in
+       this page, not the strings in this script, so a bare hint here was a second download of the module there (?page=,
+       a phone's ?writing=). Stylesheets and JSON are asked for bare by their readers too: not mapped. ?headmap=0: bare) */
+    var imap = {};
+    try { if (!/[?&]headmap=0(&|$)/.test(location.search)) imap = JSON.parse(document.querySelector('script[type="importmap"]').textContent).imports || {}; } catch (e) {}
+    var hint = function (rel, href, as, prio) {
+      if (rel === "modulepreload" && imap[href]) href = imap[href];
+      var l = document.createElement("link"); l.rel = rel; l.href = href;
+      if (as) { l.as = as; if (as === "fetch") l.crossOrigin = "anonymous"; }
+      if (prio) l.fetchPriority = prio;   /* (DYS-203: before it is in the head, where it is asked for) */
+      document.head.appendChild(l);
+    };
+    /* (DYS-203 start sooner) room3d.json, the router's first file (shared/spots.js loadSpots: every visit the router runs
+       on, the live room or not), asked for now at a low priority beside the first paint's files rather than once the
+       router has come after the first paint: a hint only, the router's own request (same address, fetch's defaults)
+       takes it. Not with ?room3d= (another export is read first), nor ?bootpreload=0 (as before). (A page read here,
+       below, asks for it already.) */
+    if (!pm && !/[?&](room3d=|bootpreload=0(&|$))/.test(location.search)) hint("preload", "/room3d/room3d.json", "fetch", "low");
+    /* (DYS-203 fewer steps) app.js's imports and theirs (masthead.js's sound.js), asked for now beside app.js rather than
+       once it has come in and then once masthead.js has: two round trips off the first paint, for ~12 KB it reads anyway
+       (sky.js has its own link below). scripts/live/boot_first_test.mjs keeps this list equal to app.js's static graph.
+       ?stillmods=0: as before */
+    if (!/[?&]stillmods=0(&|$)/.test(location.search)) for (var sm of ["/shared/masthead.js", "/shared/transition.js", "/shared/device.js", "/shared/sound.js"]) hint("modulepreload", sm);
+    /* (DYS-230 round 2) ?lock=full: the lock's module now, beside app.js, so the lock is on the blurred wallpaper sooner */
+    if (r.classList.contains("sfw-fv-full")) hint("modulepreload", "/shared/lockscreen.js");
+    /* (DYS-203 fewer steps) where the live room is expected on the bare homepage (sky-head.js's verdict above, motion
+       allowed, no ?3d=): its first two files, bake.json and light-tex.json, asked for now at a low priority (~11 KB), so
+       app.js's start of the room's files at the reveal (earlyBoot) finds them in and asks for the model and its textures
+       at once, a round trip sooner; and shared/spots.js and shared/gl/early.js, which it runs then (~9 KB). The names are
+       room3d.json's, written here by the build (scripts/deploy/build_dist.py, the "@sfw-room-boot" mark: the published
+       room3d.json's bake and tex as the router resolves them); the source's null: the two modules only. The engine's own
+       reads take them (fetch's defaults: as=fetch, crossorigin). ?earlyboot=0: none */
+    var RB = null /* @sfw-room-boot */;
+    var d3 = /[?&]3d=/.test(location.search);
+    try { d3 = d3 || !!sessionStorage.getItem("sfw-3d"); } catch (e) {}
+    if (!pm && location.pathname === "/" && !d3 && r.classList.contains("sfw-room-menu") && !matchMedia("(prefers-reduced-motion: reduce)").matches
+        && !/[?&](earlyboot=0(&|$)|room3d=|bake=|tex=|pano=|page=|writing=)/.test(location.search)) {
+      hint("modulepreload", "/shared/spots.js", null, "low");
+      hint("modulepreload", "/shared/gl/early.js", null, "low");
+      if (RB) for (var rb = 0; rb < RB.length; rb++) hint("preload", RB[rb], "fetch", "low");
+    }
+    /* (DYS-27, Akshay: on a phone 'refreshing goes back to the main page and waits to load again') an essay's own page
+       sent here on a phone-sized screen (/?writing=<slug>): the paper of the page it comes back as from the first paint
+       (DYS-118: since DYS-80 never a reading sheet: the lifted page, or the essay's own page where the room won't start),
+       until that page is up (at most 10 s if the router never comes), instead of the desk and the masthead; its files
+       asked for now */
+    var wm = /[?&]writing=([a-z0-9][a-z0-9-]*)(&|$)/.exec(location.search);
+    if (wm && innerWidth <= 640) {
+      r.classList.add("sfw-pre-sheet");
+      /* (deploy 4, with DYS-26: where the room will start, sky-head.js's verdict above, the essay comes back as its
+         lifted page, the whole screen's paper (shared/essay-lift.js show), not the reading sheet) */
+      if (r.classList.contains("sfw-room-menu")) r.classList.add("sfw-pre-lift");
+      setTimeout(function () { r.classList.remove("sfw-pre-sheet", "sfw-pre-lift"); }, 10000);
+      hint("preload", "/shared/reader.css", "style");
+      hint("preload", "/data/writing.json", "fetch");
+      hint("preload", "/data/writing/" + wm[1] + ".json", "fetch");
+      for (var wf of ["/shared/router.js", "/shared/reader.js", "/shared/room.js", "/shared/pages.js", "/shared/spots.js", "/shared/rig.js", "/shared/overlays.js"]) hint("modulepreload", wf);
+    }
+    if (pm) {
+      var files = { books: ["/books/", "/books/page.js"], quotes: ["/quotes.html", "/quotes/page.js"], projects: [null, "/projects/screen.js"] }[pm[1]];
+      if (files[0]) hint("preload", files[0], "fetch");
+      hint("preload", "/room3d/room3d.json", "fetch");
+      for (var m of ["/shared/router.js", files[1], "/shared/room.js", "/shared/pages.js", "/shared/spots.js", "/shared/rig.js", "/shared/overlays.js"]) hint("modulepreload", m);
+      if (pm[1] === "projects") { hint("modulepreload", "/shared/reader.js"); hint("preload", "/shared/reader.css", "style"); }
+    }
+    /* (DYS-24) /projects/ (desktops and phones, motion allowed, on a device the room starts on: the router's leanable
+       asks the same, with shared/gestures.js bootTier's rule): the room starts leaned in at the laptop, of which there
+       is no photograph; the desk's stays hidden too, and the scene's own colours under the masthead wait for the room to
+       come in there (Save-Data, 2G, under 4 GB: no room, the reading sheet over the desk, as before). (DYS-24 option a,
+       on DYS-26: Projects only; an essay's address keeps the desk's photograph here, DYS-26's lifted page over it.) */
+    var nc = navigator.connection;
+    var lean = pm && pm[1] === "projects" && !matchMedia("(prefers-reduced-motion: reduce)").matches && !(nc && (nc.saveData || /(^|-)2g$/.test(nc.effectiveType || ""))) && !(navigator.deviceMemory && navigator.deviceMemory < 4);
+    if (pm && (pm[1] !== "projects" || lean)) {
+      r.classList.add("sfw-pre-page");
+      setTimeout(function () { if (!window.__sfwDeskHidden) r.classList.remove("sfw-pre-page"); }, 10000);
+      return;
+    }
+    var W = innerWidth, H = Math.max(520, innerHeight), k = W / innerHeight < 0.8 ? "home_p" : "home_l";
+    var F = self.SKY_FRAMES || [], f = null;
+    for (var i = 0; i < F.length; i++) if (F[i].id === r.dataset.moment) f = F[i];
+    if (k === "home_p" && W <= 500 && f && f.lqip && f.lqip.home_m) k = "home_m";   /* phones: sky.js homeViewFor's rule */
+    var src = f && f.lqip && f.lqip[k];
+    if (!src) return;
+    var v = (self.SKY_VIEWS || {})[k] || (k !== "home_l" ? { width: 404, height: 720, focus: [0.49, 0.5] } : { width: 16, height: 9, focus: [0.6, 0.52] });
+    var s = Math.max(W / v.width, H / v.height), w = v.width * s, h = v.height * s;
+    var at = function (fc, big, box) { return big - box < 1 ? 50 : 100 * Math.min(1, Math.max(0, (fc * big - box / 2) / (big - box))); };
+    r.style.setProperty("--lqip", 'url("' + src + '")');
+    r.style.setProperty("--lqip-pos", at(v.focus[0], w, W).toFixed(1) + "% " + at(v.focus[1], h, H).toFixed(1) + "%");
+  } catch (e) {}
+})();
+</script>
+<script>
+/* @sfw-load-head (DYS-212, Akshay 1 Nov: other visits) a visit after the first, to the bare homepage where the live room
+   will start (sky-head.js's verdict above, html.sfw-room-menu; motion allowed; no ?3d= switch: app.js roomBoots), opens
+   on today's still and takes no input on it until the room is in: html.sfw-loading, from the first paint. The router
+   lets it go once the hand-over's crossfade is over, or the room fails or is not for this visit, or the visitor goes
+   elsewhere (router.js loadIn); 12 s here if the router never takes it over. A first visit (app.js FV2, the same rule
+   here: scripts/live/load_return_test.mjs keeps them apart) has its own opening and never this. ?loadreturn=0: as before */
+(function () {
+  try {
+    var r = document.documentElement, q = new URLSearchParams(location.search), f = q.get("firstvisit");
+    if (q.get("loadreturn") === "0" || f === "a" || f === "b" || !r.classList.contains("sfw-room-menu") || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (location.pathname !== "/" || location.hash || q.has("page") || q.has("writing") || q.get("3d")) return;
+    try { if (sessionStorage.getItem("sfw-3d")) return; } catch (e) {}
+    if (f !== "0") {
+      if (q.get("intro") === "again") return;
+      var seen = true;
+      try { seen = localStorage.getItem("sfw-intro") === "1"; } catch (e) { seen = true; }
+      if (!seen) return;
+    }
+    r.classList.add("sfw-loading", "sfw-chrome-hide");
+    setTimeout(function () { if (!window.__sfwLoadOwned) { r.classList.remove("sfw-loading"); self.sfwChromeIn(600); } }, 12000);
+  } catch (e) {}
+})();
+</script>
+<style>
+/* @sfw-load-head: the scene takes no input meanwhile (the photograph, its hotspots, and once the router has made them
+   the room's links, screens and gestures on the hero); the menu and the edge tabs are not there at all meanwhile
+   (html.sfw-chrome-hide, @sfw-chrome-head: Akshay's call 2), the Quiet version, "Back to the desk" and the About card
+   stay tappable */
+html.sfw-loading #scene { pointer-events: none; }
+html.sfw-loading #scene :is(#stage, #stage *, .sfw-live, .sfw-live *, .sfw-links, .sfw-links *, .sfw-screen, .sfw-screen *) { pointer-events: none !important; }
+html.sfw-loading #scene :is(.quiet-corner, .sfw-edge, .sfw-close, .sfw-about) { pointer-events: auto; }
+/* (G's S1) nor the keyboard: the still's hotspots and the room's link outlines (transparent) out of the tab order meanwhile */
+html.sfw-loading #hotspots, html.sfw-loading #scene .sfw-links { visibility: hidden; }
+</style>
+<link rel="preload" href="/scene.json" as="fetch" crossorigin />
+<link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="modulepreload" href="/shared/sky.js?v=2d83bdcdac" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta property="og:title" content="Akshay Chintalapati" />
+<meta property="og:description" content="Always learning. A desk on Russian Hill, looking out at the Golden Gate as it looks right now." />
+<meta property="og:image" content="https://akshaychintalapati.com/og.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="stylesheet" href="/style.css?v=a50f5f46a7" />
+<style>html.sfw-pre-page #stage, html.sfw-pre-page #scene > .veil { visibility: hidden; }
+/* (DYS-27) an essay opened on a phone: the paper of the page it comes back as, at first paint, until that page is up.
+   DYS-118 (with DYS-80, Akshay 28 Oct: no reading sheets anywhere): where the room won't start that is the essay's own
+   page (essayPage), its paper over the whole screen with no sheet's grip; where it will, the lifted page's (below) */
+html.sfw-pre-sheet body::before, html.sfw-pre-sheet body::after { content: ""; position: fixed; z-index: 59; pointer-events: none; }
+html.sfw-pre-sheet body::before { inset: 0; background: rgba(18, 12, 6, 0.26); -webkit-backdrop-filter: blur(7px) saturate(0.92); backdrop-filter: blur(7px) saturate(0.92); }
+html.sfw-pre-sheet body::after { inset: 0; background: #fff; }   /* (DYS-131: the essay's own page is white too) */
+html.sfw-pre-sheet[data-scheme="dark"] body::before { background: rgba(4, 2, 0, 0.42); }
+html.sfw-pre-sheet[data-scheme="dark"] body::after { background: #fff; }
+/* (the lifted page's paper, essay-lift.js PAPER: white since DYS-28) */
+html.sfw-pre-lift.sfw-pre-sheet body::after { background: #fff; }
+html.sfw-pre-lift.sfw-pre-sheet[data-scheme="dark"] body::after { background: #fff; }</style>
+<noscript><style>
+  /* Without scripts: the desk at golden hour (the room over its view), cover-cropped toward the bridge as app.js
+     lays it out; the view is the room's frame overscanned by 8 %. */
+  .nojs-view { --h: max(520px, 100svh); --w: max(100vw, calc(var(--h) * 16 / 9));
+    position: absolute; width: var(--w); height: max(var(--h), calc(100vw * 9 / 16));
+    left: clamp(calc(100vw - var(--w)), calc(50vw - 0.5986 * var(--w)), 0px); top: 0; }
+  .nojs-view img { position: absolute; display: block; max-width: none; }
+  .nojs-view .nojs-ext { left: -4%; top: -4%; width: 108%; height: 108%; }
+  .nojs-view .nojs-room { left: 0; top: 0; width: 100%; height: 100%; }
+  @media (max-aspect-ratio: 4/5) {
+    .nojs-view { --w: max(100vw, calc(var(--h) * 9 / 16)); height: max(var(--h), calc(100vw * 16 / 9)); left: clamp(calc(100vw - var(--w)), calc(50vw - 0.4917 * var(--w)), 0px); }
+    .nojs-view .nojs-l { display: none; }
+  }
+  @media not (max-aspect-ratio: 4/5) { .nojs-view .nojs-p { display: none; } }
+  /* Without scripts: About (/#about) and Social (/#social) show over the photograph as a sheet of paper; the cross
+     (a link to #) puts it away. With scripts they open in the reading sheet (shared/reader.js) instead. */
+  #about:target, #social:target { display: block; position: fixed; z-index: 10; left: 0; right: 0; top: 50%;
+    margin: 0 auto; transform: translateY(-50%); width: min(640px, calc(100vw - 32px)); max-height: calc(100svh - 32px);
+    overflow-y: auto; background: var(--paper); color: var(--ink); border-radius: 14px;
+    box-shadow: 0 10px 24px -8px rgba(20, 12, 4, 0.28), 0 34px 90px -24px rgba(20, 12, 4, 0.5); }
+  #about:target .col { padding: 3.2rem 2.4rem 2.2rem; max-width: none; }
+  #social:target { width: min(360px, calc(100vw - 32px)); padding: 3.4rem 1.5rem 2.4rem; text-align: center; }
+  #social:target a.icon { display: inline-flex; margin: 0 0.6rem; color: var(--ink); }
+  #social:target a.icon svg { width: 22px; height: 22px; fill: currentColor; filter: none; }
+  #about .nojs-x, #social .nojs-x { position: absolute; top: 12px; right: 12px; display: grid; place-items: center;
+    width: 36px; height: 36px; color: var(--muted); border: 0; }
+  .nojs-x svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; fill: none; }
+  @media (max-width: 640px) {
+    #about:target, #social:target { top: auto; bottom: 0; transform: none; width: 100%; max-height: calc(100svh - 40px); border-radius: 16px 16px 0 0; }
+    #about:target .col { padding: 3rem 1.4rem 2.4rem; }
+  }
+</style></noscript>
+<link rel="prefetch" href="/shared/world.css?v=844fe51bd6" as="style" />
+<!-- (DYS-203 start sooner) the modules the live room's boot imports, every one, so they come in together at the first
+     paint's reveal rather than a round trip deep each (router.js, then its imports; engine.js, then three and the loader,
+     then GLTFLoader, then BufferGeometryUtils: J1 traces, 31 Oct). Inert here (a template fetches nothing): app.js
+     startNav puts them in the head as it asks for router.js, after the first paint's photographs, so they never share the
+     line with those. data-room: only where the room is expected (html.sfw-room-menu, motion allowed, no ?3d=);
+     data-firstvisit: only for the first visit's close opening (firstvisit-a2.js). The same addresses the imports resolve
+     to (the import map's for three and meshoptimizer), fetched as module scripts are: nothing comes twice.
+     scripts/live/boot_first_test.mjs keeps this list equal to the boot's import graph. ?bootpreload=0: none, as before. -->
+<template id="sfw-boot-modules">
+<link rel="modulepreload" href="/shared/router.js?v=b538334fe2" /><link rel="modulepreload" href="/shared/spots.js?v=446367f5fb" /><link rel="modulepreload" href="/shared/rig.js?v=d29a61848f" /><link rel="modulepreload" href="/shared/framing.js?v=84ca958a84" /><link rel="modulepreload" href="/shared/overlays.js?v=872a728ce8" /><link rel="modulepreload" href="/shared/occlude.js?v=c669ba8e22" /><link rel="modulepreload" href="/shared/links.js?v=e2a8810d78" /><link rel="modulepreload" href="/shared/picking.js?v=23cd2e32d7" /><link rel="modulepreload" href="/shared/gestures.js?v=da10ed783b" /><link rel="modulepreload" href="/shared/laptop.js?v=25508bebb8" /><link rel="modulepreload" href="/shared/surface.js?v=5f616a3959" /><link rel="modulepreload" href="/shared/edgefit.js?v=d059b2927d" /><link rel="modulepreload" href="/shared/faces.js?v=3732bb60e5" /><link rel="modulepreload" href="/shared/gl/early.js?v=5c7bcd75e3" />
+<link rel="modulepreload" href="/shared/firstvisit-a2.js?v=002bced5d1" data-firstvisit="" />
+<link rel="modulepreload" href="/shared/gl/engine.js?v=61a36cce90" data-room="" /><link rel="modulepreload" href="/vendor/three-0.169.0/three.module.min.js" data-room="" /><link rel="modulepreload" href="/shared/gl/context.js?v=8ab05c7d32" data-room="" /><link rel="modulepreload" href="/shared/gl/loop.js?v=467fa310c4" data-room="" /><link rel="modulepreload" href="/shared/gl/loader.js?v=a1fb1a0265" data-room="" /><link rel="modulepreload" href="/vendor/three-0.169.0/addons/loaders/GLTFLoader.js" data-room="" /><link rel="modulepreload" href="/vendor/three-0.169.0/addons/utils/BufferGeometryUtils.js" data-room="" /><link rel="modulepreload" href="/vendor/meshoptimizer-0.25.0/meshopt_decoder.module.js" data-room="" /><link rel="modulepreload" href="/shared/gl/room.js?v=3b649f0b33" data-room="" /><link rel="modulepreload" href="/shared/gl/material.js?v=751cf33e10" data-room="" /><link rel="modulepreload" href="/shared/gl/probes.js?v=a444992573" data-room="" /><link rel="modulepreload" href="/shared/gl/colour.js?v=a14cb989c2" data-room="" /><link rel="modulepreload" href="/shared/gl/mirror.js?v=c53f23da48" data-room="" /><link rel="modulepreload" href="/shared/gl/beams.js?v=84277df69e" data-room="" /><link rel="modulepreload" href="/shared/gl/glass.js?v=367c050ed7" data-room="" /><link rel="modulepreload" href="/shared/gl/hitex.js?v=d28d4f1d6f" data-room="" />
+<link rel="modulepreload" href="/shared/outside.js?v=951fc4ee36" data-room="" /><link rel="modulepreload" href="/shared/pano.js?v=9fdd9ebb6a" data-room="" /><link rel="modulepreload" href="/shared/gl/outside.glsl.js?v=bbff9c841a" data-room="" /><link rel="modulepreload" href="/shared/gl/wakes.glsl.js?v=a01dc0a78c" data-room="" /><link rel="modulepreload" href="/shared/city/events/windows.js?v=552cee03a8" data-room="" /><link rel="modulepreload" href="/shared/city/tables.js?v=f3ac86e0df" data-room="" /><link rel="modulepreload" href="/shared/city/clock.js?v=36cb9faed7" data-room="" /><link rel="modulepreload" href="/shared/city/geo.js?v=edb3f9b7a1" data-room="" /><link rel="modulepreload" href="/shared/city/hash.js?v=9daacf707d" data-room="" /><link rel="modulepreload" href="/shared/outside-events.js?v=756aba4bdc" data-room="" /><link rel="modulepreload" href="/shared/city/sprites.js?v=c74070f5a4" data-room="" /><link rel="modulepreload" href="/shared/city/ship-detail.js?v=41fc5fd95b" data-room="" /><link rel="modulepreload" href="/shared/city/city.js?v=f2322c2b85" data-room="" /><link rel="modulepreload" href="/shared/city/lighting.js?v=a6d7e2ee45" data-room="" /><link rel="modulepreload" href="/shared/city/events/bridge.js?v=d293a33e75" data-room="" /><link rel="modulepreload" href="/shared/city/events/beacons.js?v=bd383fbadb" data-room="" /><link rel="modulepreload" href="/shared/city/events/aircraft.js?v=cbbb01a8c1" data-room="" /><link rel="modulepreload" href="/shared/city/events/ships.js?v=28a0d5cc85" data-room="" /><link rel="modulepreload" href="/shared/city/events/tours.js?v=6215fe9284" data-room="" /><link rel="modulepreload" href="/shared/city/events/sails.js?v=db1f4b28b7" data-room="" /><link rel="modulepreload" href="/shared/city/events/gulls.js?v=632e20cf30" data-room="" /><link rel="modulepreload" href="/shared/city/events/ferries.js?v=396e94efc9" data-room="" /><link rel="modulepreload" href="/shared/city/events/sound.js?v=9d934b89d4" data-room="" /><link rel="modulepreload" href="/shared/city/events/phase2.js?v=c9e11a649b" data-room="" /><link rel="modulepreload" href="/shared/outside-stats.js?v=5f7420da68" data-room="" />
+<link rel="modulepreload" href="/shared/gl/interact.js?v=ceedaa9cb7" data-room="" /><link rel="modulepreload" href="/shared/gl/steam.js?v=65e096982f" data-room="" /><link rel="modulepreload" href="/shared/gl/sheen.js?v=d132e4227f" data-room="" /><link rel="modulepreload" href="/shared/notebook.js?v=e6f117308b" data-room="" /><link rel="modulepreload" href="/shared/pageturn.js?v=582f8e7e0c" data-room="" /><link rel="modulepreload" href="/shared/phone.js?v=58913f57c7" data-room="" /><link rel="modulepreload" href="/shared/toys.js?v=e10a028809" data-room="" />
+</template>
+<!-- @sfw-lock-first-css (scripts/live/lock_first_frame.py: lockscreen.js's own CSS, for the first frame) -->
+<style id="sfw-lock-css-first">
+.sfw-lock{position:absolute;inset:0;overflow:hidden;background:#000;pointer-events:none;color:#fff;--lk-wall:none;--lk-lift:.38;
+ font-family:-apple-system,BlinkMacSystemFont,"Geist",system-ui,sans-serif;font-synthesis:none;-webkit-font-smoothing:antialiased}
+.sfw-lock *{box-sizing:border-box;margin:0}
+.lk-s{position:absolute;left:0;top:0;transform-origin:0 0;background:#1b1d22 var(--lk-soft,none) center/cover no-repeat}
+.lk-s>*,.lk-top>*{position:absolute}
+.lk-w,.lk-dim,.lk-top,.lk-top>*,.lk-off{inset:0}
+.lk-w{background:var(--lk-wall) center/cover no-repeat}
+.lk-wf{animation:lkF .6s ease-out}
+@keyframes lkF{from{opacity:0}}
+.lk-dim{background:linear-gradient(#00000024,#00000015 22%,#0000 46%);opacity:0;transition:opacity .4s}
+.sfw-lock[data-tc=l]{--lk-lift:.5}
+[data-tc=l] .lk-dim{opacity:1}
+.lk-top{transform-origin:50% 20%}
+.lk-d{padding-top:88.2px;text-align:center;font-size:26.8px;line-height:1;font-weight:600;color:#ffffffa8}
+[data-tc=l] .lk-d{color:#fffffff0;text-shadow:0 .5px 3px #0000004d}
+.lk-k{padding-top:108.9px;text-align:center;font-size:135.5px;line-height:1;font-weight:700;letter-spacing:-.012em;font-feature-settings:"case";white-space:nowrap}
+.lk-na .lk-k .c{vertical-align:.1em;line-height:0}
+.lk-h{color:transparent;text-shadow:0 1.5px 8px #0000002e}
+[data-tc=l] .lk-h{text-shadow:0 0 4px #0000004d,0 0 12px #0000004d,0 1.5px 8px #0003}
+.lk-t{color:#ffffffd9;transform:translateY(-2px)}
+.lk-b{color:#fffffff2;opacity:.32;transform:translateY(1.5px)}
+.lk-y{color:transparent;background:linear-gradient(rgba(255,255,255,var(--lk-lift)) 0 0),var(--lk-frost,var(--lk-wall));background-color:#2a2d33;
+ background-size:100% 100%,var(--lk-fs,cover);background-position:center;-webkit-background-clip:text;background-clip:text}
+.lk-r{color:transparent;-webkit-text-stroke:.75px #ffffff52}
+[data-tc=l] .lk-r{-webkit-text-stroke-color:#fff6}
+.lk-m{top:0;right:25.7px;height:28.6px;display:flex;align-items:center;font-size:13px;font-weight:500}
+[data-tm=l] .lk-m{text-shadow:0 .5px 2px #0000004d}
+.lk-ns{top:36px;right:12px;width:344px;--lk-nf:#ffffff1f}
+[data-tn=l] .lk-ns{--lk-nf:#1a1a1e4d}
+.lk-n{position:absolute;left:0;top:0;width:344px;border-radius:20px;overflow:hidden;box-shadow:0 4px 18px #00000024;
+ transform:translate(var(--lk-x,380px),var(--lk-y,0px));transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.lk-g{position:absolute;left:calc(356px - var(--lk-sw) - var(--lk-m,40px));top:calc(-36px - var(--lk-y,0px) - var(--lk-m,40px));
+ width:calc(var(--lk-sw) + 2*var(--lk-m,40px));height:calc(var(--lk-sh) + 2*var(--lk-m,40px));
+ background:linear-gradient(var(--lk-nf) 0 0),var(--lk-frost,none);background-color:#3a3d44;background-size:100% 100%,var(--lk-fs,cover);
+ background-position:center}
+.lk-n::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:.75px;
+ background:linear-gradient(155deg,#ffffff8c,#ffffff1f 30%,#ffffff0a 60%,#ffffff38);
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+ mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
+.lk-c{position:relative;display:flex;align-items:center;gap:10px;padding:12px 14px 12px 12px;font-size:13px;line-height:16px}
+.lk-i{flex:none;position:relative;width:32px;height:32px;border-radius:23%;overflow:hidden;box-shadow:inset 0 0 0 .5px #00000024}
+.lk-i svg{display:block;width:100%;height:100%}
+.lk-iw{background:linear-gradient(#fffdf8,#ebe4d4)}.lk-ir{background:linear-gradient(#4d73ab,#253d69)}.lk-ip{background:linear-gradient(#f3a958,#d9822b)}
+.lk-x{flex:1;min-width:0;color:#ffffffdb}
+.lk-x p:first-child{display:flex;align-items:baseline;gap:8px}
+.lk-x b{flex:1;min-width:0;font-weight:600;color:#fffffff5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lk-x i{font-style:normal;font-size:12px;color:#ffffff8c}
+.lk-x p+p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lk-bt{left:0;right:0;bottom:33.9px;display:flex;flex-direction:column;align-items:center}
+.lk-av{width:47px;height:47px;margin-bottom:14.6px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+ background:linear-gradient(#a7adb9,#858a96) center/cover;font:600 19px ui-rounded,-apple-system,BlinkMacSystemFont,"Geist",sans-serif;letter-spacing:.02em}
+.lk-nm{margin-bottom:10px;font-size:14px;line-height:17px;font-weight:600;white-space:nowrap}
+.lk-tid{position:relative;width:38px;height:38px;margin-bottom:8.5px;border-radius:50%;background:#ffffff1a;box-shadow:inset 0 .75px 0 #ffffff38,inset 0 0 0 .5px #ffffff1f}
+.lk-tid::before{content:"";position:absolute;inset:0;border-radius:50%;background:#fff;opacity:0;transition:opacity .3s}
+.is-ready .lk-tid::before{opacity:.16}
+.lk-tid svg{position:absolute;overflow:visible}
+.lk-ring{inset:0;width:100%;height:100%}
+.lk-ring circle{fill:none;stroke-width:3}
+.lk-ta{stroke:#fff;stroke-linecap:round;stroke-dasharray:120.01;stroke-dashoffset:120.01;opacity:0;transition:stroke-dashoffset .35s ease-out,opacity .2s}
+.lk-tr{stroke:#ffffff4d;transition:opacity .4s}
+.lk-fp{left:21%;top:21%;width:58%;height:58%;fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round;opacity:.72;transition:opacity .3s}
+.lk-hn{position:relative;width:240px;height:29.4px;font-size:12px;line-height:14.7px;font-weight:500;text-align:center}
+.lk-hn>span{position:absolute;left:0;right:0;top:0;transition:opacity .22s ease-in,transform .22s ease-in}
+.lk-hl{color:#ffffff99}
+.lk-hr{opacity:0;transform:translateY(3px);font-weight:600;color:#ffffffc7}
+[data-tb=l] .lk-nm,[data-tb=l] .lk-hn,[data-tb=l] .lk-fs{text-shadow:0 0 3px #00000038,0 .5px 1.5px #00000040}
+.lk-sh{position:absolute;left:0;top:0;width:48px;height:100%;overflow:hidden;font-style:normal;
+ -webkit-mask:linear-gradient(90deg,#0000,#000,#0000);mask:linear-gradient(90deg,#0000,#000,#0000);transform:translateX(-48px)}
+.lk-sh span{position:absolute;left:0;top:0;width:240px;color:#fff;transform:translateX(48px)}
+.is-ready .lk-hl{opacity:0;transform:translateY(-3px)}
+.is-ready .lk-hr{opacity:1;transform:none;transition:opacity .3s ease-out .12s,transform .3s ease-out .12s}
+.is-ready .lk-fp{opacity:1}.is-ready .lk-tr{opacity:0}
+.is-ready .lk-sh{animation:lkW 2.6s ease-in-out .92s infinite both}
+.is-ready .lk-sh span{animation:lkT 2.6s ease-in-out .92s infinite both}
+@keyframes lkW{from{transform:translateX(-48px)}to{transform:translateX(240px)}}
+@keyframes lkT{from{transform:translateX(48px)}to{transform:translateX(-240px)}}
+.lk-off{position:absolute;background:#000;transition:opacity 500ms cubic-bezier(.33,1,.68,1) 300ms}
+.is-awake .lk-off{opacity:0}
+.is-unlock{background:none}
+.is-unlock .lk-top,.is-unlock .lk-bt,.is-unlock .lk-fs,.is-unlock .lk-ns,.is-unlock .lk-m,.is-unlock .lk-dim{opacity:0;transition:opacity .2s ease-out .06s}
+.is-unlock .lk-s{opacity:0;transition:opacity .35s ease .16s}
+.is-unlock .lk-tid{animation:lkP .3s ease-out}
+.is-unlock .lk-sh,.is-unlock .lk-sh span{animation:none}
+@keyframes lkP{35%{transform:scale(.9)}}
+.lk-rm .lk-n{transform:translateY(var(--lk-y,0px));opacity:0;transition:opacity .4s}
+.lk-rm .lk-n.on{opacity:1}
+.lk-rm.is-unlock .lk-top,.lk-rm.is-unlock .lk-bt,.lk-rm.is-unlock .lk-ns{transform:none}
+.lk-rm .lk-sh,.lk-rm .lk-sh span{display:none}
+.lk-rm .lk-fb::after,.lk-rm .lk-tid,.lk-rm .lk-t,.lk-rm .lk-b{animation:none!important}
+.lk-rm .lk-hn>span{transform:none!important}
+.lk-ph .lk-d{padding-top:var(--lk-at-date);font-size:var(--lk-date)}
+.lk-ph .lk-k{padding-top:var(--lk-at-clock);font-size:var(--lk-clock)}
+.lk-mx .lk-m,.lk-fl .lk-b,.lk-fl .lk-y,.lk-fl .lk-r{display:none}
+.lk-fl{background:none}.lk-fl .lk-off{display:none}.lk-fl .lk-wf{animation-duration:.3s}
+.lk-fl .lk-t{color:#ffffffe0;transform:none}
+.lk-fs,.lk-ld,.lk-rd{display:flex;flex-direction:column;align-items:center}
+.lk-fs{left:0;right:0;top:var(--lk-at-stack);line-height:1.2;white-space:nowrap}
+.lk-fx{font-size:var(--lk-fox);line-height:1;margin-bottom:var(--lk-foxGap)}
+.lk-fn{font-size:var(--lk-name);font-weight:600;margin-bottom:var(--lk-barGap)}
+.lk-sl{position:relative;align-self:stretch}
+.lk-ld,.lk-rd{transition:opacity .25s}
+.lk-rd{position:absolute;left:0;right:0;top:0;opacity:0}
+.lk-pb{width:var(--lk-bar);height:var(--lk-barH);border-radius:9px;overflow:hidden;background:#ffffff40}
+.lk-pb i{display:block;height:100%;background:#fff;transform:scaleX(0);transform-origin:0 0;transition:transform .35s ease-out}
+.lk-fs p{font-size:var(--lk-label);font-weight:500;color:#ffffffb3}
+.lk-ld p{margin-top:var(--lk-loadGap)}
+.lk-fs .lk-tid{width:var(--lk-fp);height:var(--lk-fp);background:#0003;border:1.6px solid #fff}
+.lk-fb::after{content:"";position:absolute;inset:-35%;border-radius:50%;background:radial-gradient(closest-side,#fff0 58%,#ffffff47 72%,#fff0);opacity:0}
+.is-ready .lk-ld{opacity:0}.is-ready .lk-rd{opacity:1}
+.is-ready .lk-fb::after{animation:lkQ 2s ease-in-out .3s infinite}
+@keyframes lkQ{50%{opacity:1;transform:scale(1.06)}}
+.is-press .lk-tid::before{opacity:1;transition:opacity .12s}.is-press .lk-fp{stroke:#000}
+</style>
+<!-- @sfw-lock-first-css end -->
+<script src="/app.js?v=619c0a2eeb" type="module"></script>
+</head>
+<body>
+<!-- @sfw-lock-first (scripts/live/lock_first_frame.py: lockscreen.js's own full-mode markup) -->
+<div class="fv-full fv-first" aria-hidden="true"><div class="sfw-lock lk-fl" aria-hidden="true"><div class="lk-s" style="width: 1527.6799999999998px; height: 954.8px; transform: scale(0.9426057813154588); --lk-sw: 1527.6799999999998px; --lk-sh: 954.8px;"><div class="lk-w"></div><div class="lk-dim"></div><div class="lk-top"><div class="lk-d"></div><div class="lk-k lk-h"></div><div class="lk-k lk-t"></div><div class="lk-k lk-b"></div><div class="lk-k lk-y"></div><div class="lk-k lk-r"></div></div><div class="lk-m"><span>U.S.</span><svg viewBox="0 0 15 10" style="width:14.7px;height:9.6px;margin:0 16px 0 6.6px"><rect x=".55" y=".55" width="13.9" height="8.9" rx="1.8" fill="none" stroke="#fff" stroke-width="1.1"></rect><path d="M2.4 2.4h1.3v1.1H2.4zm2.1 0h1.3v1.1H4.5zm2.1 0h1.3v1.1H6.6zm2.1 0H10v1.1H8.7zm2.1 0h1.3v1.1h-1.3zM3.4 4.4h1.3v1.1H3.4zm2.1 0h1.3v1.1H5.5zm2.1 0h1.3v1.1H7.6zm2.1 0H11v1.1H9.7zM4.4 6.5h6.2v1.1H4.4z" fill="#fff"></path></svg><svg viewBox="0 0 25 12" style="width:24.3px;height:11.8px;margin-right:19px"><rect x=".5" y=".5" width="21.6" height="11" rx="3.4" fill="none" stroke="#ffffff80"></rect><rect x="2" y="2" width="16.9" height="8" rx="2" fill="#fff"></rect><rect x="23" y="4.1" width="1.6" height="3.8" rx=".8" fill="#ffffff80"></rect></svg><svg viewBox="0 0 13 9.5" style="width:12.5px;height:9px"><path d="M1.55 3.45A7 7 0 0 1 11.45 3.45M3.25 5.15A4.6 4.6 0 0 1 9.75 5.15" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"></path><circle cx="6.5" cy="7.95" r="1.25" fill="#fff"></circle></svg></div><div class="lk-fs"><div class="lk-fx">🦊</div><div class="lk-fn">Akshay Chintalapati</div><div class="lk-sl"><div class="lk-ld"><div class="lk-pb"><i></i></div><p>Loading…</p></div><div class="lk-rd"><div class="lk-tid lk-fb"><svg class="lk-fp" viewBox="0 0 24 24"><path d="M4.12 10.61A8 8 0 0 1 16.59 5.45M18.55 7.41A8 8 0 0 1 19.73 14.07M4.48 14.74A8 8 0 0 0 6.34 17.66M6.8 17.2V12A5.2 5.2 0 0 1 17.2 12V15.4M9.6 19.9C9.45 18.6 9.4 17.2 9.4 15.8V12A2.6 2.6 0 0 1 14.6 12V14.6C14.6 16.5 14.2 18.2 13.5 19.7M12 12.4V16.2C12 17.6 11.8 18.9 11.4 20M17.2 18.1C16.95 19.05 16.6 19.9 16.15 20.7"></path></svg></div><p>Click to enter</p></div></div></div></div><div class="lk-off"></div></div></div>
+<script>
+/* (DYS-230 round 2b: the first paint is the whole lock screen) ?lock=full: the lock's own markup above, laid out here as
+   app.js fvFullPlace and lockscreen.js resize() lay it out (the same numbers: FULL is the module's), the SF date and
+   time in it, its tones on the golden wallpaper; app.js and lockscreen.js take these elements over as they are */
+(function () {
+  var r = document.documentElement, f = document.querySelector(".fv-full.fv-first");
+  if (!f) return;
+  if (!r.classList.contains("sfw-fv-full")) { f.remove(); return; }
+  try {
+    var FULL = {"phone":{"at":{"date":0.126,"clock":0.152,"stack":0.705},"date":18,"clock":100,"fox":48,"foxGap":20,"name":20,"barGap":16,"bar":150,"barH":5,"loadGap":14,"label":13,"fp":48},"mac":{"at":{"stack":0.792},"fox":47,"foxGap":14.6,"name":19.6,"barGap":12,"bar":160,"barH":5,"loadGap":10,"label":13,"fp":38},"portraitX":"58%"}, TONES = {"mac":{"tc":"l","tb":"d","tm":"d"},"phone":{"tc":"l","tb":"d","tm":"d"}};
+    var l = f.firstElementChild, st = l.querySelector(".lk-s"), vw = innerWidth, vh = innerHeight;
+    var h = Math.min(Math.max(vh, vw / 1.6), vh * 1.06), w = h * 1.6;
+    f.style.width = w.toFixed(2) + "px"; f.style.height = h.toFixed(2) + "px"; f.style.transformOrigin = "0 0";
+    f.style.transform = "translate(" + ((vw - w) / 2).toFixed(2) + "px, " + ((vh - h) / 2).toFixed(2) + "px)";
+    var ph = w < 700 || h > w || h < 500, sw = w, sh = h, sc = 1, k;
+    if (!ph) { var hv = 1440 * h / w, pt = Math.min(1440 / 1470, hv / 954.8); sw = 1440 / pt; sh = hv / pt; sc = (w / 1440) * pt; }
+    st.style.width = sw + "px"; st.style.height = sh + "px"; st.style.transform = "scale(" + sc + ")";
+    st.style.setProperty("--lk-sw", sw + "px"); st.style.setProperty("--lk-sh", sh + "px");
+    var T = FULL[ph ? "phone" : "mac"], q = ph ? Math.min(w / 390, h / 720, 1.4) : 1;
+    if (ph) l.classList.add("lk-ph");
+    if (ph || 13 * sc < 12) l.classList.add("lk-mx");
+    if (!/Mac|iPhone|iPad|iPod/.test(navigator.platform || "")) l.classList.add("lk-na");
+    for (k in T) if (k !== "at") l.style.setProperty("--lk-" + k, Math.max(T[k] * q, /^(date|name|label)$/.test(k) ? 12 / sc : 0) + "px");
+    for (k in T.at) l.style.setProperty("--lk-at-" + k, T.at[k] * sh + "px");
+    var tn = TONES[ph ? "phone" : "mac"];
+    for (k in tn) l.dataset[k] = tn[k];
+    if (matchMedia("(pointer: coarse)").matches) l.querySelector(".lk-rd p").textContent = "Tap to enter";
+    var d = new Date(), p = {}, o = { timeZone: "America/Los_Angeles", hourCycle: "h23", hour: "numeric", minute: "numeric" };
+    new Intl.DateTimeFormat("en-US", o).formatToParts(d).forEach(function (x) { p[x.type] = x.value; });
+    var t = ((+p.hour % 24) % 12 || 12) + '<span class="c">:</span>' + p.minute;
+    l.querySelector(".lk-d").textContent = new Intl.DateTimeFormat("en-US", { timeZone: "America/Los_Angeles", weekday: "long", month: "long", day: "numeric" }).format(d);
+    l.querySelectorAll(".lk-k").forEach(function (e) { e.innerHTML = t; });
+  } catch (e) { f.remove(); }
+})();
+</script>
+<!-- @sfw-lock-first end -->
+<main>
+  <section class="scene" id="scene" aria-label="A desk by a window on Russian Hill, looking out at the Golden Gate Bridge">
+    <div class="stage" id="stage">
+      <div class="layer ext" id="ext" aria-hidden="true"></div>
+      <div class="layer glass" id="glass" aria-hidden="true"></div>
+      <div class="layer room" id="room" aria-hidden="true"></div>
+      <div class="layer halo" id="halo-mask" aria-hidden="true"><div class="layer" id="halo"></div></div>
+      <div class="lqip" id="lqip" aria-hidden="true"></div>
+      <svg class="hotspots" id="hotspots" viewBox="0 0 1 1" preserveAspectRatio="none"></svg>
+      <noscript><div class="nojs-view" aria-hidden="true">
+        <img class="nojs-ext nojs-l" src="/frames/golden-home_l-ext-1600.webp" alt="" /><img class="nojs-room nojs-l" src="/frames/golden-home_l-room-1600.webp" alt="" />
+        <img class="nojs-ext nojs-p" src="/frames/golden-home_p-ext-720.webp" alt="" /><img class="nojs-room nojs-p" src="/frames/golden-home_p-room-720.webp" alt="" />
+      </div></noscript>
+    </div>
+    <div class="veil" aria-hidden="true"></div>
+
+    <header class="masthead" id="masthead">
+      <div class="who">
+        <h1>Akshay Chintalapati</h1>
+      </div>
+      <div class="clock">
+        <div class="clock-line"><button class="now" id="now" type="button" aria-expanded="false" aria-controls="dial">The sky over San Francisco</button></div>
+        <div class="dial" id="dial" hidden>
+          <input id="dial-range" type="range" min="0" max="1439" step="5" aria-label="Time of day in San Francisco" />
+          <button id="dial-reset" type="button" aria-label="Back to now"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.1 9.2a5 5 0 1 0 .9-4.6" /><path d="M3.2 2.4v2.9h2.9" /></svg></button>
+        </div>
+      </div>
+      <!-- (masthead-r2, Akshay 20 Oct) the live room's menu is About, Writing and Social: the laptop, Poor Charlie's
+           Almanack on the desk and the print lead to Projects, Books and Quotes. Those three stay here as plain links,
+           shown without the live room (no JS, photographs only, reduced motion): style.css, shared/sky-head.js -->
+      <nav aria-label="Primary">
+        <a href="/#about">About</a>
+        <a href="/projects/" class="plain">Projects</a>
+        <a href="/writing/">Writing</a>
+        <a href="/books/" class="plain">Books</a>
+        <a href="/quotes.html" class="plain">Quotes</a>
+        <a href="/#social">Social</a>
+      </nav>
+    </header>
+    <!-- (DYS-31, Akshay 29 Oct, option C) the Quiet version on its own in the page's top-right corner, on every screen
+         size, out of the menu: shown with the room's menu, as the menu's link was; it steps aside while "Back to the
+         desk" holds that corner (style.css .quiet-corner) -->
+    <a href="/simple/" class="quiet-corner">Quiet version</a>
+
+    <div class="tip" id="tip" role="tooltip" hidden></div>
+  </section>
+
+  <!-- His bio: About in the menu opens it in the reading sheet (shared/router.js), the name opens it as its card; kept
+       here for search engines and for no JS (/#about shows it over the photograph). Nothing below the room. -->
+  <section class="about" id="about" aria-label="About" hidden>
+    <div class="col">
+      <p>Curiosity drives me. AI and clean energy are two things that live rent-free in my head, and my life's goal is to make lasting contributions towards a future that's both exciting and sustainable.</p>
+      <p>Currently, I'm a founder, building a product with the objective of helping people live better lives.</p>
+      <p>Previously, I've worked in clean energy, building software products for installing and maintaining residential solar and storage systems at Generac, SunPower, and Tesla.</p>
+      <p>Before that, I got a Master's in chemical engineering from Cornell and a bachelor's in chemical engineering from Osmania University in India.</p>
+    </div>
+    <noscript><a class="nojs-x" href="#" aria-label="Close"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></a></noscript>
+  </section>
+  <!-- Social: his five links. In the live room Social leans in to the phone, whose lock screen shows them (shared/phone.js
+       reads them here); without the 3D they show in a small sheet, and without JS over the photograph (/#social). -->
+  <nav class="social" id="social" aria-label="Social" hidden>
+    <a class="icon" href="https://x.com/akshayvkt" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
+    <a class="icon" href="https://www.linkedin.com/in/akshaych98/" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+    <a class="icon" href="https://github.com/akshayvkt" aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+    <a class="icon" href="mailto:venkatakshay98@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3 5.5h18v13H3z"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.6 6.2 12 12.6l8.4-6.4"/></svg></a>
+    <a class="icon" href="https://akshaychintalapati.substack.com/" aria-label="Substack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg></a>
+    <noscript><a class="nojs-x" href="#" aria-label="Close"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></a></noscript>
+  </nav>
+</main>
+</body>
+</html>
