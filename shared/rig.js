@@ -844,6 +844,8 @@ export class Rig {
     }
     this.dollyT = clamp(this.dollyT + m, lo, hi);
     const dMag = this.magT !== mag0;
+    // (shared/track.js: the magnifier reaching 2x and 4x; 1 % short of each counts, as a ceiling can stop just under)
+    if (dMag && this.magT > mag0) for (const lv of [2, 4]) if (mag0 < lv * 0.99 && this.magT >= lv * 0.99) (globalThis.__sfwT ||= []).push(["zoom_level", { level: lv }]);
     const dWalk = len(sub(this.walkT, walk0)) > 1e-9;
     if (this.dollyT === before && !dMag && !dWalk) {
       // (a pinch held at the ceiling or at 1x whose fingers move: the view follows them all the same)

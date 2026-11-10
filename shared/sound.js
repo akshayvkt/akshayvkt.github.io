@@ -152,6 +152,7 @@ function start() {
     engine.start({ timer: true, fade: 3 });
     state = "on";
     paint();
+    (globalThis.__sfwT ||= []).push(["sound_play", { sound: "ambient" }]);   // (shared/track.js)
   }).catch((err) => { console.warn("sound:", err && err.message); if (my === gen) shutdown(); });
 }
 

@@ -2942,6 +2942,7 @@ class Nav {
   // a new tab (a real gesture).
   egg() {
     const url = ACTIONS.headphones.url;
+    (globalThis.__sfwT ||= []).push(["object_open", { object: "headphones" }], ["sound_play", { sound: "headphones" }]);   // (shared/track.js)
     if (!this.eggHere()) {
       window.open(url, "_blank", "noopener");
       return;
@@ -2974,6 +2975,7 @@ class Nav {
 
   // The breadboard: the LED blinks three times where it is (if it is in view from here), the buzzer chirps with Sound on.
   async blinkBoard() {
+    (globalThis.__sfwT ||= []).push(["object_open", { object: "breadboard" }]);   // (shared/track.js)
     if (!this.board || this.mode !== "live" || this.board.blinking) return;
     const [w, h] = this.size(), s = this.board.place(this.rig.pose, w, h);
     let visible = false;
@@ -3778,6 +3780,7 @@ class Nav {
 
   async go(name, { push = true, zoom = false } = {}) {
     if (!this.room || !this.room.spots[name]) return;
+    if (name !== "desk" && name !== this.spot) (globalThis.__sfwT ||= []).push(["object_open", { object: name }]);   // (shared/track.js)
     if (this.mode === "booting") {
       this.fv?.nudge();   // (v3/loading: the line says the room is still on its way)
       this.loadSign?.nudge();
