@@ -1,21 +1,21 @@
 {
  "l3": "zoom-l3/l3.json",
- "source": "out/r27/zoom_l3",
+ "source": "out/r28/zoom_l3",
  "synthetic": false,
  "moments": {
   "golden": 1489,
-  "night": 1478,
-  "midday": 1480,
+  "night": 1481,
+  "midday": 1489,
   "predawn": 1482,
-  "dawn": 1485,
+  "dawn": 1487,
   "sunrise": 1489,
-  "morning": 1487,
-  "latemorning": 1483,
-  "afternoon": 1478,
-  "lateafternoon": 1479,
+  "morning": 1489,
+  "latemorning": 1489,
+  "afternoon": 1489,
+  "lateafternoon": 1489,
   "sunset": 1489,
-  "dusk": 1477,
-  "blue": 1479,
+  "dusk": 1479,
+  "blue": 1482,
   "lowsun": 1489
  },
  "near": {
@@ -19757,6 +19757,14 @@
    [
     74,
     11
+   ],
+   [
+    74,
+    12
+   ],
+   [
+    74,
+    13
    ],
    [
     74,

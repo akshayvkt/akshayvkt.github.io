@@ -10110,6 +10110,10 @@
     ],
     [
      78,
+     8
+    ],
+    [
+     78,
      9
     ],
     [
@@ -10182,6 +10186,10 @@
     ],
     [
      79,
+     8
+    ],
+    [
+     79,
      9
     ],
     [
@@ -10251,6 +10259,10 @@
     [
      80,
      7
+    ],
+    [
+     80,
+     8
     ],
     [
      80,
@@ -12281,7 +12293,7 @@
      15
     ]
    ],
-   "bytes": 1328817,
+   "bytes": 1330405,
    "source": "renders at 256 px/deg: night_hero_bridge0_on.png, night_hero_bridge1_on.png, night_hero_palace0_on.png, night_hero_marina0_on.png, night_hero_marina1_on.png, night_hero_marina2_on.png, night_hero_marina3_on.png, night_hero_near0_on.png; + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + scripts/area1_towers.json's cells (scripts/area_rerender.py); + renders/court4x/cou",
    "synthetic": false,
    "extra": {
@@ -16029,6 +16041,10 @@
      ],
      [
       78,
+      8
+     ],
+     [
+      78,
       9
      ],
      [
@@ -16101,6 +16117,10 @@
      ],
      [
       79,
+      8
+     ],
+     [
+      79,
       9
      ],
      [
@@ -16170,6 +16190,10 @@
      [
       80,
       7
+     ],
+     [
+      80,
+      8
      ],
      [
       80,
@@ -18200,7 +18224,7 @@
       15
      ]
     ],
-    "bytes": 727099,
+    "bytes": 728080,
     "dial_default": 0.0,
     "add": "RGB over the city's L3 tile",
     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
@@ -21515,6 +21539,10 @@
     ],
     [
      72,
+     5
+    ],
+    [
+     72,
      6
     ],
     [
@@ -21587,6 +21615,18 @@
     ],
     [
      73,
+     5
+    ],
+    [
+     73,
+     6
+    ],
+    [
+     73,
+     7
+    ],
+    [
+     73,
      8
     ],
     [
@@ -21644,6 +21684,14 @@
     [
      73,
      27
+    ],
+    [
+     74,
+     4
+    ],
+    [
+     74,
+     5
     ],
     [
      74,
@@ -21712,6 +21760,18 @@
     [
      74,
      27
+    ],
+    [
+     75,
+     4
+    ],
+    [
+     75,
+     5
+    ],
+    [
+     75,
+     6
     ],
     [
      75,
@@ -24130,7 +24190,7 @@
      15
     ]
    ],
-   "bytes": 10091284,
+   "bytes": 10110387,
    "source": "renders at 256 px/deg: midday_hero_bridge0.png, midday_hero_bridge1.png, midday_hero_palace0.png, midday_hero_marina0.png, midday_hero_marina1.png, midday_hero_marina2.png, midday_hero_marina3.png, midday_hero_near0.png; near-box: 35 squares re-rendered with v3/city-detail d01d28a (renders/near_box_day1/zoom-l3); + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + scripts/area1_towers.json's cells (",
    "synthetic": false
   },
@@ -30066,7 +30126,7 @@
      15
     ]
    ],
-   "bytes": 972187,
+   "bytes": 972076,
    "source": "renders at 256 px/deg: predawn_hero_bridge0_on.png, predawn_hero_bridge1_on.png, predawn_hero_palace0_on.png, predawn_hero_marina0_on.png, predawn_hero_marina1_on.png, predawn_hero_marina2_on.png, predawn_hero_marina3_on.png, predawn_hero_near0_on.png; + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + scripts/area1_towers.json's cells (scripts/area_rerender.py); + ren",
    "synthetic": false,
    "extra": {
@@ -39092,6 +39152,14 @@
     ],
     [
      68,
+     4
+    ],
+    [
+     68,
+     5
+    ],
+    [
+     68,
      7
     ],
     [
@@ -41951,7 +42019,7 @@
      15
     ]
    ],
-   "bytes": 1287336,
+   "bytes": 1287984,
    "source": "renders at 256 px/deg: dawn_hero_bridge0_on.png, dawn_hero_bridge1_on.png, dawn_hero_palace0_on.png, dawn_hero_marina0_on.png, dawn_hero_marina1_on.png, dawn_hero_marina2_on.png, dawn_hero_marina3_on.png, dawn_hero_near0_on.png; + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + scripts/area1_towers.json's cells (scripts/area_rerender.py); + renders/court4x/court_b.jso",
    "synthetic": false,
    "extra": {
@@ -45039,6 +45107,14 @@
      ],
      [
       68,
+      4
+     ],
+     [
+      68,
+      5
+     ],
+     [
+      68,
       7
      ],
      [
@@ -47898,7 +47974,7 @@
       15
      ]
     ],
-    "bytes": 595306,
+    "bytes": 595960,
     "dial_default": 0.0,
     "add": "RGB over the city's L3 tile",
     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
@@ -57357,6 +57433,14 @@
     ],
     [
      74,
+     12
+    ],
+    [
+     74,
+     13
+    ],
+    [
+     74,
      14
     ],
     [
@@ -59820,7 +59904,7 @@
      15
     ]
    ],
-   "bytes": 7704226,
+   "bytes": 7719992,
    "source": "renders at 256 px/deg: morning_hero_bridge0.png, morning_hero_bridge1.png, morning_hero_palace0.png, morning_hero_marina0.png, morning_hero_marina1.png, morning_hero_marina2.png, morning_hero_marina3.png, morning_hero_near0.png; near-box: 35 squares re-rendered with v3/city-detail d01d28a (renders/near_box_day1/zoom-l3); + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + scripts/area1_towers.json's",
    "synthetic": false
   },
@@ -65345,6 +65429,14 @@
     ],
     [
      103,
+     6
+    ],
+    [
+     103,
+     7
+    ],
+    [
+     103,
      8
     ],
     [
@@ -65385,6 +65477,14 @@
     ],
     [
      104,
+     7
+    ],
+    [
+     104,
+     8
+    ],
+    [
+     104,
      9
     ],
     [
@@ -65418,6 +65518,14 @@
     [
      105,
      6
+    ],
+    [
+     105,
+     7
+    ],
+    [
+     105,
+     8
     ],
     [
      105,
@@ -65760,7 +65868,7 @@
      15
     ]
    ],
-   "bytes": 10728064,
+   "bytes": 10776761,
    "source": "renders at 256 px/deg: latemorning_hero_bridge0.png, latemorning_hero_bridge1.png, latemorning_hero_palace0.png, latemorning_hero_marina0.png, latemorning_hero_marina1.png, latemorning_hero_marina2.png, latemorning_hero_marina3.png, latemorning_hero_near0.png; near-box: 35 squares re-rendered with v3/city-detail d01d28a (renders/near_box_day1/zoom-l3); + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + ",
    "synthetic": false
   },
@@ -68853,6 +68961,14 @@
     ],
     [
      68,
+     5
+    ],
+    [
+     68,
+     6
+    ],
+    [
+     68,
      7
     ],
     [
@@ -68990,6 +69106,10 @@
     [
      71,
      5
+    ],
+    [
+     71,
+     6
     ],
     [
      71,
@@ -69061,6 +69181,10 @@
     ],
     [
      72,
+     5
+    ],
+    [
+     72,
      6
     ],
     [
@@ -69202,6 +69326,14 @@
     [
      73,
      27
+    ],
+    [
+     74,
+     4
+    ],
+    [
+     74,
+     5
     ],
     [
      74,
@@ -71266,6 +71398,10 @@
     [
      103,
      7
+    ],
+    [
+     103,
+     8
     ],
     [
      103,
@@ -71302,6 +71438,14 @@
     [
      104,
      6
+    ],
+    [
+     104,
+     7
+    ],
+    [
+     104,
+     8
     ],
     [
      104,
@@ -71338,6 +71482,14 @@
     [
      105,
      6
+    ],
+    [
+     105,
+     7
+    ],
+    [
+     105,
+     8
     ],
     [
      105,
@@ -71680,7 +71832,7 @@
      15
     ]
    ],
-   "bytes": 8159962,
+   "bytes": 8233122,
    "source": "renders at 256 px/deg: afternoon_hero_bridge0.png, afternoon_hero_bridge1.png, afternoon_hero_palace0.png, afternoon_hero_marina0.png, afternoon_hero_marina1.png, afternoon_hero_marina2.png, afternoon_hero_marina3.png, afternoon_hero_near0.png; near-box: 35 squares re-rendered with v3/city-detail d01d28a (renders/near_box_day1/zoom-l3); + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + scripts/are",
    "synthetic": false
   },
@@ -75149,6 +75301,10 @@
     ],
     [
      74,
+     6
+    ],
+    [
+     74,
      7
     ],
     [
@@ -75214,6 +75370,14 @@
     [
      75,
      4
+    ],
+    [
+     75,
+     5
+    ],
+    [
+     75,
+     6
     ],
     [
      75,
@@ -77014,6 +77178,14 @@
     [
      99,
      5
+    ],
+    [
+     99,
+     6
+    ],
+    [
+     99,
+     7
     ],
     [
      99,
@@ -77054,6 +77226,10 @@
     [
      100,
      6
+    ],
+    [
+     100,
+     7
     ],
     [
      100,
@@ -77226,6 +77402,14 @@
     [
      104,
      6
+    ],
+    [
+     104,
+     7
+    ],
+    [
+     104,
+     8
     ],
     [
      104,
@@ -77262,6 +77446,14 @@
     [
      105,
      6
+    ],
+    [
+     105,
+     7
+    ],
+    [
+     105,
+     8
     ],
     [
      105,
@@ -77604,7 +77796,7 @@
      15
     ]
    ],
-   "bytes": 6098118,
+   "bytes": 6151130,
    "source": "renders at 256 px/deg: lateafternoon_hero_bridge0.png, lateafternoon_hero_bridge1.png, lateafternoon_hero_palace0.png, lateafternoon_hero_marina0.png, lateafternoon_hero_marina1.png, lateafternoon_hero_marina2.png, lateafternoon_hero_marina3.png, lateafternoon_hero_near0.png; near-box: 35 squares re-rendered with v3/city-detail d01d28a (renders/near_box_day1/zoom-l3); + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + ",
    "synthetic": false
   },
@@ -86697,6 +86889,10 @@
     ],
     [
      69,
+     4
+    ],
+    [
+     69,
      7
     ],
     [
@@ -87378,6 +87574,10 @@
     [
      79,
      7
+    ],
+    [
+     79,
+     8
     ],
     [
      79,
@@ -89484,7 +89684,7 @@
      15
     ]
    ],
-   "bytes": 2312675,
+   "bytes": 2315677,
    "source": "renders at 256 px/deg: dusk_hero_bridge0_on.png, dusk_hero_bridge1_on.png, dusk_hero_palace0_on.png, dusk_hero_marina0_on.png, dusk_hero_marina1_on.png, dusk_hero_marina2_on.png, dusk_hero_marina3_on.png, dusk_hero_near0_on.png; + scripts/area1_towers.json's cells (scripts/area_rerender.py); + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + renders/court4x/court_b.jso",
    "synthetic": false,
    "extra": {
@@ -92612,6 +92812,10 @@
      ],
      [
       69,
+      4
+     ],
+     [
+      69,
       7
      ],
      [
@@ -93293,6 +93497,10 @@
      [
       79,
       7
+     ],
+     [
+      79,
+      8
      ],
      [
       79,
@@ -95399,7 +95607,7 @@
       15
      ]
     ],
-    "bytes": 746456,
+    "bytes": 747110,
     "dial_default": 0.0,
     "add": "RGB over the city's L3 tile",
     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
@@ -99154,6 +99362,10 @@
     ],
     [
      78,
+     8
+    ],
+    [
+     78,
      9
     ],
     [
@@ -99226,6 +99438,10 @@
     ],
     [
      79,
+     8
+    ],
+    [
+     79,
      9
     ],
     [
@@ -99295,6 +99511,10 @@
     [
      80,
      7
+    ],
+    [
+     80,
+     8
     ],
     [
      80,
@@ -101325,7 +101545,7 @@
      15
     ]
    ],
-   "bytes": 1390286,
+   "bytes": 1392577,
    "source": "renders at 256 px/deg: blue_hero_bridge0_on.png, blue_hero_bridge1_on.png, blue_hero_palace0_on.png, blue_hero_marina0_on.png, blue_hero_marina1_on.png, blue_hero_marina2_on.png, blue_hero_marina3_on.png, blue_hero_near0_on.png; + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + scripts/area1_towers.json's cells (scripts/area_rerender.py); + renders/court4x/court_b.jso",
    "synthetic": false,
    "extra": {
@@ -105077,6 +105297,10 @@
      ],
      [
       78,
+      8
+     ],
+     [
+      78,
       9
      ],
      [
@@ -105149,6 +105373,10 @@
      ],
      [
       79,
+      8
+     ],
+     [
+      79,
       9
      ],
      [
@@ -105218,6 +105446,10 @@
      [
       80,
       7
+     ],
+     [
+      80,
+      8
      ],
      [
       80,
@@ -107248,7 +107480,7 @@
       15
      ]
     ],
-    "bytes": 748207,
+    "bytes": 749188,
     "dial_default": 0.0,
     "add": "RGB over the city's L3 tile",
     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
@@ -113222,8 +113454,8 @@
  "synthetic": false,
  "built": {
   "by": "scripts/near_box_merge.py (docs/v3/briefs/near-box.md)",
-  "time": "2026-11-08 22:20:42",
-  "commit": "e3e45adb",
+  "time": "2026-11-09 19:17:47",
+  "commit": "79d72708",
   "day": {
    "from": "renders/cloud_zoom1/zoom-l3",
    "moments": [
@@ -113431,7 +113663,7 @@
   },
   "area": {
    "by": "scripts/area_rerender.py merge",
-   "regions": "renders/towers4x/fixl3w/cut.json",
+   "regions": "renders/towers4x/fixb2/cut.json",
    "moments": [
     "afternoon",
     "blue",
@@ -113453,132 +113685,6 @@
    ],
    "held_note": "sunrise (B 29 Oct 07:48): area 1 is A1c (shadow casters, renders/area1/rr1c); area 2 is held at the live set's squares (its earlier ones in ../held-074802/sunrise) until DYS-41's full-scene step (c) passes",
    "squares_held": {
-    "midday": [
-     [
-      72,
-      5
-     ],
-     [
-      73,
-      5
-     ],
-     [
-      73,
-      6
-     ],
-     [
-      73,
-      7
-     ],
-     [
-      74,
-      4
-     ],
-     [
-      74,
-      5
-     ],
-     [
-      75,
-      4
-     ],
-     [
-      75,
-      5
-     ],
-     [
-      75,
-      6
-     ]
-    ],
-    "afternoon": [
-     [
-      68,
-      5
-     ],
-     [
-      68,
-      6
-     ],
-     [
-      71,
-      6
-     ],
-     [
-      72,
-      5
-     ],
-     [
-      74,
-      4
-     ],
-     [
-      74,
-      5
-     ],
-     [
-      103,
-      8
-     ],
-     [
-      104,
-      7
-     ],
-     [
-      104,
-      8
-     ],
-     [
-      105,
-      7
-     ],
-     [
-      105,
-      8
-     ]
-    ],
-    "lateafternoon": [
-     [
-      74,
-      6
-     ],
-     [
-      75,
-      5
-     ],
-     [
-      75,
-      6
-     ],
-     [
-      99,
-      6
-     ],
-     [
-      99,
-      7
-     ],
-     [
-      100,
-      7
-     ],
-     [
-      104,
-      7
-     ],
-     [
-      104,
-      8
-     ],
-     [
-      105,
-      7
-     ],
-     [
-      105,
-      8
-     ]
-    ],
     "predawn": [
      [
       68,
@@ -113612,14 +113718,6 @@
     "dawn": [
      [
       68,
-      4
-     ],
-     [
-      68,
-      5
-     ],
-     [
-      68,
       6
      ],
      [
@@ -113635,10 +113733,6 @@
      [
       68,
       6
-     ],
-     [
-      69,
-      4
      ],
      [
       69,
@@ -113671,10 +113765,6 @@
      [
       76,
       5
-     ],
-     [
-      79,
-      8
      ]
     ],
     "blue": [
@@ -113705,18 +113795,6 @@
      [
       76,
       5
-     ],
-     [
-      78,
-      8
-     ],
-     [
-      79,
-      8
-     ],
-     [
-      80,
-      8
      ]
     ],
     "night": [
@@ -113751,44 +113829,6 @@
      [
       76,
       5
-     ],
-     [
-      78,
-      8
-     ],
-     [
-      79,
-      8
-     ],
-     [
-      80,
-      8
-     ]
-    ],
-    "latemorning": [
-     [
-      103,
-      6
-     ],
-     [
-      103,
-      7
-     ],
-     [
-      104,
-      7
-     ],
-     [
-      104,
-      8
-     ],
-     [
-      105,
-      7
-     ],
-     [
-      105,
-      8
      ]
     ]
    },
