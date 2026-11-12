@@ -281,6 +281,55 @@ export function createStreets(routes, frame, opt = {}) {
   let cur = null, nxt = null;
 
   const pools = new WeakMap(), MIX = [], MIXS = [];
+  // (DYS-266 zoom-gc: keep, the outside's own calls (city.js state()): the cars drawn written into one of two kept lists
+  // of kept records in turn (the one handed out last stays as it was while the next is made: the state before), the
+  // same keys in the same order as before; and the placed records listed and found by id in kept lists and indexes
+  // (placedK, swapK), not in a new Map a simulation a frame and a new list. The same numbers; ?gcdiet=0 or any other call: as before)
+  const KOUT = [[], []], KREC = [[], []];
+  let kLast = null;
+  // (each simulation's kept placement: its records, their list in placed()'s order, and an index by id kept across
+  // frames, a record found in it only if placed this time (st) and still that car's)
+  const kept = new WeakMap(), KSW = [];
+  function placedK(sim, T) {
+    let K = kept.get(sim);
+    if (!K) kept.set(sim, (K = { recs: [], list: [], idx: new Map(), st: 0 }));
+    const f = min(1, max(0, (T - (sim.t - IDM.dt)) / IDM.dt)), st = ++K.st, list = K.list, recs = K.recs;
+    let k = 0;
+    for (let i = 0; i < streets.length; i++) for (let li = 0; li < streets[i].nMax; li++) {
+      const cs = sim.lanes[i][li].cars;
+      for (let j = 0; j < cs.length; j++) {
+        const c = cs[j], r = recs[k] || (recs[k] = { c: null, i: 0, li: 0, s: 0, st: 0 });
+        r.c = c; r.i = i; r.li = li; r.s = c.sPrev + (c.s - c.sPrev) * f; r.st = st;
+        list[k++] = r;
+      }
+    }
+    list.length = k;
+    if (K.idx.size > 4 * k + 256) K.idx.clear();   // (the ids gone since: let go now and then)
+    for (let j = 0; j < k; j++) K.idx.set(list[j].c.id, list[j]);
+    return K;
+  }
+  const getK = (K, id) => { const r = K.idx.get(id); return r !== undefined && r.st === K.st && r.c.id === id ? r : undefined; };
+  // swap() over two kept placements (b null: a's list as it is), into KSW: the same records in the same order
+  function swapK(T, A, Bk, mix, tb, gone) {
+    if (!Bk) return A.list;
+    const a = A.list, b = Bk.list, out = KSW, same = (p, q) => p && q && p.i === q.i && p.li === q.li && abs(p.s - q.s) <= 4, h1 = (p) => (p.c.h1 >= tb ? p.c.h1 : 1e15);
+    let n = 0, nm = 0;
+    out.old = 0;
+    const held = (q) => { if (shows(streets[q.i], q.s, q.c) > 0.04) out.old++; };
+    for (let j = 0; j < a.length; j++) {
+      const p = a[j], q = getK(Bk, p.c.id);
+      if (same(p, q)) {
+        if (T >= h1(p)) { if (q.c.hl >= h1(p)) out[n++] = q; else held(q); }
+        else { const r = mix < 0.5 ? p : q; out[n++] = r; MIX[nm] = r; MIXS[nm++] = p.s + (q.s - p.s) * mix; }
+      }
+      else if (T < h1(p)) { out[n++] = p; out.old++; }
+    }
+    for (let j = 0; j < b.length; j++) { const q = b[j], id = q.c.id, p = getK(A, id); if (!same(p, q)) { if (q.c.hl >= (p ? h1(p) : max(tb, gone?.get(id) ?? tb))) out[n++] = q; else held(q); } }
+    for (let k = 0; k < nm; k++) MIX[k].s = MIXS[k];
+    out.length = n;
+    return out;
+  }
+
   function placed(sim, T) {
     const f = min(1, max(0, (T - (sim.t - IDM.dt)) / IDM.dt)), out = new Map();
     if (GC_DIET) {
@@ -451,10 +500,18 @@ export function createStreets(routes, frame, opt = {}) {
 
   // ---- the vehicles at T
   // (DYS-149 SL: what at0 asked of the worker goes once it returns, the worker free)
-  function at(T, opt) { try { return (lastOut = at0(T, opt)); } finally { if (far) pump(); } }
-  function at0(T, opt) {
+  function at(T, opt, keep) {
+    try {
+      const r = (lastOut = at0(T, opt, !!keep && GC_DIET));
+      if (r === KOUT[0] || r === KOUT[1]) kLast = r;
+      return r;
+    } finally { if (far) pump(); }
+  }
+  function at0(T, opt, keep) {
     const A = anchorFor(T), ms = opt?.budgetMs, t0 = ms ? clockMs() : 0, hold = !!(ms && opt.hold);
-    const A1 = A + P, tb = A + W + P - B, out = [];
+    const kb = kLast === KOUT[0] ? 1 : 0, recs = keep ? KREC[kb] : null;
+    const A1 = A + P, tb = A + W + P - B, out = keep ? KOUT[kb] : [];
+    let on = 0;   // (keep: the list's own count, its length set as it is handed out: a length cut to 0 lets its store go)
     if (hold) wasHeld = true;
     const paused = t0 - wallAt > RESUME_MS;
     wallAt = t0;
@@ -462,6 +519,7 @@ export function createStreets(routes, frame, opt = {}) {
     let cap = Infinity;
     const first = (n) => { if (wasHeld) { wasHeld = false; rampN = 0; } if (rampN < RAMP) cap = Math.ceil((n * ++rampN) / RAMP); };
     const faded = () => {
+      if (keep) out.length = on;
       if (ms) { const f = (clockMs() - max(readyAt, heldAt)) / fadeMs; if (f < 1) { const k = f <= 0 ? 0 : f * f * (3 - 2 * f); for (const o of out) o.alpha *= k; } }
       return out;
     };
@@ -520,9 +578,9 @@ export function createStreets(routes, frame, opt = {}) {
       // in the slice; none placed until every simulation drawn is at the clock)
       if (qxOn()) { for (const s of [cur, nxt]) if (s && !s.xw) s.xw = [qx.tb, QUICK_MAX * IDM.quickBlend]; budgeted(qx.sim, T, room(), clockMs()); }
       else qx = null;
-      if (hold || cur.t < T - 1e-9 || (qx && qx.sim.t < T - 1e-9) || (T >= tb && nxt && (nxt.far || nxt.t < T - 1e-9))) { heldAt = clockMs(); return out; }
+      if (hold || cur.t < T - 1e-9 || (qx && qx.sim.t < T - 1e-9) || (T >= tb && nxt && (nxt.far || nxt.t < T - 1e-9))) { heldAt = clockMs(); if (keep) out.length = on; return out; }
     }
-    let rec = swap(T, placed(cur, T), mix > 0 ? placed(nxt, T) : null, mix, tb, cur.gone);
+    let rec = keep ? swapK(T, placedK(cur, T), mix > 0 ? placedK(nxt, T) : null, mix, tb, cur.gone) : swap(T, placed(cur, T), mix > 0 ? placed(nxt, T) : null, mix, tb, cur.gone);
     // (DYS-39: after a jump, the quick simulation's street hands over to the full one; the full simulations note when
     // each vehicle is hidden through the window, as in a hand-over's own)
     // (past its length it goes on while a quick-only vehicle is still drawn, never hidden yet: at most QUICK_MAX times)
@@ -537,7 +595,7 @@ export function createStreets(routes, frame, opt = {}) {
     return faded();
 
     function emit(p, s) {
-      if (out.length >= cap) return;
+      if ((keep ? on : out.length) >= cap) return;
       const S = streets[p.i], c = p.c, alpha = shows(S, s, c);
       if (alpha <= 0.04) return;
       const q = GC_DIET && S.line.atTo ? S.line.atTo(Q, s, 8) : S.line.at(s, 8), l = c.lc, u = l ? min(1, max(0, (T - l.t0) / c.lcd)) : 1;
@@ -545,6 +603,16 @@ export function createStreets(routes, frame, opt = {}) {
       const heading = q.heading + Math.atan((6 * u * (1 - u) * dl) / c.lcd / max(c.v, l?.d ? 3 : 1)) / DEG;
       const cs = Math.cos(q.heading * DEG), sn = Math.sin(q.heading * DEG), px = q.x + lw * cs, py = q.y - lw * sn;
       const pitch = Math.atan2(GC_DIET && S.line.hAt ? S.line.hAt(min(S.L, s + 3)) - S.line.hAt(max(0, s - 3)) : S.line.at(min(S.L, s + 3), 8).h - S.line.at(max(0, s - 3), 8).h, 6) / DEG;
+      if (keep) {
+        const o = recs[on] || (recs[on] = { id: "", kind: "", model: "", paint: 0, street: "", si: 0, lane: 0, s: 0, x: 0, y: 0, z: 0, zRoad: 0, h: 0,
+          heading: 0, pitch: 0, len: 0, type: "", light: "", tint: 0, alpha: 0, speed: 0, stopped: false, brake: false });
+        o.id = c.id; o.kind = c.kind; o.model = c.model; o.paint = c.paint; o.street = S.r.name; o.si = p.i; o.lane = p.li; o.s = s;
+        o.x = px; o.y = py; o.z = frame.z(px, py, q.h); o.zRoad = frame.z(px, py, q.h - lift); o.h = q.h; o.heading = heading; o.pitch = pitch;
+        o.len = FL.lenOf[c.model]; o.type = c.type; o.light = sn * -px + cs * -py > 0 ? "head" : "tail"; o.tint = hs(c.paint, 0, 7); o.alpha = alpha;
+        o.speed = c.v; o.stopped = c.v < 0.3; o.brake = c.a < -0.6 || c.v < 0.3;
+        out[on++] = o;
+        return;
+      }
       out.push({ id: c.id, kind: c.kind, model: c.model, paint: c.paint, street: S.r.name, si: p.i, lane: p.li, s,
         x: px, y: py, z: frame.z(px, py, q.h), zRoad: frame.z(px, py, q.h - lift), h: q.h, heading, pitch, len: FL.lenOf[c.model], type: c.type,
         light: sn * -px + cs * -py > 0 ? "head" : "tail", tint: hs(c.paint, 0, 7), alpha, speed: c.v, stopped: c.v < 0.3, brake: c.a < -0.6 || c.v < 0.3 });

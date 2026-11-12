@@ -10,6 +10,10 @@ import { u01, SEED } from "../hash.js";
 import { polyline, navLights, view } from "../geo.js";
 
 const DEG = Math.PI / 180;
+// (DYS-266 zoom-gc: rate()'s SF time kept by its slot: a frame asked sfTime for a new object of 17 fields for every
+// corridor's every slot in flight (~200 a frame, the same few slots frame after frame); only its hour, day and whether
+// it is a weekend are read. The same numbers; ?gcdiet=0: as before)
+const GC_DIET = typeof location === "undefined" || new URLSearchParams(location.search || "").get("gcdiet") !== "0";
 
 export function createAircraft(routes, frame, inDesk) {
   const cors = routes.aircraft.map((c, i) => {
@@ -24,8 +28,15 @@ export function createAircraft(routes, frame, inDesk) {
     return { ...c, i, line, enter, maxDur: line.L / (c.speed * 0.92) };
   });
 
+  const RT = 256, rtT = new Float64Array(RT).fill(NaN), rtH = new Float64Array(RT), rtD = new Float64Array(RT), rtW = new Uint8Array(RT), LT = { hour: 0, day: 0, weekend: false };
+  function ltAt(t) {
+    const j = ((Math.floor(t / AIRCRAFT.slot) % RT) + RT) % RT;
+    if (rtT[j] !== t) { const l = sfTime(t); rtT[j] = t; rtH[j] = l.hour; rtD[j] = l.day; rtW[j] = l.weekend ? 1 : 0; }
+    LT.hour = rtH[j]; LT.day = rtD[j]; LT.weekend = rtW[j] === 1;
+    return LT;
+  }
   function rate(c, t) {        // launches per second at time t
-    const lt = sfTime(t);
+    const lt = GC_DIET ? ltAt(t) : sfTime(t);
     let r = (c.per10 / 600) * AIRCRAFT_HOUR[Math.floor(lt.hour) % 24];
     if (c.kind === "light") {
       if (t < sunrise(lt.day) || t > sunset(lt.day)) return 0;

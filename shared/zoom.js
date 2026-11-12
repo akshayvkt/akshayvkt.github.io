@@ -107,6 +107,26 @@ const RELEASE_MS = 20000;                               // away from the window 
 const EYE_MAG = 1.8;                                    // the parallax is gone by this magnification
 const XK = "~x";                                        // windows_extra's tiles: the moment's key with this suffix
 const MAG_AT = new Set(["window", "desk"]);             // v3/zoom-r3: the spots that magnify (the router's magCap)
+// (DYS-266 zoom-gc, ?gcdiet=0: as before) the magnifier's bookkeeping without new strings, lists and closures a frame: a
+// tile's key made once per moment and cell (L3Store.key), a cell set read as a grid of 0 / 1 made once from it (the sets
+// never change once made), the view's cells and the tiles wanted in kept lists of kept records, the loops written out;
+// density() a call per vehicle per frame with no new string or closure. The same answers in the same order:
+// scripts/city_clock/zoom_same.mjs
+const GC_DIET = typeof location === "undefined" || new URLSearchParams(location.search || "").get("gcdiet") !== "0";
+// a cell set ("i,j" strings) as a grid of 0 / 1 over cols x rows, kept by the set
+const GRIDS = new WeakMap();
+function gridOf(set, cols, rows) {
+  let g = GRIDS.get(set);
+  if (g && g.cols === cols && g.rows === rows) return g.a;
+  const a = new Uint8Array(cols * rows);
+  for (const k of set) {
+    const c = k.indexOf(","), i = +k.slice(0, c), j = +k.slice(c + 1);
+    if (Number.isInteger(i) && Number.isInteger(j) && i >= 0 && j >= 0 && i < cols && j < rows && `${i},${j}` === k) a[j * cols + i] = 1;
+  }
+  GRIDS.set(set, (g = { cols, rows, a }));
+  return a;
+}
+const inGrid = (i, j, cols, rows) => Number.isInteger(i) && Number.isInteger(j) && i >= 0 && j >= 0 && i < cols && j < rows;
 
 // ------------------------------------------------------------------------------------------------ the variant program
 // The outside's backdrop shader with L3 read in momentColour (the dominant moment, the city band), the first-paint
@@ -269,8 +289,19 @@ class L3Store {
     this.fading = false;
     this.waitSince = new Map();          // moment -> when its first tile still waiting to fade in came (GROUP_MS)
   }
-  key(m, i, j) { return `${m}|${i}|${j}`; }
-  has(m, i, j) { return this.avail[m]?.has(`${i},${j}`) || false; }
+  key(m, i, j) {
+    if (!GC_DIET || !inGrid(i, j, this.cols, this.rows)) return `${m}|${i}|${j}`;
+    const K = this.keys || (this.keys = new Map());
+    let a = K.get(m);
+    if (!a) K.set(m, (a = new Array(this.cols * this.rows).fill(null)));
+    const n = j * this.cols + i;
+    return a[n] || (a[n] = `${m}|${i}|${j}`);
+  }
+  has(m, i, j) {
+    if (!GC_DIET || !inGrid(i, j, this.cols, this.rows)) return this.avail[m]?.has(`${i},${j}`) || false;
+    const s = this.avail[m];
+    return !!s && gridOf(s, this.cols, this.rows)[j * this.cols + i] === 1;
+  }
   url(m, i, j) {
     if (m.endsWith(XK)) {
       const b = m.slice(0, -XK.length), e = this.idx.moments[b];
@@ -285,6 +316,20 @@ class L3Store {
   /** What is wanted this frame, most wanted first: [[m, i, j], ...]. Starts fetches. */
   want(list, now) {
     this.wantNow.clear();
+    if (GC_DIET) {
+      for (let r = 0; r < list.length; r++) {
+        const t = list[r], key = this.key(t[0], t[1], t[2]);
+        if (!this.wantNow.has(key)) this.wantNow.set(key, r);
+        const w = this.where.get(key);
+        if (w) this.seen[w.slot] = now;
+      }
+      for (const key of this.wantNow.keys()) {
+        if (this.fetching >= MAX_FETCH) break;
+        if (this.where.has(key) || this.pending.has(key) || this.failed.has(key) || this.waiting(key, now)) continue;
+        this._fetch(key);
+      }
+      return;
+    }
     list.forEach(([m, i, j], r) => {
       const key = this.key(m, i, j);
       if (!this.wantNow.has(key)) this.wantNow.set(key, r);
@@ -455,7 +500,15 @@ class L3Store {
     this.mapDirty = true;
   }
   /** Are all these cells of moment m in (or given up)? */
-  inFor(m, cells) { return cells.every(([i, j]) => { const k = this.key(m, i, j); return this.where.has(k) || this.failed.has(k) || !this.has(m, i, j); }); }
+  inFor(m, cells, n = cells.length) {
+    if (!GC_DIET) return cells.every(([i, j]) => { const k = this.key(m, i, j); return this.where.has(k) || this.failed.has(k) || !this.has(m, i, j); });
+    // (DYS-266: the first n of cells, as every() over cells.slice(0, n) asks them)
+    for (let q = 0, e = Math.min(n, cells.length); q < e; q++) {
+      const c = cells[q], k = this.key(m, c[0], c[1]);
+      if (!(this.where.has(k) || this.failed.has(k) || !this.has(m, c[0], c[1]))) return false;
+    }
+    return true;
+  }
   /** The grid map for the moments in the outside's shader slots (R slot + 1, G resident, B fade), to the GPU when it
    * changed. x: windows_extra on (slot 0's extra cells in a second part, rows + 1 on, below a copy of the last row: the
    * coverage's bilinear read at the grid's bottom edge sees what a clamp would). v3/zoom-sharp: slots 1-3's moments'
@@ -661,6 +714,139 @@ export async function attachMagnifier(nav) {
     phoneL0 = want;
   }
 
+  // (DYS-266 zoom-gc) want()'s from the view's cells on, without its garbage: the cells in kept records (CP) listed in CL,
+  // sorted in place (a stable insertion sort: the order sort() gives with the same comparison), deduplicated by a stamp
+  // grid into VC (viewCells); the tiles wanted in kept records (OP) listed in OL; each fetched moment's share in a kept
+  // list of kept pairs (SH); the prefetch's checks and its hero-tile order by numbers kept, each distance once
+  const CP = [], CL = [], VC = [], OP = [], OL = [], SH = new Map(), EMPTY = [];
+  let stamp = null, stampN = 0, allOf = new Map(), ALL = [], ALLD = [];
+  const byD = (a, b) => a[2] - b[2];
+  function wantK(now, here, visible, pair, incoming, next) {
+    let nc = 0;
+    const cellsOf = l3CellsK();
+    if (here && cellsOf) {
+      const g = index.grid, td = index.tile_deg, G = gridOf(cellsOf, g.cols, g.rows);
+      const f = focus && now - focus.t < FOCUS_MS ? focus : null;
+      const cy = f ? f.yaw : (visible.yaw[0] + visible.yaw[1]) / 2, ce = f ? f.el : (visible.el[0] + visible.el[1]) / 2;
+      const hy = Math.max(0.5, (visible.yaw[1] - visible.yaw[0]) / 2), he = Math.max(0.5, (visible.el[1] - visible.el[0]) / 2);
+      const add = (y0, y1, e0, e1) => {
+        for (let i = Math.max(0, Math.floor((y0 - g.yaw0) / td)); i <= Math.min(g.cols - 1, Math.floor((y1 - g.yaw0) / td)); i++)
+          for (let j = Math.max(0, Math.floor((g.el_top - e1) / td)); j <= Math.min(g.rows - 1, Math.floor((g.el_top - e0) / td)); j++)
+            if (G[j * g.cols + i] === 1) {
+              const dy = g.yaw0 + (i + 0.5) * td - cy, de = g.el_top - (j + 0.5) * td - ce;
+              const c = CP[nc] || (CP[nc] = [0, 0, 0]);
+              c[0] = i; c[1] = j; c[2] = Math.max(Math.abs(dy) / hy, Math.abs(de) / he) + 0.01 * Math.hypot(dy / hy, de / he);
+              CL[nc++] = c;
+            }
+      };
+      if (f && !(tier === "T1" && OUT_PEAK > 0 && (rig.zoomOut || !rig.magnified))) add(f.yaw - 3, f.yaw + 3, f.el - 2, f.el + 2);
+      if (lf3 < LF3_WANT && !visible.none) add(visible.yaw[0] - 0.75, visible.yaw[1] + 0.75, visible.el[0] - 0.75, visible.el[1] + 0.75);
+      for (let a = 1; a < nc; a++) { const c = CL[a]; let b = a - 1; while (b >= 0 && byD(CL[b], c) > 0) { CL[b + 1] = CL[b]; b--; } CL[b + 1] = c; }
+    }
+    // (the first of each cell, in that order)
+    const g0 = index?.grid;
+    if (g0 && (!stamp || stamp.length !== g0.cols * g0.rows)) stamp = new Uint32Array(g0.cols * g0.rows);
+    if (++stampN > 4e9) { stamp.fill(0); stampN = 1; }
+    let nv = 0;
+    for (let q = 0; q < nc; q++) { const c = CL[q], k = c[1] * g0.cols + c[0]; if (stamp[k] === stampN) continue; stamp[k] = stampN; VC[nv++] = c; }
+    VC.length = nv;
+    viewCells = VC;
+    const shownPair = pair || [l3M[0]];
+    const fetchFor = [...new Set([...l3M.filter((id) => id && shownPair.includes(id)), ...incoming].filter((id) => id && L3.avail[id]))];
+    const keep = l3M.filter((id) => id && !fetchFor.includes(id));
+    const per = Math.max(1, Math.floor(L3.n / Math.max(1, fetchFor.length + keep.length)));
+    const got = new Map();
+    let no = 0;
+    const put = (id, i, j, d) => { const t = OP[no] || (OP[no] = [null, 0, 0, 0]); t[0] = id; t[1] = i; t[2] = j; t[3] = d; OL[no++] = t; };
+    const take = (list) => {
+      for (let q = 0; q < nv; q++) {
+        const c = VC[q], i = c[0], j = c[1], d = c[2];
+        for (let r = 0; r < list.length; r++) {
+          const id = list[r][0], held = list[r][1];
+          if ((got.get(id) || 0) >= per || !L3.has(id, i, j) || (held && !L3.where.has(L3.key(id, i, j)))) continue;
+          got.set(id, (got.get(id) || 0) + 1);
+          put(id, i, j, d);
+          if (id === l3Moment && l3X > 0 && L3.has(xk(id), i, j)) put(xk(id), i, j, d);
+        }
+      }
+    };
+    take([...fetchFor.filter((id) => !incoming.includes(id)).map((id) => [id, false]), ...keep.map((id) => [id, true])]);
+    take(fetchFor.filter((id) => incoming.includes(id)).map((id) => [id, false]));
+    if (no > L3.n) no = L3.n;
+    if (outbound) { let k = 0; for (let q = 0; q < no; q++) { const t = OL[q]; if (L3.where.has(L3.key(t[0], t[1], t[2]))) OL[k++] = t; } no = k; }
+    OL.length = no;
+    const out = OL;
+    L3.want(out, now);
+    shareOf.clear();
+    for (const L of SH.values()) L.n = 0;
+    for (let q = 0; q < no; q++) {
+      const t = out[q], id = t[0];
+      if (id.endsWith(XK)) continue;
+      let L = SH.get(id);
+      if (!L) SH.set(id, (L = { n: 0, list: [], pairs: [] }));
+      if (!L.n) shareOf.set(id, L.list);
+      const pr = L.pairs[L.n] || (L.pairs[L.n] = [0, 0]);
+      pr[0] = t[1]; pr[1] = t[2]; L.list[L.n++] = pr;
+    }
+    for (const L of SH.values()) L.list.length = L.n;
+    share = fetchFor.length ? Math.min(...fetchFor.map((id) => shareOf.get(id)?.length || 0)) : nv;
+    shownSet.clear(); groupSet.clear();
+    for (const id of l3M) if (id) shownSet.add(id);
+    for (const id of shownSet) {
+      const sh = shareOf.get(id) || EMPTY;
+      let k = 0;
+      for (let q = 0; q < sh.length; q++) if (L3.where.has(L3.key(id, sh[q][0], sh[q][1]))) k++;
+      if (k < sh.length / 2) groupSet.add(id);
+    }
+    for (const id of shownSet) { const sh = shareOf.get(id); L3.release(id, now, sh ? L3.inFor(id, sh) : L3.inFor(id, VC, Math.max(1, share))); }
+    for (const id of [...L3.waitSince.keys()]) if (!shownSet.has(id)) L3.release(id, now, true, now - 1e6);
+    L3.syncMap(l3M, now, reduced() ? 150 : FADE_MS, l3X > 0);
+    const cap0 = PREFETCH_BYTES[tier] || PREFETCH_BYTES.T2;
+    const allIn = () => { for (let q = 0; q < no; q++) { const t = out[q]; if (!L3.where.has(L3.key(t[0], t[1], t[2]))) return false; } return true; };
+    if (prefetchOn && l3Moment && !L3.fetching && allIn() && engine.state === "settled" && now - lastMove > 1500 && fast()) {
+      const nb = sharpOn ? next.filter((id) => L3.avail[id]).slice(0, 2 * (NEIGHBOURS[tier] || 1)) : [];
+      L3.trim(new Set([...shownSet, ...nb]), cap0);
+      let started = false;
+      const nbN = Math.min(nv, Math.ceil(L3.n / 2));
+      if (L3.blobBytes < cap0) {
+        for (let q = 0; q < nbN; q++) {
+          const i = VC[q][0], j = VC[q][1];
+          for (const id of nb) {
+            const k = L3.key(id, i, j);
+            if (!L3.has(id, i, j) || L3.where.has(k) || L3.blobs.has(k) || L3.kept.has(k) || L3.failed.has(k) || L3.waiting(k, now)) continue;
+            L3.prefetch(k, cap0); started = true; break;
+          }
+          if (started) break;
+        }
+      }
+      if (!started) for (const id of nb) if (outside.warm?.(id)) { started = true; break; }
+      if (!started && L3.blobBytes < cap0) {
+        // (the moment's cells as numbers, made once per set, in its order; each frame a copy sorted by its distance from
+        // the view's middle, each worked out once: the comparison sort() made, so the order sort() made)
+        const set = L3.avail[l3Moment];
+        let base = allOf.get(set);
+        if (!base) allOf.set(set, (base = [...set].map((s) => s.split(",").map(Number))));
+        const g = index.grid, td = index.tile_deg;
+        const cy = (visible.yaw[0] + visible.yaw[1]) / 2, ce = (visible.el[0] + visible.el[1]) / 2;
+        for (let q = 0; q < base.length; q++) {
+          const D = ALLD[q] || (ALLD[q] = [null, 0]), a = base[q];
+          D[0] = a; D[1] = Math.hypot(g.yaw0 + (a[0] + 0.5) * td - cy, g.el_top - (a[1] + 0.5) * td - ce);
+          ALL[q] = D;
+        }
+        ALL.length = base.length;
+        ALL.sort(byDist);
+        for (let q = 0; q < ALL.length; q++) {
+          const i = ALL[q][0][0], j = ALL[q][0][1], k = L3.key(l3Moment, i, j);
+          if (L3.where.has(k) || L3.blobs.has(k) || L3.kept.has(k) || L3.failed.has(k) || L3.waiting(k, now)) continue;
+          L3.prefetch(k, cap0);
+          break;
+        }
+      }
+    }
+  }
+  const byDist = (p, q) => p[1] - q[1];
+  const XKS = new Map(), xk = (id) => XKS.get(id) || (XKS.set(id, id + XK), id + XK);
+
   const hooks = {
     mag: () => effMag(),
     // (v3/street-traffic: the outside draws its 3D vehicles no sharper than the picture behind them)
@@ -757,6 +943,7 @@ export async function attachMagnifier(nav) {
       // the view's cells (every moment has the same ones), nearest the gesture's point or the view's middle first
       // (v3/zoom-sharp: nearest in the screen's own shape, so a share of them is a rectangle like the view: a phone's
       // tall middle as a desktop's wide one)
+      if (GC_DIET) { wantK(now, here, visible, pair, incoming, next); return; }
       const cells = [], cellsOf = l3Cells();
       if (here && cellsOf) {
         const g = index.grid, td = index.tile_deg;
@@ -908,7 +1095,42 @@ export async function attachMagnifier(nav) {
     const v = (a, b) => (a < 0 || b < 0 || a >= cols || b >= rows ? 0 : at(a, b));
     return (v(i, j) * (1 - fx) + v(i + 1, j) * fx) * (1 - fy) + (v(i, j + 1) * (1 - fx) + v(i + 1, j + 1) * fx) * fy;
   };
+  // (DYS-266 zoom-gc: bilinear's cell values from a grid (and a second as a mask, or a byte grid over div), no closure)
+  const cellV = (a, b, cols, rows, A, B, div) => {
+    if (a < 0 || b < 0 || a >= cols || b >= rows) return 0;
+    const k = b * cols + a;
+    return div ? A[k] / div : A[k] === 1 && (!B || B[k] === 1) ? 1 : 0;
+  };
+  const bilinearG = (gx, gy, cols, rows, A, B, div) => {
+    const x = gx - 0.5, y = gy - 0.5, i = Math.floor(x), j = Math.floor(y), fx = x - i, fy = y - j;
+    return (cellV(i, j, cols, rows, A, B, div) * (1 - fx) + cellV(i + 1, j, cols, rows, A, B, div) * fx) * (1 - fy)
+      + (cellV(i, j + 1, cols, rows, A, B, div) * (1 - fx) + cellV(i + 1, j + 1, cols, rows, A, B, div) * fx) * fy;
+  };
+  let l3Any;   // (l3Cells()'s stand-in set when slot 0's moment has none: the first moment's, found once)
+  const l3CellsK = () => (L3 ? L3.avail[l3Moment] || (l3Any !== undefined ? l3Any : (l3Any = Object.entries(L3.avail).find(([m]) => !m.endsWith(XK))?.[1] || null)) : null);
+  function densityK(yaw, el) {
+    let w3 = 0, n = 0;
+    const cells = index && l3CellsK();
+    const g = index?.grid, G = cells ? gridOf(cells, g.cols, g.rows) : null;
+    if (cells && el < (meta.bands?.city?.el?.[1] ?? 6)) {
+      const td = index.tile_deg;
+      w3 = smooth01((bilinearG((yaw - g.yaw0) / td, (g.el_top - el) / td, g.cols, g.rows, G, null, 0) - 0.5) / 0.5);
+    }
+    if (nearMap) {
+      const N = nearMap;
+      n = bilinearG((yaw - N.yaw0) / N.deg, (N.el_top - el) / N.deg, N.cols, N.rows, N.cover, null, 255);
+      const ok = cells && nearOk?.[l3Moment];
+      if (ok && n > 0) {
+        const td = index.tile_deg;
+        const wo = smooth01((bilinearG((yaw - g.yaw0) / td, (g.el_top - el) / td, g.cols, g.rows, G, gridOf(ok, g.cols, g.rows), 0) - 0.5) / 0.5);
+        n *= 1 - wo;
+      }
+    }
+    const lc = (1 - w3) * Math.log(L0_PPD) + w3 * Math.log(index?.ppd || 256);
+    return Math.exp((1 - n) * lc + n * Math.log(nearMap?.ppd || 88));
+  }
   function density(yaw, el) {
+    if (GC_DIET) return densityK(yaw, el);
     let w3 = 0, n = 0;
     const cells = index && l3Cells();
     if (cells && el < (meta.bands?.city?.el?.[1] ?? 6)) {

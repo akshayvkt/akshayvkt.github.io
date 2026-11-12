@@ -16,6 +16,10 @@ import { sfTime, sfDay, sfToT, sunCross, utcOffset } from "../clock.js";
 import { u01, u24, SEED, GLSL_HASH } from "../hash.js";
 import { clamp, smooth } from "../geo.js";
 
+// (DYS-266 zoom-gc: at()'s keep, city.js state()'s for the outside's own calls: the deck lamps lit written into one of two
+// kept lists of kept records in turn (the one handed out last stays as it was), not ~110 new objects and two lists a
+// frame; the same keys in the same order. ?gcdiet=0 or any other call: as before)
+const GC_DIET = typeof location === "undefined" || new URLSearchParams(location.search || "").get("gcdiet") !== "0";
 const MID = [15, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349];   // mid-month day of year
 
 export function monthly(doy) {
@@ -100,10 +104,26 @@ export function createWindows(routes, frame, bridge) {
     }
   }
 
-  function at(T, c, lampAlt) {
+  const KL = [[], []], KR = [[], []];
+  let kpar = 0;
+  function deckKept(lt, T) {
+    const out = KL[kpar], recs = KR[kpar];
+    kpar ^= 1;
+    let n = 0;
+    for (let i = 0; i < deck.length; i++) {
+      const p = deck[i], level = lamp(p.j, lt, T);
+      if (!(level > 0.001)) continue;
+      const o = recs[n] || (recs[n] = { id: "", kind: "lamp", x: 0, y: 0, z: 0, colour: "amber", level: 0 });
+      o.id = p.id; o.x = p.x; o.y = p.y; o.z = p.z; o.level = level;
+      out[n++] = o;
+    }
+    out.length = n;
+    return out;
+  }
+  function at(T, c, lampAlt, keep = false) {
     const st = state(T, c);
     const lt = lampTimes(T, c, lampAlt);
-    const lamps = deck.map((p) => ({ id: p.id, kind: "lamp", x: p.x, y: p.y, z: p.z, colour: "amber", level: lamp(p.j, lt, T) }))
+    const lamps = keep && GC_DIET ? deckKept(lt, T) : deck.map((p) => ({ id: p.id, kind: "lamp", x: p.x, y: p.y, z: p.z, colour: "amber", level: lamp(p.j, lt, T) }))
       .filter((p) => p.level > 0.001);
     // share of street lamps on (for the light layer's overall gain) from 200 sample lamps
     let on = 0;

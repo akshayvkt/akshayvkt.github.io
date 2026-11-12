@@ -224,8 +224,81 @@ export function createBridge(routes, frame) {
     return u01(SEED.bridge, id, k, 1) < density(t, dir) / f ? 1 : 0;
   }
 
+  // (DYS-266 zoom-gc: keep, city.js state()'s for the outside's own calls: no new record, id or draws a vehicle a frame.
+  // Each lane's cells in a ring by their number, with what is fixed for a cell (whether it holds a vehicle, present()'s
+  // pure answer; its id, kind, length, tint, model, paint and jitter draws); the records written into one of two kept
+  // sets in turn, so the state before stays as it was while the next is made. The same numbers, the same keys in the
+  // same order. Any other call (the sound's, every node tool) as before; ?gcdiet=0: as before)
+  const RING = 256, ring = lanes.map(() => ({ k: new Float64Array(RING).fill(NaN), c: [] })), KEPT = [[], []], RECS = [[], []];
+  let kpar = 0;
+  function cellOf(li, k) {
+    const R = ring[li], j = ((k % RING) + RING) % RING;
+    let c = R.c[j];
+    if (c && R.k[j] === k) return c;
+    if (!c) c = R.c[j] = { p: 0, id: "", heavy: false, jo: 0, per: 0, jp: 0, len0: 0, tint: 0, type: "", model: "", paint: 0, len: 0 };
+    R.k[j] = k;
+    c.p = present(li, k);
+    if (!c.p) return c;
+    const w = lanes[li][0], dir = lanes[li][1], idj = TRAFFIC_REAL ? laneId(w, dir) : 0, id = laneId(w, dir);
+    if (TRAFFIC_REAL) {
+      c.jo = JIT.off * (2 * u01(SEED.bridge, idj, k, 6) - 1);
+      c.per = JIT.period[0] + (JIT.period[1] - JIT.period[0]) * u01(SEED.bridge, idj, k, 7);
+      c.jp = u01(SEED.bridge, idj, k, 8);
+    }
+    c.id = `v${id}:${k}`;
+    c.heavy = u01(SEED.bridge, id, k, 2) < BT.heavy;
+    c.len0 = c.heavy ? 12 + 6 * u01(SEED.bridge, id, k, 3) : 4.5;
+    c.tint = u01(SEED.bridge, id, k, 4);
+    if (TRAFFIC_REAL) {
+      const r = u01(SEED.bridge, id, k, 9);
+      const ty = c.heavy ? (r < 0.5 ? "bus" : "boxtruck") : FL.mix[pickW(FL.mix, r)][1], P = FL.types[ty];
+      c.type = ty;
+      c.model = ty === "bus" ? "muni" : P.models[pickW(P.models, u01(SEED.bridge, id, k, 10))][1];
+      c.paint = ty === "bus" ? 0 : pickW(CAR_PAINT, u01(SEED.bridge, id, k, 11));
+      c.len = P.len || FL.lenOf[c.model];
+    }
+    return c;
+  }
+  function atKept(T) {
+    const out = KEPT[kpar], recs = RECS[kpar];
+    kpar ^= 1;
+    let n = 0;
+    const X0 = X(T, 0), X1 = X(T, 1);
+    for (let li = 0; li < lanes.length; li++) {
+      const w = lanes[li][0], dir = lanes[li][1];
+      const x = (dir ? X1 : X0) * laneV(w);
+      const k0 = Math.ceil((x - L) / BT.cell), k1 = Math.floor(x / BT.cell);
+      for (let k = k0; k <= k1; k++) {
+        const c = cellOf(li, k);
+        if (!c.p) continue;
+        let u = x - k * BT.cell;
+        if (TRAFFIC_REAL) u += c.jo + JIT.wob * Math.sin(2 * Math.PI * (T / c.per + c.jp));
+        const s = dir === 1 ? S0 + u : S1 - u;
+        const deck = onDeck(s);
+        if (deck <= 0) continue;
+        const p = pointTo(s, w, deckBottom(s) + B.truss + B.car_light), px = p[0], py = p[1], pz = p[2];
+        let v = recs[n];
+        if (!v) v = recs[n] = TRAFFIC_REAL
+          ? { id: "", kind: "", dir: "", lane: 0, s: 0, x: 0, y: 0, z: 0, heading: 0, len: 0, light: "", tint: 0, alpha: 0, type: "", model: "", paint: 0, zRoad: 0, railW: 0 }
+          : { id: "", kind: "", dir: "", lane: 0, s: 0, x: 0, y: 0, z: 0, heading: 0, len: 0, light: "", tint: 0, alpha: 0 };
+        v.id = c.id; v.kind = c.heavy ? "heavy" : "car"; v.dir = dir ? "nb" : "sb"; v.lane = w; v.s = s;
+        v.x = px; v.y = py; v.z = pz; v.heading = dir ? B.bearing : (B.bearing + 180) % 360;
+        v.len = c.len0; v.light = dir ? "tail" : "head"; v.tint = c.tint; v.alpha = Math.min(1, u / 40, (L - u) / 40) * deck;
+        if (TRAFFIC_REAL) {
+          v.type = c.type; v.model = c.model; v.paint = c.paint; v.len = c.len;
+          v.zRoad = frame.z(px, py, deckBottom(s) + B.truss + B.road);
+          v.railW = Math.max(0, B.cable_w - w);
+        }
+        out[n++] = v;
+      }
+    }
+    out.length = n;
+    return out;
+  }
+
   // ---------------- the vehicles on the bridge at T
-  function at(T) {
+  function at(T, keep = false) {
+    if (keep && GC_DIET) return atKept(T);
     const out = [];
     const Xd = [X(T, 0), X(T, 1)];
     for (let li = 0; li < lanes.length; li++) {

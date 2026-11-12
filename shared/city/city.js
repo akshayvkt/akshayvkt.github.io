@@ -18,7 +18,7 @@
 import { clockAt } from "./clock.js";
 import { STREET_SHOW } from "./tables.js";
 import { createLighting } from "./lighting.js";
-import { makeFrame, smooth, view, wrap180 } from "./geo.js";
+import { makeFrame, smooth, view, wrap180, wrap360 } from "./geo.js";
 import { createBridge } from "./events/bridge.js";
 
 // the street traffic's switch (deploy 2a ships without it, the coordinator 14:3x 27 Oct, as the live site has none): off,
@@ -73,6 +73,26 @@ function look(it, L, M, lighting) {
   const backlit = L.day * (1 - smooth(4, 18, L.sunAlt)) * facing ** 3;
   it.look = { day: L.day, backlit, lights: L.lights, hull: L.day < 0.5 ? "lights" : backlit > 0.5 ? "backlit" : "day" };
   if (M) { it.look.hull = M.hull; it.look.moment = lighting.item(it, M); }
+  return it;
+}
+
+// (DYS-266 zoom-gc: a street car's view and look written into the ones it has (its record is kept, events/streets.js),
+// the same keys in the same order as view() and look() make them; ?gcdiet=0: new ones every frame, as before)
+const GC_DIET = typeof location === "undefined" || new URLSearchParams(location.search || "").get("gcdiet") !== "0";
+const DEGc = Math.PI / 180;
+function viewTo(o, x, y, z) {
+  const d = Math.hypot(x, y);
+  o.bearing = wrap360(Math.atan2(x, y) / DEGc); o.elev = Math.atan2(z, d) / DEGc; o.dist = Math.hypot(d, z);
+  return o;
+}
+function lookTo(it, L, M, lighting) {
+  const b = it.view.bearing;
+  const facing = Math.max(0, Math.cos((wrap180(L.sunAz - b) * Math.PI) / 180));
+  const backlit = L.day * (1 - smooth(4, 18, L.sunAlt)) * facing ** 3;
+  const o = it.look || (it.look = { day: 0, backlit: 0, lights: 0, hull: "" });
+  o.day = L.day; o.backlit = backlit; o.lights = L.lights; o.hull = L.day < 0.5 ? "lights" : backlit > 0.5 ? "backlit" : "day";
+  if (M) { o.hull = M.hull; o.moment = lighting.itemTo ? lighting.itemTo(o.moment, it, M) : lighting.item(it, M); }
+  else if (o.moment !== undefined) o.moment = undefined;
   return it;
 }
 
@@ -142,6 +162,9 @@ export function createCity(routes, opts = {}) {
 
   function state(T, env = {}) {
     const c = clockAt(T, 0);
+    // (DYS-266 zoom-gc: own, the outside's calls (they name streetsHold): their vehicles', cars' and deck lamps' records
+    // kept, two sets in turn)
+    const own = GC_DIET && env.streetsHold !== undefined;
     const M = momentLight ? momentLight.at(c.sun) : null;
     c.fog = env.fog !== undefined && env.fog !== null ? env.fog : M ? M.fog : 0;
     const L = lighting(c);
@@ -152,10 +175,10 @@ export function createCity(routes, opts = {}) {
     const fe = ferries.at(T, c).map(lk);
     const pl = aircraft.at(T, c, env).map(lk);
     const gl = gulls.at(T, c, env).map(lk);
-    const w = windows.at(T, c, env.lampAlt ?? undefined);
+    const w = windows.at(T, c, env.lampAlt ?? undefined, own);
     // bridge traffic fades toward the view behind it by the scene's haze along the line of sight, as every other
     // sprite does (lighting.js): a car is no plainer than the deck it drives on
-    const vehicles = bridge.at(T);
+    const vehicles = bridge.at(T, own);
     if (M) for (const v of vehicles) v.haze = 1 - momentLight.haze(M, Math.hypot(v.x, v.y, v.z), frame.h(v.x, v.y, v.z));
     // the streets' traffic, kept apart from the bridge's (whose checks count the deck), hazed the same way
     if (!streets) loadStreets();
@@ -164,10 +187,11 @@ export function createCity(routes, opts = {}) {
     // (sun well below STREET_SHOW.sunLo))
     if (env.streetsHold !== undefined) streetsHold = !!env.streetsHold;
     // (DYS-149 SL review: own, the outside's calls (they name streetsHold): the clock its worker requests are made for)
-    const cars = streets && c.sun.alt > STREET_SHOW.sunLo - 1 ? streets.at(T, typeof window !== "undefined" ? { budgetMs: sliceMs(), hold: streetsHold, own: env.streetsHold !== undefined } : undefined) : [];
+    const cars = streets && c.sun.alt > STREET_SHOW.sunLo - 1 ? streets.at(T, typeof window !== "undefined" ? { budgetMs: sliceMs(), hold: streetsHold, own: env.streetsHold !== undefined } : undefined, own) : [];
     // (their view and the moment's lighting hints, as every sprite's: the outside draws them from the cars atlas with
     // the hull program)
-    for (const v of cars) { v.view = view(v.x, v.y, v.z); lk(v); }
+    if (own) for (const v of cars) { viewTo(v.view || (v.view = { bearing: 0, elev: 0, dist: 0 }), v.x, v.y, v.z); lookTo(v, L, M, momentLight); }
+    else for (const v of cars) { v.view = view(v.x, v.y, v.z); lk(v); }
     if (M) for (const v of cars) v.haze = 1 - momentLight.haze(M, Math.hypot(v.x, v.y, v.z), frame.h(v.x, v.y, v.z));
     return {
       T,

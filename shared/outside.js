@@ -1768,6 +1768,21 @@ export async function createOutside(engine, opts = {}) {
   let lastLayer = null, carDebugInfo = null;
   // (DYS-149 gc-diet: kept for the draws below; each read at once, before the next use)
   const NONE = [], MM = new Float64Array(16), M16 = new Float64Array(16), ROT = [0, 0, 0, 0, 0, 0, 0, 0, 0], CAR = [0, 0, 0, 0], DIR = [0, 0, 0], LK = [0, 0, 0, 0];
+  // (DYS-266 zoom-gc, ?gcdiet=0: as before) drawCars3d's vehicle records (each its model -> clip C and box) kept by number,
+  // listed in kept sharp and soft lists; drawCarGroup's items and erasers kept the same way (groupItems); glintCar into a
+  // kept pair; offWindow2's cast shadow into a kept record; occlSlot's least-recently-used list moved along in place (no
+  // splice's new list). The same numbers in the same order
+  const V3R = [], V3S = [], V3W = [], GIT = [], GER = [], GIL = [], GLK = [0, 0], CSW = { Ls: 0, ux: 0, uy: 0, eu: 0, ew: 0 };
+  let giStamp = 0;
+  const v3Rec = (k) => V3R[k] || (V3R[k] = { i: 0, C: new Float64Array(16), mir: 1, box: [0, 0, 0, 0], f: 0, ppd: 0 });
+  const glintCar = (h1, h2) => {
+    const o = GC_DIET ? GLK : [0, 0];
+    o[0] = h1 < 0.15 ? 0.1 + (0.2 * h1) / 0.15 : h1 < 0.85 ? 0.6 + (0.35 * (h1 - 0.15)) / 0.7 : 1 + (0.15 * (h1 - 0.85)) / 0.15;
+    o[1] = 0.5 + 0.4 * h2;
+    return o;
+  };
+  // (key to the newest end of lru, from its place k: as lru.splice(k, 1) then lru.push(key))
+  const lruTouch = (lru, k, key) => { const e = lru.length - 1; for (let q = k; q < e; q++) lru[q] = lru[q + 1]; lru[e] = key; };
   const SHA = [0, 0, 0, 0], SHC = [0, 0, 0, 0], QA = [0, 0, 0, 0], QB = [0, 0, 0, 0], shapes = new Map();
   const mul4 = (a, b, o = new Float64Array(16)) => {
     for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) {
@@ -1860,12 +1875,14 @@ export async function createOutside(engine, opts = {}) {
   // the shadow vehicle b (length L, beam B, height Ht, m) casts on the road in the sun, in its own axes (x right, y
   // forward): its direction (ux, uy), its length Ls (at most 25 m) and its quad's half sizes along it (eu) and across
   // (ew); null when it casts none (drawCarGroup draws it, DYS-111's cull reaches for it)
-  function castShadow(D, b, sun, sunOn, L, B, Ht) {
+  function castShadow(D, b, sun, sunOn, L, B, Ht, into) {
     const sx = sun[0] * D[b + 3] + sun[1] * D[b + 4] + sun[2] * D[b + 5], sy = sun[0] * D[b + 6] + sun[1] * D[b + 7] + sun[2] * D[b + 8];
     const sz = sun[0] * D[b + 9] + sun[1] * D[b + 10] + sun[2] * D[b + 11], sh = Math.hypot(sx, sy);
     if (!(sunOn > 0.05 && sz > 0.05 && sh > 1e-3)) return null;
     const Ls = Math.min(25, (Ht * sh) / sz), ux = -sx / sh, uy = -sy / sh;
-    return { Ls, ux, uy, eu: Math.abs(ux) * B / 2 + Math.abs(uy) * L / 2, ew: Math.abs(uy) * B / 2 + Math.abs(ux) * L / 2 };
+    const eu = Math.abs(ux) * B / 2 + Math.abs(uy) * L / 2, ew = Math.abs(uy) * B / 2 + Math.abs(ux) * L / 2;
+    if (into) { into.Ls = Ls; into.ux = ux; into.uy = uy; into.eu = eu; into.ew = ew; return into; }   // (DYS-265 zoom-gc: a kept record)
+    return { Ls, ux, uy, eu, ew };
   }
   // DYS-111: whether vehicle b (model -> clip C, mirrored mir) lies wholly off the window's rectangle (rect: x, y, w, h,
   // device px, y up, in a W x H frame): its body at full size (+0.6 m for the mirrors, +0.2 m over the roof), the contact
@@ -1899,7 +1916,7 @@ export async function createOutside(engine, opts = {}) {
   function offWindow2(C, D, b, mir, rect, W, H, s) {
     const len = D[b + 25], beam = D[b + 26], ht = D[b + 27], kl = Math.hypot(D[b + 6], D[b + 7], D[b + 8]) || 1;
     const L = len / kl / 2 + 0.6, B = beam / 2 + 0.6, Ht = ht + 0.2;
-    const cs = s && castShadow(D, b, s.sun, s.sunOn, len, beam, ht);
+    const cs = s && castShadow(D, b, s.sun, s.sunOn, len, beam, ht, CSW);   // (DYS-266: into a kept record, read at once)
     let cx = 0, cy = 0, ax = 0, ay = 0, bx = 0, by = 0;
     if (cs) {
       const { Ls, ux, uy, eu, ew } = cs;
@@ -2081,16 +2098,18 @@ export async function createOutside(engine, opts = {}) {
     // (DYS-111: the window's rectangle and the sun, for the off-window cull below)
     const rect = frame.window.rect, sunNow = env ? carSun(env) : null;
     // each vehicle's model -> clip, its box on the screen and how sharp it may be (the picture's density / the screen's)
-    const sharp = [], soft = [];
+    const sharp = GC_DIET ? V3S : [], soft = GC_DIET ? V3W : [];
+    let nR = 0, nS3 = 0, nW3 = 0;
     for (const i of events.order3) {
       if (carHalf && i & 1) continue;   // (DYS-161 memory, QA ?carhalf=1: the vehicles in even slots only)
       const b = i * F, view = D[b + 18], mir = meshMeta.version !== 2 && view > 4 ? -1 : 1;
       // (DYS-149 gc-diet: the model matrix into MM, and the corners below by number, not 9 new arrays and their
       // destructuring; the same numbers in the same order)
       const Mm = GC_DIET ? modelInto(MM, D, b, mir) : [D[b + 3] * mir, D[b + 4] * mir, D[b + 5] * mir, 0, D[b + 6], D[b + 7], D[b + 8], 0, D[b + 9], D[b + 10], D[b + 11], 0, D[b], D[b + 1], D[b + 2], 1];
-      const C = mul4(VP, Mm);
+      const R3 = GC_DIET ? v3Rec(nR) : null, C = GC_DIET ? mul4(VP, Mm, R3.C) : mul4(VP, Mm);
       const L = D[b + 25] / 2 + 0.6, B = D[b + 26] / 2 + 0.6, Ht = D[b + 27] + 0.2;   // (DYS-109: where outside-events.js writes them; was 27-29)
-      const box = [Infinity, Infinity, -Infinity, -Infinity];
+      const box = GC_DIET ? R3.box : [Infinity, Infinity, -Infinity, -Infinity];
+      if (GC_DIET) { box[0] = Infinity; box[1] = Infinity; box[2] = -Infinity; box[3] = -Infinity; }
       if (GC_DIET) {
         for (let q = 0; q < 8; q++) {
           const px = q & 1 ? B : -B, py = q & 2 ? L : -L, pz = q & 4 ? Ht : 0;
@@ -2118,8 +2137,12 @@ export async function createOutside(engine, opts = {}) {
         ppd = Math.exp((1 - w) * Math.log(ppd) + w * Math.log(PANO_L0_PPD));
       }
       const f = ppd / screenPpd;
-      (f >= CAR_SOFT_AT ? sharp : soft).push({ i, C, mir, box, f, ppd: Number.isFinite(ppd) ? ppd : 64 });
+      if (GC_DIET) {
+        nR++; R3.i = i; R3.mir = mir; R3.f = f; R3.ppd = Number.isFinite(ppd) ? ppd : 64;
+        if (f >= CAR_SOFT_AT) sharp[nS3++] = R3; else soft[nW3++] = R3;
+      } else (f >= CAR_SOFT_AT ? sharp : soft).push({ i, C, mir, box, f, ppd: Number.isFinite(ppd) ? ppd : 64 });
     }
+    if (GC_DIET) { sharp.length = nS3; soft.length = nW3; }
     const layers = [];
     // (the blur: the picture's sigma at its density here, window px per picture px = 1 / f, less what the layer already
     // has: ~0.45 window px from the 2x layer averaged down, ~0.4 of a texel enlarged bilinearly)
@@ -2169,7 +2192,12 @@ export async function createOutside(engine, opts = {}) {
     const key = i * 1000 + j, m = occl.meta.l3;
     if (!m.have.has(key)) return -1;
     const s = occl.slots.get(key);
-    if (s && s.ready) { const k = occl.lru.indexOf(key); if (k >= 0) occl.lru.splice(k, 1); occl.lru.push(key); return s.slot; }
+    if (s && s.ready) {
+      const k = occl.lru.indexOf(key);
+      if (GC_DIET && k >= 0) lruTouch(occl.lru, k, key);
+      else { if (k >= 0) occl.lru.splice(k, 1); occl.lru.push(key); }
+      return s.slot;
+    }
     if (s || occl.want.size >= 4 || held) return -1;
     if (!occl.atlas) {
       const W = OCCL_SPR * (m.tile_px + 4), H = Math.ceil(OCCL_SLOTS / OCCL_SPR) * 2 * (m.tile_px + 4), t = gl.createTexture();
@@ -2214,6 +2242,61 @@ export async function createOutside(engine, opts = {}) {
     if (occl.up.length) engine.requestFrame();
   }
 
+  // (DYS-266 zoom-gc) drawCarGroup's items with the switch on: each vehicle's {c, d} and each baked parked car near the
+  // group's vehicles as an eraser {p, C, C0, d}, kept records in a kept list (GIL), the erasers' model matrices kept with
+  // them; the same items in the same order, sorted far to near as there
+  function groupItems(group, D, F, VPg) {
+    if (!GC_DIET) {
+      const items = group.map((c) => ({ c, d: D[c.i * F + 12] }));
+      if (baked && meshGL.vaos.prius) {
+        const seen = new Set(), pm = meshMeta.models.prius;
+        for (const c of group) {
+          const b = c.i * F, cx = Math.floor(D[b] / 20), cz = Math.floor(D[b + 2] / 20);
+          for (let gx = -1; gx <= 1; gx++) for (let gz = -1; gz <= 1; gz++) {
+            for (const p of (GC_DIET ? baked.cellsN.get(cellKey(cx + gx, cz + gz)) : baked.cells.get(`${cx + gx},${cz + gz}`)) || (GC_DIET ? NONE : [])) {
+              if (seen.has(p) || Math.hypot(p.t[0] - D[b], p.t[2] - D[b + 2]) > 30) continue;
+              seen.add(p);
+              const k = 0.97, sx = (p.W / pm.beam) * k, sy = (p.L / pm.length) * k, sz = (p.H / pm.height) * k;
+              const Mm = [p.right[0] * sx, p.right[1] * sx, p.right[2] * sx, 0, p.fwd[0] * sy, p.fwd[1] * sy, p.fwd[2] * sy, 0, 0, sz, 0, 0, p.t[0], p.t[1], p.t[2], 1];
+              items.push({ p, C: mul4(VPg, Mm), C0: Mm, d: p.d });
+            }
+          }
+        }
+        items.sort((a, b2) => b2.d - a.d);
+      }
+      return items;
+    }
+    const items = GIL;
+    let n = 0, ne = 0;
+    for (let q = 0; q < group.length; q++) {
+      const c = group[q], it = GIT[q] || (GIT[q] = { c: null, d: 0 });
+      it.c = c; it.d = D[c.i * F + 12];
+      items[n++] = it;
+    }
+    if (baked && meshGL.vaos.prius) {
+      // (seen: a parked car taken once a call, marked with this call's number, not a new Set)
+      const st = ++giStamp, pm = meshMeta.models.prius;
+      for (const c of group) {
+        const b = c.i * F, cx = Math.floor(D[b] / 20), cz = Math.floor(D[b + 2] / 20);
+        for (let gx = -1; gx <= 1; gx++) for (let gz = -1; gz <= 1; gz++) {
+          for (const p of baked.cellsN.get(cellKey(cx + gx, cz + gz)) || NONE) {
+            if (p._gi === st || Math.hypot(p.t[0] - D[b], p.t[2] - D[b + 2]) > 30) continue;
+            p._gi = st;
+            const k = 0.97, sx = (p.W / pm.beam) * k, sy = (p.L / pm.length) * k, sz = (p.H / pm.height) * k;
+            const e = GER[ne] || (GER[ne] = { p: null, C: new Float64Array(16), C0: new Array(16).fill(0), d: 0 }), Mm = e.C0;
+            ne++;
+            Mm[0] = p.right[0] * sx; Mm[1] = p.right[1] * sx; Mm[2] = p.right[2] * sx; Mm[3] = 0; Mm[4] = p.fwd[0] * sy; Mm[5] = p.fwd[1] * sy; Mm[6] = p.fwd[2] * sy; Mm[7] = 0;
+            Mm[8] = 0; Mm[9] = sz; Mm[10] = 0; Mm[11] = 0; Mm[12] = p.t[0]; Mm[13] = p.t[1]; Mm[14] = p.t[2]; Mm[15] = 1;
+            e.p = p; mul4(VPg, Mm, e.C); e.d = p.d;
+            items[n++] = e;
+          }
+        }
+      }
+      items.length = n;
+      items.sort((a, b2) => b2.d - a.d);
+    } else items.length = n;
+    return items;
+  }
   // one group of vehicles into its offscreen layer (slot 0 sharp, 1 soft) at up to `cap` layer px per window px, then
   // onto the window (cp: carProgram's, DYS-149)
   function drawCarGroup(frame, group, slot, cap, soften, VPg, cp) {
@@ -2321,8 +2404,7 @@ export async function createOutside(engine, opts = {}) {
     // share matte or dirty (15 %: 0.1-0.3), most mid (70 %: 0.6-0.95), a few glossy (15 %: 1-1.15); y, how far its
     // roof's normal is eased toward level for the mirror (0.5-0.9): roofs that curve more fore and aft catch less of the
     // low sky)
-    const glintCar = (h1, h2) => [h1 < 0.15 ? 0.1 + (0.2 * h1) / 0.15 : h1 < 0.85 ? 0.6 + (0.35 * (h1 - 0.15)) / 0.7 : 1 + (0.15 * (h1 - 0.85)) / 0.15,
-      0.5 + 0.4 * h2];
+    // (glintCar: createOutside's, DYS-266)
     gl.uniform3f(u.uSkyRef, ...Hl.map((x) => x * 0.9 * nk));
     gl.uniform3f(u.uHorRef, ...Al.map((x) => x * 0.9 * nk));
     // the cast shadows' darkness as the panorama's own: its road in a parked car's shadow against the open road beside
@@ -2334,23 +2416,7 @@ export async function createOutside(engine, opts = {}) {
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     // the baked parked cars near this group's vehicles, as erasers in the far-to-near order: a moving car behind one is
     // hidden where the photograph's parked car stands in front of it (the depth map can't tell metres at this range)
-    const items = group.map((c) => ({ c, d: D[c.i * F + 12] }));
-    if (baked && meshGL.vaos.prius) {
-      const seen = new Set(), pm = meshMeta.models.prius;
-      for (const c of group) {
-        const b = c.i * F, cx = Math.floor(D[b] / 20), cz = Math.floor(D[b + 2] / 20);
-        for (let gx = -1; gx <= 1; gx++) for (let gz = -1; gz <= 1; gz++) {
-          for (const p of (GC_DIET ? baked.cellsN.get(cellKey(cx + gx, cz + gz)) : baked.cells.get(`${cx + gx},${cz + gz}`)) || (GC_DIET ? NONE : [])) {
-            if (seen.has(p) || Math.hypot(p.t[0] - D[b], p.t[2] - D[b + 2]) > 30) continue;
-            seen.add(p);
-            const k = 0.97, sx = (p.W / pm.beam) * k, sy = (p.L / pm.length) * k, sz = (p.H / pm.height) * k;
-            const Mm = [p.right[0] * sx, p.right[1] * sx, p.right[2] * sx, 0, p.fwd[0] * sy, p.fwd[1] * sy, p.fwd[2] * sy, 0, 0, sz, 0, 0, p.t[0], p.t[1], p.t[2], 1];
-            items.push({ p, C: mul4(VPg, Mm), C0: Mm, d: p.d });
-          }
-        }
-      }
-      items.sort((a, b2) => b2.d - a.d);
-    }
+    const items = groupItems(group, D, F, VPg);
     // (DYS-149 smooth: instanced, carsInstanced draws the items; the loop below is the per-vehicle path, ?carinst=0)
     const nDraws = cp.inst ? carsInstanced({ items, slot, Lm, u, W, H, D, F, models, fog: e.fog, look: [grainK, sunGate, Math.max(0, sun[1])],
       sun, sunOn, shadeA, ambShare, glintCar, l3K }) : null;
@@ -2544,11 +2610,97 @@ export async function createOutside(engine, opts = {}) {
     for (const p of a.polys) for (const q of b.polys) if (!sepBy(p, q) && !sepBy(q, p)) return true;
     return false;
   };
+  // (DYS-265 zoom-gc: the footprints above without a new array a vehicle: at full zoom they were ~25 MB/s of the page's
+  // ~104 MB/s of garbage (V8's sampling heap profiler), which WebKit at times let pile up to +1.1 GB before collecting.
+  // A chunk's hulls go into FPV (x, y pairs), each unit's outlines as [start, length] in FPI; units and batches come
+  // from pools. The same projections, hulls (an insertion sort is stable, as Array.sort), boxes, overlap tests and
+  // batches, in the same order: scripts/city_clock/gcdiet_gl_same.mjs checks every call and float)
+  let FPV = new Float64Array(8192), FPI = new Int32Array(2048), fpvN = 0, fpiN = 0, TPX = new Float64Array(64);
+  const HIX = new Int32Array(32), HLO = new Int32Array(32), HUP = new Int32Array(32), UNIT_POOL = [], BATCH_POOL = [], UNITS_A = [], BATCHES_A = [];
+  let nU = 0, nB = 0;
+  const unitOf = (key, r0, n) => { const u = UNIT_POOL[nU] || (UNIT_POOL[nU] = { key: 0, r0: 0, n: 0, all: false, p0: 0, np: 0, box: [0, 0, 0, 0] }); nU++; u.key = key; u.r0 = r0; u.n = n; return u; };
+  const batchOf = (key) => { const t = BATCH_POOL[nB] || (BATCH_POOL[nB] = { key: 0, units: [], nu: 0, box: [0, 0, 0, 0], first: 0, n: 0 }); nB++; t.key = key; t.nu = 0; t.box[0] = t.box[1] = Infinity; t.box[2] = t.box[3] = -Infinity; t.first = t.n = 0; return t; };
+  const anyHit = (list, un, n = list.length) => { for (let k = 0; k < n; k++) if (unitHitK(list[k], un)) return true; return false; };
+  // (toPx into TPX: its point count, or -1 when one is behind the eye)
+  const toPxK = (C, pts, W, H) => {
+    if (TPX.length < (pts.length / 3) * 2) TPX = new Float64Array(TPX.length * 2 + pts.length);
+    let n = 0;
+    for (let k = 0; k < pts.length; k += 3) {
+      const px = pts[k], py = pts[k + 1], pz = pts[k + 2], cw = C[3] * px + C[7] * py + C[11] * pz + C[15];
+      if (!(cw > 1e-6)) return -1;
+      TPX[2 * n] = ((C[0] * px + C[4] * py + C[8] * pz + C[12]) / cw * 0.5 + 0.5) * W; TPX[2 * n + 1] = ((C[1] * px + C[5] * py + C[9] * pz + C[13]) / cw * 0.5 + 0.5) * H;
+      n++;
+    }
+    return n;
+  };
+  // (hull2 of TPX's n points, appended to FPV: its length in floats)
+  const hullK = (n) => {
+    const p = TPX, ix = n <= HIX.length ? HIX : new Int32Array(n), lo = n <= HLO.length ? HLO : new Int32Array(n), up = n <= HUP.length ? HUP : new Int32Array(n);
+    for (let k = 0; k < n; k++) ix[k] = k;
+    for (let k = 1; k < n; k++) for (let j = k; j > 0; j--) {
+      const a = ix[j - 1], b = ix[j];
+      if (!((p[2 * a] - p[2 * b] || p[2 * a + 1] - p[2 * b + 1]) > 0)) break;
+      ix[j - 1] = b; ix[j] = a;
+    }
+    const cr = (o, a, b) => (p[2 * a] - p[2 * o]) * (p[2 * b + 1] - p[2 * o + 1]) - (p[2 * a + 1] - p[2 * o + 1]) * (p[2 * b] - p[2 * o]);
+    let nl = 0, nu = 0;
+    for (let k = 0; k < n; k++) { const i = ix[k]; while (nl >= 2 && cr(lo[nl - 2], lo[nl - 1], i) <= 0) nl--; lo[nl++] = i; }
+    for (let k = n - 1; k >= 0; k--) { const i = ix[k]; while (nu >= 2 && cr(up[nu - 2], up[nu - 1], i) <= 0) nu--; up[nu++] = i; }
+    nl = Math.max(0, nl - 1); nu = Math.max(0, nu - 1);
+    const len = nl + nu ? 2 * (nl + nu) : 2;
+    if (FPV.length < fpvN + len) { const g = new Float64Array(Math.max(FPV.length * 2, fpvN + len)); g.set(FPV.subarray(0, fpvN)); FPV = g; }
+    let o = fpvN;
+    if (nl + nu) { for (let k = 0; k < nl; k++) { FPV[o++] = p[2 * lo[k]]; FPV[o++] = p[2 * lo[k] + 1]; } for (let k = 0; k < nu; k++) { FPV[o++] = p[2 * up[k]]; FPV[o++] = p[2 * up[k] + 1]; } }
+    else { FPV[o++] = p[0]; FPV[o++] = p[1]; }
+    fpvN = o;
+    return len;
+  };
+  // (footprint of one or two point lists into unit u: u.all (ALL), else its outlines FPI[u.p0..] and box)
+  const footprintK = (C, a, b, W, H, u) => {
+    const box = u.box;
+    box[0] = Infinity; box[1] = Infinity; box[2] = -Infinity; box[3] = -Infinity;
+    u.all = false; u.p0 = fpiN; u.np = 0;
+    for (let m = 0; m < 2; m++) {
+      const pts = m ? b : a;
+      if (!pts) continue;
+      const n = toPxK(C, pts, W, H);
+      if (n < 0) { u.all = true; fpiN = u.p0; u.np = 0; box[0] = -Infinity; box[1] = -Infinity; box[2] = Infinity; box[3] = Infinity; return u; }
+      const s = fpvN, len = hullK(n);
+      for (let k = s; k < s + len; k += 2) { box[0] = Math.min(box[0], FPV[k]); box[1] = Math.min(box[1], FPV[k + 1]); box[2] = Math.max(box[2], FPV[k]); box[3] = Math.max(box[3], FPV[k + 1]); }
+      if (FPI.length < fpiN + 2) { const g = new Int32Array(FPI.length * 2); g.set(FPI); FPI = g; }
+      FPI[fpiN++] = s; FPI[fpiN++] = len; u.np++;
+    }
+    return u;
+  };
+  // (sepBy on FPV's outlines A (a0, an floats) and B)
+  const sepByK = (a0, an, b0, bn) => {
+    const A = FPV;
+    for (let i = 0, n = an >> 1; i < n; i++) {
+      const j = (i + 1) % n, ex = A[a0 + 2 * j] - A[a0 + 2 * i], ey = A[a0 + 2 * j + 1] - A[a0 + 2 * i + 1], len = Math.hypot(ex, ey);
+      if (len < 1e-9) continue;
+      const nx = -ey / len, ny = ex / len;
+      let p0 = Infinity, p1 = -Infinity, q0 = Infinity, q1 = -Infinity;
+      for (let k = a0; k < a0 + an; k += 2) { const d = A[k] * nx + A[k + 1] * ny; p0 = Math.min(p0, d); p1 = Math.max(p1, d); }
+      for (let k = b0; k < b0 + bn; k += 2) { const d = A[k] * nx + A[k + 1] * ny; q0 = Math.min(q0, d); q1 = Math.max(q1, d); }
+      if (p1 + INST_GAP < q0 || q1 + INST_GAP < p0) return true;
+    }
+    return false;
+  };
+  const unitHitK = (a, b) => {
+    if (!boxHit(a.box, b.box)) return false;
+    if (a.all || b.all) return true;
+    for (let x = 0; x < a.np; x++) for (let y = 0; y < b.np; y++) {
+      const p0 = FPI[a.p0 + 2 * x], pn = FPI[a.p0 + 2 * x + 1], q0 = FPI[b.p0 + 2 * y], qn = FPI[b.p0 + 2 * y + 1];
+      if (!sepByK(p0, pn, q0, qn) && !sepByK(q0, qn, p0, pn)) return true;
+    }
+    return false;
+  };
+  const QP = [new Array(12).fill(0), new Array(12).fill(0)], CS = { Ls: 0, ux: 0, uy: 0, eu: 0, ew: 0 };
   // (a shadow quad's corners as CAR3D_VS makes them: the centre qa.xy, axes qa.zw and qb.xy, 2 cm over the road)
-  const quadPts = (qa, qb) => {
-    const pts = [];
+  const quadPts = (qa, qb, into) => {
+    const pts = into || [];
     // (DYS-149 gc-diet: the corners by number, in the same order)
-    if (GC_DIET) { for (let k = 0; k < 4; k++) { const p = k & 1 ? 1 : -1, q = k & 2 ? 1 : -1; pts.push(qa[0] + p * qa[2] + q * qb[0], qa[1] + p * qa[3] + q * qb[1], 0.02); } return pts; }
+    if (GC_DIET) { for (let k = 0; k < 4; k++) { const p = k & 1 ? 1 : -1, q = k & 2 ? 1 : -1; pts[3 * k] = qa[0] + p * qa[2] + q * qb[0]; pts[3 * k + 1] = qa[1] + p * qa[3] + q * qb[1]; pts[3 * k + 2] = 0.02; } return pts; }
     for (const [p, q] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) pts.push(qa[0] + p * qa[2] + q * qb[0], qa[1] + p * qa[3] + q * qb[1], 0.02);
     return pts;
   };
@@ -2568,7 +2720,11 @@ export async function createOutside(engine, opts = {}) {
       const its = items.length <= chunk ? items : items.slice(c0, c0 + chunk);
       const need = its.length * 3 * R;
       if (instStage.length < need) { instStage = new Float32Array(need * 2); instOut = new Float32Array(need * 2); }
-      const S = instStage, units = [];
+      // (DYS-266 zoom-gc: units and batches by count, written by number: a list's length cut to 0 lets V8 drop its store,
+      // made again by the next pushes; each batch's units the same, bt.nu of them)
+      const S = instStage, units = GC_DIET ? UNITS_A : [];
+      let nUn = 0;
+      if (GC_DIET) fpvN = fpiN = nU = nB = 0;   // (DYS-265 zoom-gc: this chunk's outlines, units and batches)
       let nr = 0;
       const put = (o, a) => { for (let k = 0; k < a.length; k++) S[o + k] = a[k]; };
       // (a record: the model -> layer clip (0-15), the model -> room rotation (16-26, 19 the kind: 0 body, 1 the contact
@@ -2644,8 +2800,7 @@ export async function createOutside(engine, opts = {}) {
           rot[0] = C0[0]; rot[1] = C0[1]; rot[2] = C0[2]; rot[3] = C0[4]; rot[4] = C0[5]; rot[5] = C0[6]; rot[6] = C0[8]; rot[7] = C0[9]; rot[8] = C0[10];
           car[0] = d; car[1] = 1; car[2] = 0; car[3] = 0;
           const o = rec(0, 1, mul4(Lm, it.C, M16), rot, dir, car, null, oc);
-          const fp = footprint(it.C, [meshGL.boxes.prius[1]], W, H);
-          units.push({ key: KEY_ERASE, r0: o / R, n: 1, polys: fp.polys, box: fp.box });
+          units[nUn++] = footprintK(it.C, meshGL.boxes.prius[1], null, W, H, unitOf(KEY_ERASE, o / R, 1));   // (DYS-265 zoom-gc)
           return;
         }
         const { i, C, mir } = it.c;
@@ -2667,8 +2822,10 @@ export async function createOutside(engine, opts = {}) {
         let o = rec(1, 0, mvp, rot, dir, car, lk, oc);
         S[o + 36] = D[b + 16]; S[o + 37] = fog; S[o + 38] = 1; S[o + 39] = evW;
         put(o + 52, shA); put(o + 60, shC); put(o + 64, qa); put(o + 68, qb);
-        const r0 = o / R, quads = [quadPts(qa, qb)];
-        const cs = castClear ? null : castShadow(D, b, sun, sunOn, L, B, Ht);
+        // (DYS-265 zoom-gc: the quads' corners in QP, the cast shadow in CS, the units from the pool)
+        const r0 = o / R, q0 = quadPts(qa, qb, QP[0]);
+        let q1 = null;
+        const cs = castClear ? null : castShadow(D, b, sun, sunOn, L, B, Ht, CS);
         if (cs) {
           const { Ls, ux, uy, eu, ew } = cs;
           qa[0] = ux * Ls / 2 * mir; qa[1] = uy * Ls / 2; qa[2] = ux * (eu + Ls / 2) * mir; qa[3] = uy * (eu + Ls / 2);
@@ -2677,29 +2834,45 @@ export async function createOutside(engine, opts = {}) {
           S[o + 36] = D[b + 16]; S[o + 37] = fog; S[o + 38] = shadeA; S[o + 39] = evW; put(o + 52, shA);
           S[o + 56] = ux * Ls * mir; S[o + 57] = uy * Ls; S[o + 58] = tier; S[o + 59] = L * cy; put(o + 60, shC);
           put(o + 64, qa); put(o + 68, qb);
-          quads.push(quadPts(qa, qb));
+          q1 = quadPts(qa, qb, QP[1]);
         }
-        const fq = footprint(C, quads, W, H);
-        units.push({ key: KEY_QUADS, r0, n: cs ? 2 : 1, polys: fq.polys, box: fq.box });
+        units[nUn++] = footprintK(C, q0, q1, W, H, unitOf(KEY_QUADS, r0, cs ? 2 : 1));
         const lenPx = Math.max(it.c.box[2] - it.c.box[0], it.c.box[3] - it.c.box[1]);
         const lod = carLod >= 0 ? Math.min(carLod, meshGL.ranges[model].length - 1) : lenPx >= CAR_LOD_PX[0] ? 0 : lenPx >= CAR_LOD_PX[1] ? 1 : 2;
         o = rec(0, 0, mvp, rot, dir, car, lk, oc);
         S[o + 36] = D[b + 16]; S[o + 37] = fog; S[o + 38] = 0; S[o + 39] = evW; S[o + 44] = D[b + 19]; S[o + 45] = D[b + 20]; S[o + 46] = D[b + 21];
         const gk = glintCar(D[b + 28], D[b + 29]);
         S[o + 48] = gk[0]; S[o + 49] = gk[1]; S[o + 50] = D[b + 27];
-        const fb = footprint(C, [meshGL.boxes[model][lod]], W, H);
-        units.push({ key: D[b + 17] * 8 + lod, r0: o / R, n: 1, polys: fb.polys, box: fb.box });
+        units[nUn++] = footprintK(C, meshGL.boxes[model][lod], null, W, H, unitOf(D[b + 17] * 8 + lod, o / R, 1));
       }
       // the batches: a unit goes back past batches none of whose units it overlaps, to the latest of its kind
-      const batches = [];
-      for (const un of units) {
+      // (DYS-265 zoom-gc: with the switch on, the batches from the pool and the outlines in FPV, the same tests in order)
+      const batches = GC_DIET ? BATCHES_A : [];
+      if (GC_DIET) {
+        let nBt = 0;
+        for (let q = 0; q < nUn; q++) {
+          const un = units[q];
+          let t = null;
+          for (let k = nBt - 1, k0 = Math.max(0, nBt - INST_WALK); k >= k0; k--) {
+            const bt = batches[k];
+            if (bt.key === un.key) { t = bt; break; }
+            if (boxHit(bt.box, un.box) && anyHit(bt.units, un, bt.nu)) break;
+          }
+          if (!t) batches[nBt++] = (t = batchOf(un.key));
+          t.units[t.nu++] = un;
+          const x = t.box, y = un.box;
+          x[0] = Math.min(x[0], y[0]); x[1] = Math.min(x[1], y[1]); x[2] = Math.max(x[2], y[2]); x[3] = Math.max(x[3], y[3]);
+        }
+        batches.length = nBt;
+      }
+      for (const un of GC_DIET ? NONE : units) {
         let t = null;
         for (let k = batches.length - 1, k0 = Math.max(0, batches.length - INST_WALK); k >= k0; k--) {
           const bt = batches[k];
           if (bt.key === un.key) { t = bt; break; }
-          if (boxHit(bt.box, un.box) && bt.units.some((v) => unitHit(v, un))) break;
+          if (boxHit(bt.box, un.box) && (GC_DIET ? anyHit(bt.units, un) : bt.units.some((v) => unitHit(v, un)))) break;
         }
-        if (!t) batches.push((t = { key: un.key, units: [], box: [Infinity, Infinity, -Infinity, -Infinity], first: 0, n: 0 }));
+        if (!t) batches.push((t = GC_DIET ? batchOf(un.key) : { key: un.key, units: [], box: [Infinity, Infinity, -Infinity, -Infinity], first: 0, n: 0 }));
         t.units.push(un);
         const x = t.box, y = un.box;
         x[0] = Math.min(x[0], y[0]); x[1] = Math.min(x[1], y[1]); x[2] = Math.max(x[2], y[2]); x[3] = Math.max(x[3], y[3]);
@@ -2709,7 +2882,12 @@ export async function createOutside(engine, opts = {}) {
       let at = 0;
       for (const bt of batches) {
         bt.first = at;
-        for (const un of bt.units) { O.set(S.subarray(un.r0 * R, (un.r0 + un.n) * R), at * R); at += un.n; }
+        if (GC_DIET) {
+          for (let q = 0; q < bt.nu; q++) { const un = bt.units[q], a = un.r0 * R, e = (un.r0 + un.n) * R, d = at * R - a; for (let k = a; k < e; k++) O[k + d] = S[k]; at += un.n; }   // (no view a unit)
+        } else for (const un of bt.units) {
+          O.set(S.subarray(un.r0 * R, (un.r0 + un.n) * R), at * R);
+          at += un.n;
+        }
         bt.n = at - bt.first;
       }
       let T = instT[slot];

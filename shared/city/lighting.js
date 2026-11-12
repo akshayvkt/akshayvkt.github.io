@@ -71,5 +71,22 @@ export function createLighting(moments, frame) {
     };
   }
 
-  return { at, item, haze, moments: list, byId };
+  // (DYS-266 zoom-gc: item() into o (new if none), the same keys in the same order; city.js lookTo)
+  function itemTo(o, it, M) {
+    const v = it.view;
+    const db = wrap180(M.sunAz - v.bearing);
+    const toward = Math.cos(db * DEG);
+    const cosAlt = Math.max(0, Math.cos(M.sunAlt * DEG));
+    const h = it.h !== undefined ? it.h : frame.h(it.x, it.y, it.z) + (it.height || it.mast || 0) / 2;
+    const tr = haze(M, v.dist, h);
+    if (!o) o = { silhouette: 0, rim: 0, sunOnFace: 0, sunFromRight: 0, hazeMix: 0 };
+    o.silhouette = M.mode.backlit * (0.6 + 0.4 * Math.max(0, toward));
+    o.rim = M.mode.backlit * Math.max(0, toward) ** 2;
+    o.sunOnFace = M.mode.day * Math.max(0, -toward) * cosAlt;
+    o.sunFromRight = Math.sin(db * DEG) * cosAlt;
+    o.hazeMix = 1 - tr;
+    return o;
+  }
+
+  return { at, item, itemTo, haze, moments: list, byId };
 }

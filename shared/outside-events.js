@@ -503,7 +503,14 @@ export function createEvents({ axisDeg, eye, atlas, carAtlas = null, eyeH = 113.
     return [px, py];
   }
   // (DYS-149 gc-diet: project into o (null where project is), its caller reading it before the next)
-  const W3 = [0, 0, 0], R3 = [0, 0, 0], P2 = [0, 0];
+  const W3 = [0, 0, 0], R3 = [0, 0, 0], P2 = [0, 0], PV = [0, 0];
+  // (DYS-266 zoom-gc: fill's vehicle's middle on the screen, projected once (pcS 0: not yet, 1: pc), and keepCar's
+  // answer for it once (kcS -1: not yet); fill sets both back for each vehicle)
+  let pcS = 0, pc = null, kcS = -1;
+  const centreK = (v) => { if (pcS === 0) { pc = projectTo(PV, v.x, v.y, v.z); pcS = 1; } return pc; };
+  const keepK = (v, keepCar) => { if (kcS < 0) kcS = keepCar(v) ? 1 : 0; return kcS === 1; };
+  // (DYS-266 zoom-gc: a street car's sprite lighting where it has none: fill's default, kept, its day written in)
+  const LM0 = { sunOnFace: 0, silhouette: 0, rim: 0, hazeMix: 0 }, LM0D = (day) => { LM0.sunOnFace = day; return LM0; };
   function projectTo(o, x, y, z) {
     const w = F.worldTo(W3, x, y, z), m = cam.vp;
     const cx = m[0] * w[0] + m[4] * w[1] + m[8] * w[2] + m[12];
@@ -883,12 +890,18 @@ export function createEvents({ axisDeg, eye, atlas, carAtlas = null, eyeH = 113.
     }
     // ---- bridge and street traffic: specks by day, dark dots against a low sun, head and tail lights at night
     const V = M ? M.vehicles : { speck: 0.35 * L.day, dark: 0, lights: 1 - L.day };
-    for (const v of s.cars ? s.vehicles.concat(s.cars) : s.vehicles) {
+    // (DYS-266 zoom-gc: the bridge's then the streets' in turn, not a new list of both a frame; ?gcdiet=0: as before)
+    const VL = GC_DIET ? null : s.cars ? s.vehicles.concat(s.cars) : s.vehicles, nV = s.vehicles.length, nVC = VL ? VL.length : nV + (s.cars ? s.cars.length : 0);
+    for (let iv = 0; iv < nVC; iv++) {
+      const v = VL ? VL[iv] : iv < nV ? s.vehicles[iv] : s.cars[iv - nV];
       inStreet = v.street != null;
       // (a street car fades in with its module, env.streetsW: city.js imports it the first time it is needed; QA
       // __carHide: none at all, the panorama's own street for the screen-space overlap check)
       const a = (v.alpha ?? 1) * (v.street != null ? (globalThis.__carHide ? 0 : (env.streetsW ?? 1) * showW) : 1);
       if (a <= 0.01) continue;
+      // (DYS-266 zoom-gc: its middle on the screen (PV, or null) and keepCar, each worked out once and only when first
+      // asked (pcS, kcS): the 3D test, the sprite and the speck asked the same projection up to three times, keepCar twice)
+      pcS = 0; kcS = -1;
       // a street vehicle with a sprite in the cars atlas: a hull instance (no reflection, no window light), lit for
       // the moment by HULL_FS like the ships; at night its lamps are still the points below, by day no speck
       let sprited = false;
@@ -898,7 +911,7 @@ export function createEvents({ axisDeg, eye, atlas, carAtlas = null, eyeH = 113.
       const mi = (v.street != null || v.model != null) && carMeshes?.ready && zm > MESH_ZOOM && meshW > 0.01 ? meshNames.indexOf(meshOf(v)) : -1;
       // (DYS-183 mv-outside: 3D or a speck by the full-size frame's density, so a moving frame drawn smaller doesn't turn
       // vehicles into specks mid-gesture and back at rest)
-      if (mi >= 0 && keepCar(v) && ((cam.pxPerRadRest ?? cam.pxPerRad) * (v.len || 4.6)) / (v.view?.dist || distOf(v.x, v.y, v.z)) >= MESH_MIN_PX && (GC_DIET ? projectTo(P2, v.x, v.y, v.z) : project(v.x, v.y, v.z))) {
+      if (mi >= 0 && (GC_DIET ? keepK(v, keepCar) : keepCar(v)) && ((cam.pxPerRadRest ?? cam.pxPerRad) * (v.len || 4.6)) / (v.view?.dist || distOf(v.x, v.y, v.z)) >= MESH_MIN_PX && (GC_DIET ? centreK(v) : project(v.x, v.y, v.z))) {
         // a 3D vehicle: on the road (zRoad), along its heading, pitched to the slope
         // (DYS-149 gc-diet: car3d below, its record written straight into cars3d; else as before)
         if (GC_DIET) car3d(v, a, meshW, mi, L, V, env);
@@ -927,8 +940,9 @@ export function createEvents({ axisDeg, eye, atlas, carAtlas = null, eyeH = 113.
         // Camry 0.2 m, the bus 0.26 m; round 1's "cars touching in the packed mass")
         const kl = Math.min(1, Math.max(0.85, (v.len || mm.length) / mm.length));
         for (let q = 0; q < 3; q++) fwd[q] *= kl;
+        const khO = v.railW != null && BRIDGE_GL && BRIDGE_CAR_Q ? Math.max(BRIDGE_CAR_Q[5], 1e-3) : 1; for (let q = 0; q < 3; q++) up[q] *= khO;   // (DYS-266: G's DYS-240 height, as car3d's kh; was full height with ?gcdiet=0)
         if ((n3 + 1) * CAR3D_FLOATS > cars3d.length) { const nn = new Float32Array(cars3d.length * 2); nn.set(cars3d); cars3d = nn; }
-        cars3d.set([t[0], t[1], t[2], ...right, ...fwd, ...up, d, a * meshW, haze, L.lights * (0.35 + 0.65 * Math.max(V.lights, L.night)) * (v.railW != null && BRIDGE_LAMP_Q ? 1 - brDay : 1), brakeSlot(v, t),
+        cars3d.set([t[0], t[1], t[2], ...right, ...fwd, ...up, d, a * meshW, haze, L.lights * (0.35 + 0.65 * Math.max(V.lights, L.night)) * (v.railW != null && BRIDGE_LAMP_Q ? 1 - brDay : 1), brakeSlot(v, t) / khO,
           mi, k, lin(paint[0]), lin(paint[1]), lin(paint[2]), t[0] / d, t[1] / d, t[2] / d, mm.length * kl, mm.beam, mm.height,
           idU(v.id, "coat"), idU(v.id, "roof")], n3 * CAR3D_FLOATS);
         order3.push(n3);
@@ -937,10 +951,29 @@ export function createEvents({ axisDeg, eye, atlas, carAtlas = null, eyeH = 113.
         meshed = true;
         sprited = meshW >= 0.999;   // (fading in: the speck under it fades out)
       }
-      if (!sprited && carAtlas && v.street != null && keepCar(v)) {
-        const sp = carSprite(v, carAtlas, cam.pxPerRad, CAR_PAINT);
-        const p0 = sp && project(v.x, v.y, v.z);
-        if (p0) {
+      if (!sprited && carAtlas && v.street != null && (GC_DIET ? keepK(v, keepCar) : keepCar(v))) {
+        // (DYS-266 zoom-gc: where it is on the screen first, its sprite only then: carSprite's new object for every street
+        // car out of view was ~100 KB a frame at full zoom; its record written straight in. The same ones, the same numbers)
+        const pg = GC_DIET ? centreK(v) : null;
+        const sp = GC_DIET ? pg && carSprite(v, carAtlas, cam.pxPerRad, CAR_PAINT) : carSprite(v, carAtlas, cam.pxPerRad, CAR_PAINT);
+        const p0 = GC_DIET ? sp && pg : sp && project(v.x, v.y, v.z);
+        if (p0 && GC_DIET) {
+          const vv = v.view, lm = v.look?.moment || LM0D(L.day);
+          const sunAz = M ? M.sunAz : L.sunAz, sunAlt = M ? M.sunAlt : L.sunAlt;
+          const db = (sunAz - vv.bearing) * DEG, ca = Math.cos(Math.max(-5, sunAlt) * DEG);
+          const s0 = Math.sin(db) * ca, s1 = Math.sin(Math.max(-5, sunAlt) * DEG), s2 = -Math.cos(db) * ca, s3 = M ? M.mode.lights : 1 - L.day;
+          const r = F.relTo(R3, v.x, v.y, v.z), d = vv.dist;
+          if ((nc + 1) * HULL_FLOATS > cars.length) { const n = new Float32Array(cars.length * 2); n.set(cars); cars = n; }
+          const C = cars, o = nc * HULL_FLOATS;
+          C[o] = p0[0]; C[o + 1] = p0[1]; C[o + 2] = sp.scale; C[o + 3] = d;
+          C[o + 4] = sp.cell0[0]; C[o + 5] = sp.cell0[1]; C[o + 6] = sp.size[0]; C[o + 7] = sp.size[1]; C[o + 8] = sp.cell1[0]; C[o + 9] = sp.cell1[1]; C[o + 10] = sp.size[0]; C[o + 11] = sp.size[1];
+          C[o + 12] = sp.blend; C[o + 13] = sp.anchor; C[o + 14] = a; C[o + 15] = sp.mirror ? 2 : 0;
+          C[o + 16] = lm.sunOnFace ?? 0; C[o + 17] = lm.silhouette ?? 0; C[o + 18] = lm.rim ?? 0; C[o + 19] = lm.hazeMix ?? 0;
+          C[o + 20] = s0; C[o + 21] = s1; C[o + 22] = s2; C[o + 23] = s3; C[o + 24] = r[0] / d; C[o + 25] = r[1] / d; C[o + 26] = r[2] / d;
+          C[o + 27] = sp.warp[0]; C[o + 28] = sp.warp[1]; C[o + 29] = 1; C[o + 30] = 0; C[o + 31] = sp.livery[0]; C[o + 32] = sp.livery[1]; C[o + 33] = sp.livery[2]; C[o + 34] = 0.5;
+          nc++;
+          sprited = true;
+        } else if (p0) {
           const vv = v.view, lm = v.look?.moment || { sunOnFace: L.day, silhouette: 0, rim: 0, hazeMix: 0 };
           const sunAz = M ? M.sunAz : L.sunAz, sunAlt = M ? M.sunAlt : L.sunAlt;
           const db = (sunAz - vv.bearing) * DEG, ca = Math.cos(Math.max(-5, sunAlt) * DEG);
@@ -979,7 +1012,9 @@ export function createEvents({ axisDeg, eye, atlas, carAtlas = null, eyeH = 113.
         else point(v.x, v.y, v.z, c, a * V.lights * (v.light === "tail" ? (v.brake ? 0.85 : 0.55) : 0.8) * (0.7 + 0.3 * (v.tint ?? 1)), heavy ? 0.6 : 0.42, 0);
       }
       const day = V.speck + V.dark;
-      if (day > 0.01 && !sprited) {
+      // (DYS-266 zoom-gc: a speck whose middle is off the screen is none: point() finds it so and adds nothing; asked
+      // first, not after working out its colour and size)
+      if (day > 0.01 && !sprited && (!GC_DIET || centreK(v))) {
         // a car 5-6 km out is about one CSS px: a faint speck, never a solid dot (a dark one against a low sun)
         const px = (1335 * zm * (v.len || 4.5)) / Math.hypot(v.x, v.y, v.z);
         const cover = clamp(px / 2, 0.25, 1);
