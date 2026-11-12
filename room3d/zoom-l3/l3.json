@@ -398,6 +398,17 @@
     -22.0,
     -15.0
    ]
+  },
+  {
+   "name": "harbour-wide",
+   "yaw": [
+    -9.0,
+    6.0
+   ],
+   "el": [
+    -5.0,
+    -2.0
+   ]
   }
  ],
  "moments": {
@@ -12001,7 +12012,7 @@
      15
     ]
    ],
-   "bytes": 1296684,
+   "bytes": 1259618,
    "source": "renders at 256 px/deg: night_hero_bridge0_on.png, night_hero_bridge1_on.png, night_hero_palace0_on.png, night_hero_marina0_on.png, night_hero_marina1_on.png, night_hero_marina2_on.png, night_hero_marina3_on.png, night_hero_near0_on.png; + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + scripts/area1_towers.json's cells (scripts/area_rerender.py); + renders/court4x/cou",
    "synthetic": false,
    "extra": {
@@ -17640,7 +17651,7 @@
       15
      ]
     ],
-    "bytes": 703691,
+    "bytes": 703448,
     "dial_default": 0.0,
     "add": "RGB over the city's L3 tile",
     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
@@ -29322,7 +29333,7 @@
      15
     ]
    ],
-   "bytes": 948433,
+   "bytes": 920885,
    "source": "renders at 256 px/deg: predawn_hero_bridge0_on.png, predawn_hero_bridge1_on.png, predawn_hero_palace0_on.png, predawn_hero_marina0_on.png, predawn_hero_marina1_on.png, predawn_hero_marina2_on.png, predawn_hero_marina3_on.png, predawn_hero_near0_on.png; + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + scripts/area1_towers.json's cells (scripts/area_rerender.py); + ren",
    "synthetic": false,
    "extra": {
@@ -35037,7 +35048,7 @@
       15
      ]
     ],
-    "bytes": 573268,
+    "bytes": 573014,
     "dial_default": 0.0,
     "add": "RGB over the city's L3 tile",
     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
@@ -40823,7 +40834,7 @@
      15
     ]
    ],
-   "bytes": 1268987,
+   "bytes": 1241621,
    "source": "renders at 256 px/deg: dawn_hero_bridge0_on.png, dawn_hero_bridge1_on.png, dawn_hero_palace0_on.png, dawn_hero_marina0_on.png, dawn_hero_marina1_on.png, dawn_hero_marina2_on.png, dawn_hero_marina3_on.png, dawn_hero_near0_on.png; + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + scripts/area1_towers.json's cells (scripts/area_rerender.py); + renders/court4x/court_b.jso",
    "synthetic": false,
    "extra": {
@@ -46606,7 +46617,7 @@
       15
      ]
     ],
-    "bytes": 581731,
+    "bytes": 581471,
     "dial_default": 0.0,
     "add": "RGB over the city's L3 tile",
     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
@@ -88296,7 +88307,7 @@
      15
     ]
    ],
-   "bytes": 2312453,
+   "bytes": 2300717,
    "source": "renders at 256 px/deg: dusk_hero_bridge0_on.png, dusk_hero_bridge1_on.png, dusk_hero_palace0_on.png, dusk_hero_marina0_on.png, dusk_hero_marina1_on.png, dusk_hero_marina2_on.png, dusk_hero_marina3_on.png, dusk_hero_near0_on.png; + scripts/area1_towers.json's cells (scripts/area_rerender.py); + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + renders/court4x/court_b.jso",
    "synthetic": false,
    "extra": {
@@ -94199,7 +94210,7 @@
       15
      ]
     ],
-    "bytes": 745461,
+    "bytes": 745236,
     "dial_default": 0.0,
     "add": "RGB over the city's L3 tile",
     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
@@ -99937,7 +99948,7 @@
      15
     ]
    ],
-   "bytes": 1369619,
+   "bytes": 1333828,
    "source": "renders at 256 px/deg: blue_hero_bridge0_on.png, blue_hero_bridge1_on.png, blue_hero_palace0_on.png, blue_hero_marina0_on.png, blue_hero_marina1_on.png, blue_hero_marina2_on.png, blue_hero_marina3_on.png, blue_hero_near0_on.png; + scripts/area2_presidio.json's cells (scripts/area_rerender.py); + scripts/area1_towers.json's cells (scripts/area_rerender.py); + renders/court4x/court_b.jso",
    "synthetic": false,
    "extra": {
@@ -105672,7 +105683,7 @@
       15
      ]
     ],
-    "bytes": 732628,
+    "bytes": 732361,
     "dial_default": 0.0,
     "add": "RGB over the city's L3 tile",
     "source": "panorama.py render_extra: city_detail's windows_extra overlay alone"
@@ -111646,8 +111657,8 @@
  "synthetic": false,
  "built": {
   "by": "scripts/near_box_merge.py (docs/v3/briefs/near-box.md)",
-  "time": "2026-11-10 01:47:23",
-  "commit": "b199468a",
+  "time": "2026-11-11 14:09:07",
+  "commit": "c208e7c5",
   "day": {
    "from": "renders/cloud_zoom1/zoom-l3",
    "moments": [
@@ -111855,7 +111866,7 @@
   },
   "area": {
    "by": "scripts/area_rerender.py merge",
-   "regions": "renders/towers4x/fixb2/cut.json",
+   "regions": "renders/dys202/fin07/harbour.json",
    "moments": [
     "afternoon",
     "blue",
